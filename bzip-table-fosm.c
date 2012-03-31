@@ -3,7 +3,7 @@
 
 #include "micro-bunzip.h"
 
-#define BUF_SIZE 8192
+#define BUF_SIZE 819200
 
 /**
  * Read a bzip2 file from stdin and print
@@ -18,12 +18,14 @@ int main( int argc, char*argv[] )
 {
     bunzip_data *bd;
     int status;
-    unsigned long long position;
-    unsigned long long total_position=0;
+    unsigned long long position; // in bits
+    unsigned long long position_bytes; // in bits
+
     char * c;
     char buffer[BUF_SIZE];
     int gotcount;
     int totalcount;
+    unsigned long long globalcount=0;
 
 
     /* Attempt to open the bzip2 file, if successfull this consumes the
@@ -34,46 +36,44 @@ int main( int argc, char*argv[] )
         for ( ; ; )
         {
             /* Determine position */
-            position = bd->position;
-            position = position - bd->inbufCount + bd->inbufPos;
-            position = position * 8 - bd->inbufBitCount;
-
-	    // count 
-	    total_position += position;
-
-            /* Read one block */
-            status = get_next_block( bd );
-
-            /* Reset the total size counter for each block */
-            totalcount = 0;
-
-            /* Non-zero return value indicates an error, break out */
-            if ( status ) break;
-
-            /* This is really the only other thing init_block does, hrmm */
-            bd->writeCRC = 0xffffffffUL;
-
-            /* Decompress the block and throw away, but keep track of the
-               total size of the decompressed data */
-
-            for ( ; ; )
-            {
-                gotcount = read_bunzip( bd, buffer, BUF_SIZE );
-		double lat[2] = {0,0}; //first last
-		double lon[2] = {0,0}; //first last
-		
-
-		// now lets extract the lat and the lon, first and last in that block
-
-		int state=0;
-		//<node id='1571162048' lat='71.5624482' lon='-179.7077975'
-		char matched[25]; // what did we find?
-		int  matchedpos=0; // where
-		int i;
-		for ( i=0; i < BUF_SIZE; i ++)  {
-		  //		  printf("%c,%d\n",buffer[i],state);
-		  switch(state) {
-		  case 0: 
+	   position = bd->position;
+	   position = position - bd->inbufCount + bd->inbufPos;
+	   position = position * 8 - bd->inbufBitCount;
+	   position_bytes =position/8;
+	   /* Read one block */
+	   status = get_next_block( bd );
+	   
+	   /* Reset the total size counter for each block */
+	   totalcount = 0;
+	   
+	   /* Non-zero return value indicates an error, break out */
+	   if ( status ) break;
+	   
+	   /* This is really the only other thing init_block does, hrmm */
+	   bd->writeCRC = 0xffffffffUL;
+	   
+	   /* Decompress the block and throw away, but keep track of the
+	      total size of the decompressed data */
+	   
+	   double lat[2] = {0,0}; //first last
+	   double lon[2] = {0,0}; //first last
+	   
+	   for ( ; ; )
+	     {
+	       gotcount = read_bunzip( bd, buffer, BUF_SIZE );
+	       
+	       
+	       // now lets extract the lat and the lon, first and last in that block
+	       
+	       int state=0;
+	       //<node id='1571162048' lat='71.5624482' lon='-179.7077975'
+	       char matched[25]; // what did we find?
+	       int  matchedpos=0; // where
+	       int i;
+	       for ( i=0; i < BUF_SIZE; i ++)  {
+		 //		  printf("%c,%d\n",buffer[i],state);
+		 switch(state) {
+		 case 0: 
 		    matchedpos=0;
 		    if (buffer[i] == 'l')    {	  state=1;    };    
 		    break;
@@ -163,11 +163,15 @@ int main( int argc, char*argv[] )
 		else
 		  {
 		    totalcount += gotcount;
+		    globalcount += gotcount;
 		  }
 
-	    /* Print the position of the first bit in the block header */
-		fprintf( stdout, "%llu\t%llu\t%d\t%f\t%f\t%f\t%f\n", position, total_position, totalcount, lat[0],lat[1], lon[0],lon[1] );
-	    }; // for each block
+
+	    }; // for each buffer block
+
+	    /* Print the position of the first bit in the block header, the sum of bits, the total count of chars in that block and the global count so far*/
+	    fprintf( stdout, "%llu\t%llu\t%d\t%llu\t%f\t%f\t%f\t%f\n", position_bytes,position,  totalcount, globalcount, lat[0],lat[1], lon[0],lon[1] );
+
 	}// for the file
     } // status
     
