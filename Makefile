@@ -1,12 +1,13 @@
 CC = gcc -m64
-CFLAGS = -O3 # -DTESTING
+CFLAGS = # -O0 -g -DTESTING
 
-PROGS=bzip-table seek-bunzip bzip-table-fosm
+PROGS=bzip-table seek-bunzip bzip-table-fosm bzip-table-linecount
 
 all: $(PROGS)
 
 bzip-table : bzip-table.o micro-bunzip.o
 bzip-table-fosm : bzip-table-fosm.o micro-bunzip.o
+bzip-table-linecount : bzip-table-linecount.o micro-bunzip.o
 seek-bunzip : seek-bunzip.o micro-bunzip.o
 
 micro-bunzip : micro-bunzip.c
