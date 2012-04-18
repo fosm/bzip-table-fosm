@@ -18,8 +18,8 @@ public:
   long long total_count;
   
   DataFile(const char * filename)
-    :file(string(string(filename) + ".bin").c_str()),
-     txtfile(string(string(filename) + ".txt").c_str()),
+    :file(string(string ("datafiles/") + string(filename) + ".bin").c_str()),
+     txtfile(string(string ("datafiles/") +  string(filename) + ".txt").c_str()),
      total_count(0),
      filename(filename)
   {    
@@ -69,6 +69,7 @@ public:
   }
        
 };
+
 
 
 class OSMWorld
