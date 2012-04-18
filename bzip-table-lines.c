@@ -17,6 +17,9 @@
  * first if desired.
  */
 
+// the user define process function, is not defined, user has to define it to link
+void process_line(const char * buffer); // null terminated
+
 int main( int argc, char*argv[] ) {
     bunzip_data *bd;
     int status;
@@ -82,28 +85,23 @@ printf("file opened with fd %d\n",fd);
 	       const char * pc=0;
 	       const char * lc=0;
 	       lc=pc=buffer;
-	       long checksum=0;
-	       while (pc < buffer + BUF_SIZE) {
-		 checksum += *pc;
-		 if (*pc=='\r') {
 
-		   // now we first process the remainder from the previous block
-		   int length=strlen(buffer2); // leftover
-		   if (length>0) {
-		     remainder += length;
-		     int oldlen = strlen(buffer2);
-		     //		     printf("old s:'%s'\n",buffer2);
-		     if (pc-lc>0)
-		       {
-			 strncpy(buffer2 + (length ),lc,(pc-lc)); //  append the res, strip off the \r 
-		       }
-		     int newlen = strlen(buffer2);
-		     //    printf("test length %d old %d new %d\n",length, oldlen, newlen);
-		     //		     printf("new s:'%s'\n",buffer2);
-		     //		     process_line(buffer2);
+	       while (pc < buffer + BUF_SIZE) {
+
+		 if (*pc=='\r') {
+		   // now we first process the remainder from the previous block		  
+		   if (pc-lc>0)    {
+		     strncpy(buffer2 +(remainder ),lc,(pc-lc)); //  append the res, strip off the \r 
 		   }
-		   buffer2[0]=0;// clear it out.    	   
-		   lc=pc+1;
+		   // process a line
+		   process_line(buffer2);
+		   remainder=0;
+		   //		   buffer2[0]=0;// clear it out.
+		   //		   buffer2[1]=0;// clear it out.
+		   //		   buffer2[remainder]=0;// clear it out.    	   		   
+		   //		   buffer2[remainder+1]=0;// clear it out.    	   		   
+		   memset(buffer2,0,sizeof(buffer2));
+		   lc=pc;
 		   linecount ++;
 		 }
 		 pc++;
@@ -114,14 +112,13 @@ printf("file opened with fd %d\n",fd);
 	       if (pc-lc > 0) {
 		 
 		 strncpy(buffer2,lc,pc-lc );
-		 if (strlen(buffer2))
+		 int length=strlen(buffer2); // leftover
+		 if (length)
 		   {
-		     //printf("test2 %d <%s>\n",strlen(buffer2),buffer2);
-		     //		     buffer2[0]=0;// clear this
-		     ///		     buffer2[1]=0;// clear this
-		     lc=0;
-		     pc=0;
+		     remainder += length;
 		   }
+		 lc=0;
+		 pc=0;
 	       }
 	       //
 	       blockcount++;
@@ -141,7 +138,7 @@ printf("file opened with fd %d\n",fd);
 	       //	       totalcount += gotcount;
 	       ///	       globalcount += gotcount;
 
-	       printf("linecount %d blockcount %d gotcount %d checksum %d remainder %d\n",linecount, blockcount, gotcount, checksum,remainder);
+	       printf("linecount %d blockcount %d gotcount %d remainder %d\n",linecount, blockcount, gotcount,remainder);
 	     }
 	   
 

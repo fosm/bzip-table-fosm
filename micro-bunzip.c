@@ -565,12 +565,12 @@ extern int start_bunzip( bunzip_data **bdp, int in_fd, char *inbuf, int len )
     i = sizeof( bunzip_data );
     if ( in_fd != -1 ) i += IOBUF_SIZE;
     /* Allocate bunzip_data.  Most fields initialize to zero. */
-    if ( !( bd = *bdp = malloc( i ) ) ) return RETVAL_OUT_OF_MEMORY;
+    if ( !( bd = *bdp = (bunzip_data*)malloc( i ) ) ) return RETVAL_OUT_OF_MEMORY;
     memset( bd, 0, sizeof( bunzip_data ) );
     /* Setup input buffer */
     if ( -1 == ( bd->in_fd = in_fd ) )
     {
-        bd->inbuf = inbuf;
+      bd->inbuf = (unsigned char*)inbuf;
         bd->inbufCount = len;
     }
     else bd->inbuf = ( unsigned char * )( bd + 1 );
@@ -594,7 +594,7 @@ extern int start_bunzip( bunzip_data **bdp, int in_fd, char *inbuf, int len )
        uncompressed data.  Allocate intermediate buffer for block. */
     bd->dbufSize = 100000 * ( i - BZh0 );
 
-    if ( !( bd->dbuf = malloc( bd->dbufSize * sizeof( int ) ) ) )
+    if ( !( bd->dbuf = (unsigned int*)malloc( bd->dbufSize * sizeof( int ) ) ) )
         return RETVAL_OUT_OF_MEMORY;
     return RETVAL_OK;
 }
@@ -607,7 +607,7 @@ extern int uncompressStream( int src_fd, int dst_fd )
     bunzip_data *bd;
     int i;
 
-    if ( !( outbuf = malloc( IOBUF_SIZE ) ) ) return RETVAL_OUT_OF_MEMORY;
+    if ( !( outbuf = (char*)malloc( IOBUF_SIZE ) ) ) return RETVAL_OUT_OF_MEMORY;
     if ( !( i = start_bunzip( &bd, src_fd, 0, 0 ) ) )
     {
         for ( ;; )

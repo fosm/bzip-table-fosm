@@ -63,7 +63,7 @@ typedef struct
 }
 bunzip_data;
 
-static char * const bunzip_errors[] =
+static const char * const bunzip_errors[] =
     {
         NULL, "Bad file checksum", "Not bzip data",
         "Unexpected input EOF", "Unexpected output EOF", "Data error",
@@ -73,5 +73,7 @@ static char * const bunzip_errors[] =
 /* ---- Forward declarations for micro-bzip.c ---------------------------- */
 
 extern int get_next_block( bunzip_data *bd );
+extern int start_bunzip( bunzip_data **bdp, int in_fd, char *inbuf, int len );
+extern int read_bunzip( bunzip_data *bd, char *outbuf, int len );
 
 #endif
