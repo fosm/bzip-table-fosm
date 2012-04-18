@@ -72,6 +72,21 @@ public:
 
 
 
+template <class A, class B>
+class Pair :
+  public pair<A,B>
+{
+public:
+  Pair(const long int &,long int &);
+};
+
+template<class T, class T2>
+std::ostream& operator<<(std::ostream &out, const Pair<T,T2> &rhs){
+  out << rhs.first << "\t" << rhs.second;
+  return out;
+}
+
+
 class OSMWorld
 {
 public:
@@ -90,27 +105,57 @@ public:
   
   long int object_count;
   long int current_id;
+  long int current_node;
+  long int current_way;
+  long int current_rel;
+
+  long int current_uid;
   long int current_cs;
   long int current_ver;
+  bool     current_vis;
+  string   current_timestamp;
+  //  string   current_user;
   istream::pos_type marker; // position in the file
 
   DataFile<long int> node_positions;
+
+  //  DataFile<string>   node_user;
+  DataFile<double>   node_lon;
+  DataFile<double>   node_lat;
   DataFile<long int> node_ids;
+  DataFile<int>     node_vis;
+  DataFile<long int> node_uids;
   DataFile<long int> node_cs;
   DataFile<long int> node_ver;
 
+  DataFile<int>     way_vis;
   DataFile<long int> way_positions;
+
+  //  DataFile<string>   way_user;
   DataFile<long int> way_ids;
+  DataFile<long int> way_uids;
   DataFile<long int> way_cs;
   DataFile<long int> way_ver;
 
+  DataFile<int>     rel_vis;
   DataFile<long int> rel_positions;
+
+  
+  //  DataFile<string>   rel_user;
   DataFile<long int> rel_ids;
+  DataFile<long int> rel_uids;
   DataFile<long int> rel_cs;
   DataFile<long int> rel_ver;
 
+  // these are all
+  DataFile<long>   way_timestamp;
+  DataFile<long>   rel_timestamp; 
+  DataFile<long>   node_timestamp;
+
+  // way nodes are pairs!
+  DataFile< Pair<long int,long int> >  way_nodes;
+
   OSMWorld () :
-    object_count(0),
     current_id(0),
     current_cs(-1),
     current_ver(-1),
@@ -120,6 +165,11 @@ public:
     node_positions("node_positions"),
     way_positions("way_positions"),
     rel_positions("relation_positions"),
+
+    
+    // node lat lon
+    node_lon("node_lon"),
+    node_lat("node_lat"),
 
     //ids
     node_ids("node_ids"),
@@ -133,8 +183,28 @@ public:
 
     // version
     node_ver("node_ver"),
-    way_ver("way_ver"),
-    rel_ver("relation_ver")
+    way_ver ("way_ver"),
+    rel_ver ("relation_ver"),
+
+    node_timestamp("node_timestamp"),
+    way_timestamp ("way_timestamp"),
+    rel_timestamp ("rel_timestamp"),
+
+    node_uids("node_uids"),
+    way_uids ("way_uids"),
+    rel_uids ("rel_uids"),
+
+    //    node_user("node_user"),
+    //way_user ("way_user"),
+    //    rel_user ("rel_user"),
+
+    node_vis("node_vis"),
+    way_vis ("way_vis"),
+    rel_vis ("rel_vis"),
+
+    way_nodes ("way_nodes"),
+
+    object_count(0)
   {
 
   }
@@ -306,21 +376,118 @@ public:
     switch (get_current_element_type()) {
     case t_node:
       node_ids.push_back(id);
+      current_node=id;
       break;
       
     case    t_way:
       way_ids.push_back(id);
+      current_way=id;
       break;
       
     case    t_relation:
       rel_ids.push_back(id);
+      current_rel=id;
       break;
 
+    default:
+      break;
+
+    };
+  }
+
+  void set_current_uid(long int uid) {
+    current_uid=uid;
+    // write to disk
+    switch (get_current_element_type()) {
+    case t_node:
+      node_uids.push_back(uid);
+      break;     
+    case t_way:
+      way_uids.push_back(uid);
+      break;     
+    case t_relation:
+      rel_uids.push_back(uid);
+      break;
     default:
       break;
     };
   }
 
+  void set_current_vis(int vis) {
+    //    cerr << " vis " << vis << endl;
+    current_vis=vis;
+    switch (get_current_element_type()) {
+    case t_node:
+      node_vis.push_back(vis);
+      break;     
+    case t_way:
+      way_vis.push_back(vis);
+      break;     
+    case t_relation:
+      rel_vis.push_back(vis);
+      break;
+    default:
+      break;
+    };
+  }
+
+  void set_current_lat(double lat) {
+    switch (get_current_element_type()) {
+    case t_node:
+      node_lat.push_back(lat);
+      break;     
+    default:
+      break;
+    };
+  }
+
+  void set_current_lon(double lon) {
+    switch (get_current_element_type()) {
+    case t_node:
+      node_lon.push_back(lon);
+      break;     
+    default:
+      break;
+    };
+  }
+
+  void set_way_node_ref(long int ref) {
+    
+    switch (get_current_element_type()) {
+    
+    case t_node:
+
+      const long int cway=current_way;
+      Pair<long int,long int> apair(cway,ref);
+      way_nodes.push_back(apair);
+
+      break;     
+
+
+    };
+  }
+
+  void set_current_user(string user) { // we dont need this, the uid should be ok
+    return;
+  }
+
+  void set_current_ts(string timestamp) {
+    long ts=0;
+    current_timestamp=ts;
+    switch (get_current_element_type()) {
+    case t_node:
+      node_timestamp.push_back(ts);
+      break;     
+    case t_way:
+      way_timestamp.push_back(ts);
+      break;     
+    case t_relation:
+      rel_timestamp.push_back(ts);
+      break;
+    default:
+      break;
+    };
+  }
 
 void set_current_ver(long int id) {
     current_ver=id;
