@@ -51,3 +51,6 @@ format:
 
 testfosm: bzip-table-lines-ragel
 	./bzip-table-lines-ragel /xapi/planet/earth-20120401130001.osm.bz2
+
+testgeofabrik: bzip-table-lines-ragel
+	./bzip-table-lines-ragel  ~/OSM-API-Proxy/data/kosovo.osm.bz2 

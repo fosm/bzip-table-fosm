@@ -88,7 +88,8 @@ printf("file opened with fd %d\n",fd);
 
 	       while (pc < buffer + BUF_SIZE) {
 
-		 if (*pc=='\r') {
+		 if ((*pc=='\r') ||(*pc=='\n')) 
+                   {
 		   // now we first process the remainder from the previous block		  
 		   if (pc-lc>0)    {
 		     strncpy(buffer2 +(remainder ),lc,(pc-lc)); //  append the res, strip off the \r 

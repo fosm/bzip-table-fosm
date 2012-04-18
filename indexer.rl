@@ -2,6 +2,11 @@
 %%{
 machine osmkeys;
 
+action some_err {
+       cerr <<"an error has occured"  << endl;            
+       res = 10;
+}
+
 el_node = (
 'node' @{
        world.set_current_element_type_node();
@@ -77,10 +82,6 @@ member_attr = (
 'role' 
 );
 
-tag_attr = (
-'k' |
-'v'  
-);
 
 
 tag_k_names = (
@@ -102,7 +103,6 @@ coord = (
 
 attrs = (
       node_attr |
-      tag_attr  | 
       way_attr  |
       nd_attr  |
       relation_attr  |
@@ -193,36 +193,146 @@ ver_val_value = ( digit+  $AddChar );
 ver_val_end   = ( quote  @ FinishVersion );
 ver_val       = ( ver_val_start ver_val_value ver_val_end );
 
+#userid
+action FinishUid {
+     char *endptr;   // ignore
+//     cerr << "user " << currenttoken << endl;
+     world.set_current_uid(strtol(currenttoken.c_str(), &endptr, 10));
+}
+uid_val_start = ( 'uid' '=' quote  @StartValue);
+uid_val_value = ( digit+  $AddChar );
+uid_val_end   = ( quote  @ FinishUid );
+uid_val       = ( uid_val_start uid_val_value uid_val_end );
+
+#timestamp
+action FinishTs {
+     char *endptr;   // ignore
+//     cerr << "timestamp " << currenttoken << endl;
+     world.set_current_ts(currenttoken.c_str());
+}
+ts_val_start = ( 'timestamp' '=' quote  @StartValue);
+ts_val_value = ( [0-9TZ:\-]+  $AddChar );
+ts_val_end   = ( quote  @ FinishTs );
+ts_val       = ( ts_val_start ts_val_value ts_val_end );
+
+#visible
+action FinishVisT {
+     world.set_current_vis(1);
+}
+action FinishVisF {
+     world.set_current_vis(0);
+}
+vis_val_start = ( 'visible' '=' quote  @StartValue);
+vis_val_valuet = ( 'true'  @ FinishVisT );
+vis_val_valuef = ( 'false' @ FinishVisF );
+vis_val       = ( vis_val_start (vis_val_valuet|vis_val_valuef) quote );
+
+#user
+action FinishUser {
+     char *endptr;   // ignore
+//     cerr << "user " << currenttoken << endl;
+     world.set_current_user(currenttoken.c_str());
+}
+user_val_start = ( 'user' '=' quote  @StartValue);
+user_val_value = ( [^\']+  $AddChar );
+user_val_end   = ( quote  @ FinishUser );
+user_val       = ( user_val_start user_val_value user_val_end );
+
+#tag v
+action FinishV {
+     char *endptr;   // ignore
+     world.set_tag_val(currenttoken.c_str());
+}
+way_tag_val_start = ( 'ref' '=' quote  @StartValue);
+way_tag_val_value = ( digit+  $AddChar );
+way_tag_val_end   = ( quote  @ FinishV );
+way_tag_val       = ( way_tag_val_start way_tag_val_value way_tag_val_end );
+
+#tag k
+action FinishK {
+     char *endptr;   // ignore
+     world.set_tag_key(currenttoken.c_str());
+}
+way_tag_key_start = ( 'ref' '=' quote  @StartValue);
+way_tag_key_value = ( digit+  $AddChar );
+way_tag_key_end   = ( quote  @ FinishK );
+way_tag_key       = ( way_tag_key_start way_tag_key_value way_tag_key_end );
+
+# lat lon
+latlon_val_value_neg = (  '-' $AddChar );
+latlon_val_value_main = (  digit+ $AddChar );
+latlon_val_value_dec = ( ( '.' . digit+)  $AddChar );
+latlon_val_value = (  latlon_val_value_neg? latlon_val_value_main latlon_val_value_dec?  );
+
+#lat 
+action FinishLat {
+     char *endptr;   // ignore
+     cerr << "lat" << currenttoken << endl;
+     world.set_current_lat(strtod(currenttoken.c_str(), &endptr));
+}
+lat_val_start = ( 'lat' '=' quote  @StartValue);
+lat_val_end   = ( quote  @ FinishLat );
+lat_val       = ( lat_val_start latlon_val_value lat_val_end );
+
+#lon 
+action FinishLon {
+     char *endptr;   // ignore
+     cerr << "lon" << currenttoken << endl;
+     world.set_current_lon(strtod(currenttoken.c_str(), &endptr));
+}
+lon_val_start = ( 'lon' '=' quote  @StartValue);
+lon_val_end   = ( quote  @ FinishLon );
+lon_val       = ( lon_val_start latlon_val_value lon_val_end );
+
+#
 
 start_element = ( '<' tags @ RecordStart );
 attribute =(            
-	   id_val    |
+	   id_val     |
             cs_val    |
-            ver_val   | 
-            attrs_val 
+            ver_val    | 
+            uid_val   | 
+            ts_val    | 
+            vis_val   |         
+            user_val  |
+            lat_val  |
+            lon_val  |
+            way_tag_key |
+            way_tag_val |
+            attrs_val  
 	    @{ 
 //	       cerr <<"got attribute"  << endl;    
 	     }
 );
 
+
 attributes =(            
-	 (attribute space* )*
+	 (attribute space* )*  
 );
 
 starter = (
- 	  start_element  | 	    
-	  start_element space+ attributes space+ end_element | 
-	  start_element  attributes  | 	    
-          end_element
-           ) 
-	     @{ 
-//	       cerr <<"got something"  << endl;    
-	     };
+ 	  start_element     | 	    
+	  start_element space+ attributes space+ end_element  | 
+	  start_element  attributes   | 	    
+          end_element  
+          $err (some_err)
+           );
+           
 
+
+starter2 = (
+         space*  .starter+ space* |
+         space*  .starter space*
+       );
 
 #debug := (  space* . start_element . any +  $DebugChar );
 
-main := space* .starter @{ res = 1;      };  
+
+main := (
+     space* .starter |
+     starter2+  
+     )
+     @{ res = 1;      } ;  
 
 }%%
 
@@ -237,9 +347,13 @@ int scanner(OSMWorld & world,const char *s)
   string currenttoken;
   char *p= (char *)s;
   char *pe = (char *)s + strlen(s) +1 ;
+
+  char *eof = 0;
+     
   %% write init;
   %% write exec;
-  
+
+
   return res;
 }
 
