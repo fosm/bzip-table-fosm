@@ -9,8 +9,12 @@ bzip-table : bzip-table.o micro-bunzip.o
 bzip-table-fosm : bzip-table-fosm.o micro-bunzip.o
 bzip-table-linecount : bzip-table-linecount.o micro-bunzip.o
 
-bzip-table-lines-ragel : bzip-table-lines.o micro-bunzip.o process-fosm.o
-	g++ $(CFLAGS) bzip-table-lines.c micro-bunzip.c process-fosm.cpp -o $@
+
+indexer.c : indexer.rl
+	ragel -G1 indexer.rl
+
+bzip-table-lines-ragel : bzip-table-lines.c micro-bunzip.c process-fosm.cpp indexer.c  fileindexer.hpp
+	g++ $(CFLAGS) bzip-table-lines.c micro-bunzip.c process-fosm.cpp indexer.c -o $@
 
 seek-bunzip : seek-bunzip.o micro-bunzip.o
 
@@ -44,3 +48,6 @@ clean:
 
 format:
 	astyle --options=astyle.opts *.c *.h
+
+testfosm: bzip-table-lines-ragel
+	./bzip-table-lines-ragel /xapi/planet/earth-20120401130001.osm.bz2
