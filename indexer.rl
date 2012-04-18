@@ -51,29 +51,8 @@ el_member |
 el_tag
 );
 
-std_attr = (
-'uid' |
-'user' |
-'timestamp' |
-'visible' 
-);
-
-node_attr = (
-'lat' |
-'lon' |
-std_attr
-);
-
-way_attr = (
-std_attr
-);
-
 nd_attr = (
 'ref' 
-);
-
-relation_attr = (
-              std_attr
 );
 
 member_attr = (
@@ -102,10 +81,7 @@ coord = (
       );
 
 attrs = (
-      node_attr |
-      way_attr  |
       nd_attr  |
-      relation_attr  |
       member_attr 
       );
 
@@ -292,13 +268,13 @@ attribute =(
             cs_val    |
             ver_val    | 
             uid_val   | 
-            ts_val    | 
-            vis_val   |         
-            user_val  |
-            lat_val  |
-            lon_val  |
-            way_tag_key |
-            way_tag_val |
+#            ts_val    | 
+#            vis_val   |         
+#            user_val  |
+#            lat_val  |
+#            lon_val  |
+#            way_tag_key |
+#            way_tag_val |
             attrs_val  
 	    @{ 
 //	       cerr <<"got attribute"  << endl;    
