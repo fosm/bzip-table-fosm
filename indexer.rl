@@ -51,10 +51,6 @@ el_member |
 el_tag
 );
 
-nd_attr = (
-'ref' 
-);
-
 member_attr = (
 'type' |
 'ref'  |
@@ -80,15 +76,6 @@ coord = (
       /-?\d+/
       );
 
-attrs = (
-      nd_attr  |
-      member_attr 
-      );
-
-attrs_val = ( attrs '=' '\'' [^']+ '\'' |
-              attrs '=' '\"' [^"]+ '\"' 
-            );
-
 
 end_element  = ('/>'
                 |'</node>'
@@ -111,16 +98,18 @@ action ActEndAttribute {
            cout << "Attribute CS" << cs << endl;     
        }
 
-
 action RecordStart {
        // record the start of a type of object
+//       cout << "Record Start CS" << cs << endl;     
        world.record_start_position();
 }
+
 quote = ('\''|'\"' );
 
 action StartValue {
      currenttoken.clear();  
 }
+
 action AddChar {
      currenttoken.push_back(fc);
 }
@@ -140,6 +129,7 @@ action FinishID {
 //     cerr << "currenttoken" << currenttoken << endl;
      world.set_current_id(strtol(currenttoken.c_str(), &endptr, 10));
 }
+
 id_val_start = ( 'id' '=' quote  @StartValue);
 id_val_negvalue = (  '-'?  $AddChar2 );
 id_val_value = (  id_val_negvalue digit+  $AddChar );
@@ -219,20 +209,26 @@ action FinishV {
      char *endptr;   // ignore
      world.set_tag_val(currenttoken.c_str());
 }
-way_tag_val_start = ( 'ref' '=' quote  @StartValue);
-way_tag_val_value = ( digit+  $AddChar );
-way_tag_val_end   = ( quote  @ FinishV );
-way_tag_val       = ( way_tag_val_start way_tag_val_value way_tag_val_end );
 
 #tag k
 action FinishK {
      char *endptr;   // ignore
      world.set_tag_key(currenttoken.c_str());
 }
-way_tag_key_start = ( 'ref' '=' quote  @StartValue);
-way_tag_key_value = ( digit+  $AddChar );
-way_tag_key_end   = ( quote  @ FinishK );
-way_tag_key       = ( way_tag_key_start way_tag_key_value way_tag_key_end );
+
+action AddCharDebug {
+//       cerr <<  "debug"<< fc << endl;
+     currenttoken.push_back(fc);
+}
+
+
+add_string_value = ( [^\'\"]+  $AddChar );
+way_tag_val_end   = ( quote space*  @ FinishV );
+way_tag_val       = ( 'v' space* '=' quote add_string_value way_tag_val_end );
+
+way_tag_key_end   = ( quote space*  @ FinishK );
+way_tag_key       = ( 'k' space* '=' quote add_string_value way_tag_key_end );
+
 
 # lat lon
 latlon_val_value_neg = (  '-' $AddChar );
@@ -243,7 +239,7 @@ latlon_val_value = (  latlon_val_value_neg? latlon_val_value_main latlon_val_val
 #lat 
 action FinishLat {
      char *endptr;   // ignore
-     cerr << "lat" << currenttoken << endl;
+//     cerr << "lat" << currenttoken << endl;
      world.set_current_lat(strtod(currenttoken.c_str(), &endptr));
 }
 lat_val_start = ( 'lat' '=' quote  @StartValue);
@@ -253,7 +249,7 @@ lat_val       = ( lat_val_start latlon_val_value lat_val_end );
 #lon 
 action FinishLon {
      char *endptr;   // ignore
-     cerr << "lon" << currenttoken << endl;
+//     cerr << "lon" << currenttoken << endl;
      world.set_current_lon(strtod(currenttoken.c_str(), &endptr));
 }
 lon_val_start = ( 'lon' '=' quote  @StartValue);
@@ -264,19 +260,18 @@ lon_val       = ( lon_val_start latlon_val_value lon_val_end );
 
 start_element = ( '<' tags @ RecordStart );
 attribute =(            
-	   id_val     |
-            cs_val    |
-            ver_val    | 
-            uid_val   | 
-#            ts_val    | 
-#            vis_val   |         
-#            user_val  |
-#            lat_val  |
-#            lon_val  |
-#            way_tag_key |
-#            way_tag_val |
-            attrs_val  
-	    @{ 
+          cs_val    |
+          ver_val    | 
+          uid_val   | 
+          ts_val    | 
+          vis_val   |         
+#          user_val  | this hangs
+          lat_val  |
+          lon_val  |
+          way_tag_key |
+          way_tag_val |
+          id_val     
+    @{ 
 //	       cerr <<"got attribute"  << endl;    
 	     }
 );
@@ -288,25 +283,31 @@ attributes =(
 
 starter = (
  	  start_element     | 	    
+	  start_element space+ attributes  | 
 	  start_element space+ attributes space+ end_element  | 
-	  start_element  attributes   | 	    
-          end_element  
+	  start_element  attributes 
           $err (some_err)
            );
            
 
-
+xmlheader = ('<?xml version=\'1.0\' encoding=\'UTF-8\'?>');
+osmheader = (space* '<osm' . any+ );
 starter2 = (
          space*  .starter+ space* |
-         space*  .starter space*
+         space*  .starter space* 
        );
 
 #debug := (  space* . start_element . any +  $DebugChar );
 
 
 main := (
+     xmlheader |
+     osmheader |
      space* .starter |
-     starter2+  
+     starter2 + |
+     end_element  |
+     space*  end_element  |
+     space*  end_element  space*
      )
      @{ res = 1;      } ;  
 

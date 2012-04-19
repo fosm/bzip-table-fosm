@@ -13,6 +13,6 @@ void process_line(const char * buffer)
 
    if (ret == 10)
      {
-       cerr << "scanner returned ret " << ret << " for " << buffer << endl;
+       cerr << "scanner returned ret " << ret << " for \"" << buffer << "\""<< endl;
      }
 }

@@ -6,11 +6,8 @@ using namespace std;
 #include <string.h>
 #include <stdlib.h>
 
-
 template <class T> class DataFile {
-
 public:
-
   vector<T> data;
   ofstream  file;
   ofstream  txtfile;
@@ -70,8 +67,6 @@ public:
        
 };
 
-
-
 template <class A, class B>
 class Pair :
   public pair<A,B>
@@ -80,11 +75,92 @@ public:
   Pair(const long int &,long int &);
 };
 
+
+
 template<class T, class T2>
 std::ostream& operator<<(std::ostream &out, const Pair<T,T2> &rhs){
   out << rhs.first << "\t" << rhs.second;
   return out;
 }
+
+class TagFileEntry
+{
+public:
+  long int id;
+  string key;
+  string value;
+public:
+  TagFileEntry(const long int & id,string & k,string & v ):
+    id(id),
+    key(k),
+    value(v)  {      }
+
+  void write (ostream & os) {
+    os << id  << "\t" 
+        << key << "\t" 
+        << value  <<  endl;
+  }
+
+};
+
+
+class TagFile {
+public:
+  vector< TagFileEntry > data;
+  ofstream  txtfile;
+  string    filename;
+  long long total_count;
+  
+  TagFile(const char * filename)
+    :txtfile(string(string ("datafiles/") +  string(filename) + ".txt").c_str()),
+     total_count(0),
+     filename(filename)
+  {    
+  }           
+
+  ~TagFile()
+  {
+    int count =data.size();
+    write(count);
+    txtfile.close();
+    cout << "Closing file " << filename << ", wrote " << total_count << endl;
+  }
+
+  void flush()
+  {
+    write(data.size());
+  }
+
+  long long count()
+  {
+    return total_count;
+  }
+
+  void write(int count)
+  {
+    // append the data to the file
+    // file.write((const char*)&data[0], count * sizeof(T)); // skip the binary file now
+    typename vector< TagFileEntry >::iterator i;
+    for(i=data.begin();i!=data.end();i++)
+      {
+        i->write (txtfile);
+      }
+    data.clear(); // erase the data
+  }
+  
+  void push_back (long int pos, string & key, string & val){
+    total_count++;
+
+    TagFileEntry v (pos,key,val);
+
+    data.push_back(v);
+    int count =data.size();
+    if (count > 4096)   {
+      write(count);
+    }           
+  }
+       
+};
 
 
 class OSMWorld
@@ -101,10 +177,13 @@ public:
     t_nd,
     t_member
     
-  } current_element_type;
+  } current_element_type,parent_element_type;
+
   
   long int object_count;
   long int current_id;
+  long int parent_id;
+
   long int current_node;
   long int current_way;
   long int current_rel;
@@ -114,6 +193,8 @@ public:
   long int current_ver;
   bool     current_vis;
   string   current_timestamp;
+  string   current_tag_key;
+  string   current_tag_value;
   //  string   current_user;
   istream::pos_type marker; // position in the file
 
@@ -123,10 +204,11 @@ public:
   DataFile<double>   node_lon;
   DataFile<double>   node_lat;
   DataFile<long int> node_ids;
-  DataFile<int>     node_vis;
+  DataFile<int>      node_vis;
   DataFile<long int> node_uids;
   DataFile<long int> node_cs;
   DataFile<long int> node_ver;
+  TagFile            node_tags;
 
   DataFile<int>     way_vis;
   DataFile<long int> way_positions;
@@ -160,6 +242,7 @@ public:
     current_cs(-1),
     current_ver(-1),
     current_element_type(t_none),
+    parent_element_type(t_none),
 
     // positions
     node_positions("node_positions"),
@@ -201,9 +284,9 @@ public:
     node_vis("node_vis"),
     way_vis ("way_vis"),
     rel_vis ("rel_vis"),
-
     way_nodes ("way_nodes"),
 
+    node_tags("node_tags"), // node tags
     object_count(0)
   {
 
@@ -213,9 +296,14 @@ public:
     return current_element_type;
   }
 
+  element_type_t  get_parent_element_type (){
+    return parent_element_type;
+  }
+
   void  set_current_element_type_node (){
+    set_current_element_type_none ();
     check_counts_nodes();
-    current_element_type=t_node;
+    current_element_type=t_node;  
   }
 
   void  set_current_element_type_way (){
@@ -245,6 +333,17 @@ public:
   }
 
   void  set_current_element_type_none (){
+    switch (current_element_type )
+      {
+      case t_node :
+      case t_way:
+      case t_relation:
+        parent_element_type=current_element_type;
+        break;
+
+      default:
+        break;
+      };
     //cerr << "set_current_element_type_none" << endl;
     if (get_current_element_type()!=t_none) {
       if (current_cs==-1)   {
@@ -255,8 +354,6 @@ public:
       else   {
         //cerr << "cs is"<< current_cs << endl;
       }      
-
-
 
       if (current_ver==-1)   {
         //  cerr<< "get_current_element_type:" << get_current_element_type() << endl;
@@ -370,6 +467,34 @@ public:
   
   void set_current_id(long int id) {
 
+    //    cerr << "Setting current id  " << id << endl;
+
+    switch (current_element_type )
+      {
+      case t_node :
+      case t_way:
+      case t_relation:
+        parent_id=0;
+        break;
+
+      default:
+        // we only care about the parent type if we have a subtype
+        switch (parent_element_type )
+          {
+          case t_node :
+          case t_way:
+          case t_relation:
+            cerr << "Setting parent id to " << parent_id << endl;
+            parent_id=current_id;
+            break;            
+          default:
+            break;
+          };
+
+        break;
+      };
+
+
     current_id=id;
 
     // write to disk
@@ -378,7 +503,7 @@ public:
       node_ids.push_back(id);
       current_node=id;
       break;
-      
+     
     case    t_way:
       way_ids.push_back(id);
       current_way=id;
@@ -532,6 +657,48 @@ void set_current_ver(long int id) {
       break;
     };   
   }
+
+  const char * get_element_type_name(element_type_t t) {
+    const char * element_names[] = {
+      "none",
+      "node",
+      "way",
+      "relation",
+      "tag",
+      "nd",
+      "member",
+    };    
+    return element_names[t];
+  }
+
+  const char * get_current_element_type_name() {
+    return get_element_type_name(get_current_element_type());
+  }
+
+  const char * get_parent_element_type_name() {
+    return get_element_type_name(get_parent_element_type());
+  }
+
+
+  void set_tag_key(const char * s) {
+    /*
+      cout << "current id" << current_id << " current type:" 
+         << get_current_element_type_name()
+
+         << "parent id" << parent_id 
+         << " parent type: "
+         << get_parent_element_type_name()
+         << " tag key:" << s  << endl;
+    */
+    current_tag_key =s;
+  }
+
+  void set_tag_val(const char * s) {
+    //cout << "tag value:" << s  << endl;
+    current_tag_value =s;
+    node_tags.push_back(current_id,current_tag_key,current_tag_value);
+  }
+
 
   void record_start_position() {
     // now we close the previous object if it is not closed
