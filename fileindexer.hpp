@@ -57,7 +57,7 @@ public:
   
   void push_back (const T& v){
     total_count++;
-    cout << "pushing " << filename << " value "<< v << endl;
+    //    cout << "pushing " << filename << " value "<< v << endl;
     data.push_back(v);
     int count =data.size();
     if (count > 4096)    
@@ -182,6 +182,7 @@ public:
 
   struct tm current_tm;
 
+  string laststring;
   long int object_count;
   long int current_id;
   long int parent_id;
@@ -301,7 +302,7 @@ public:
 
   void  set_current_element_type_node (){
     set_current_element_type_none ();
-    check_counts_nodes();
+
     current_element_type=t_node;  
   }
 
@@ -350,7 +351,7 @@ public:
     marker =pos;
   }
 
-  void check_counts_nodes()
+  bool check_counts_nodes()
   {
     // make sure they all have the same count
     if (!(
@@ -374,15 +375,16 @@ public:
         cerr <<"uids :" << node_uids.count()     << endl;
         cerr << "vis :" << node_vis.count()      << endl;
 
-
         // write the files
         node_positions.flush();
         node_ids.flush();
         node_cs.flush();
         node_ver.flush();
 
-        exit (233);
+        //exit (233);
+        return false;
       }
+    return true;
   }
 
   void check_counts_ways()
@@ -664,7 +666,7 @@ void set_current_ver(long int id) {
       break;
 
     default:
-      cerr << "wrong type for cs " << cs << endl;
+      //      cerr << "wrong type for cs " << cs << endl;
       break;
     };   
   }
@@ -758,19 +760,25 @@ void set_current_ver(long int id) {
       };
     //cerr << "set_current_element_type_none" << endl;
     if (get_current_element_type()!=t_none) {
-        if (current_cs==-1)    { set_current_cs(-4);    }
-        if (current_uid ==-1)  { set_current_uid(-4);   }
-        if (current_ver==-1)   { set_current_ver(-4);   }
-        if (current_vis==-1)   { set_current_vis(1);   } // default yes visible
-        
-      current_element_type=t_none;
+             current_element_type=t_none;
     }
-
+    
     object_count++;
   }
 
   void finish_current_object()
   {
+  }
+  
+  // 
+  void scannerstatus(int stat, const char * buffer)
+  {
+    if (current_cs==-1)    { set_current_cs(-4);    }
+    if (current_uid ==-1)  { set_current_uid(-4);   }
+    if (current_ver==-1)   { set_current_ver(-4);   }
+    if (current_vis==-1)   { set_current_vis(1);   } // default yes visible
+    
+    // reset the data
     set_current_element_type_none ();
     // check default values
     current_cs=-1;// set the current value back to 0
@@ -779,6 +787,14 @@ void set_current_ver(long int id) {
     current_vis=-1;
     //current_id=0;// set the current value back to 0
 
+    if (!check_counts_nodes())
+      {
+        cerr << "last   \"" << laststring << "\"" << endl;
+        cerr << "buffer \"" << buffer << "\""<< endl;
+        exit (123);
+      }
+
+    laststring =buffer;
   }
 
 };
