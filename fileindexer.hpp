@@ -5,6 +5,7 @@ using namespace std;
 #include <string>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 
 template <class T> class DataFile {
 public:
@@ -56,7 +57,7 @@ public:
   
   void push_back (const T& v){
     total_count++;
-    //    cout << "pushing " << v << endl;
+    cout << "pushing " << filename << " value "<< v << endl;
     data.push_back(v);
     int count =data.size();
     if (count > 4096)    
@@ -179,7 +180,8 @@ public:
     
   } current_element_type,parent_element_type;
 
-  
+  struct tm current_tm;
+
   long int object_count;
   long int current_id;
   long int parent_id;
@@ -187,20 +189,15 @@ public:
   long int current_node;
   long int current_way;
   long int current_rel;
-
   long int current_uid;
   long int current_cs;
   long int current_ver;
-  bool     current_vis;
-  string   current_timestamp;
+  int      current_vis;
+  time_t   current_timestamp;
   string   current_tag_key;
   string   current_tag_value;
-  //  string   current_user;
   istream::pos_type marker; // position in the file
-
   DataFile<long int> node_positions;
-
-  //  DataFile<string>   node_user;
   DataFile<double>   node_lon;
   DataFile<double>   node_lat;
   DataFile<long int> node_ids;
@@ -230,9 +227,9 @@ public:
   DataFile<long int> rel_ver;
 
   // these are all
-  DataFile<long>   way_timestamp;
-  DataFile<long>   rel_timestamp; 
-  DataFile<long>   node_timestamp;
+  DataFile<time_t>   way_timestamp;
+  DataFile<time_t>   rel_timestamp; 
+  DataFile<time_t>   node_timestamp;
 
   // way nodes are pairs!
   DataFile< Pair<long int,long int> >  way_nodes;
@@ -241,6 +238,8 @@ public:
     current_id(0),
     current_cs(-1),
     current_ver(-1),
+    current_uid(-1),
+    current_vis(-1),
     current_element_type(t_none),
     parent_element_type(t_none),
 
@@ -332,48 +331,6 @@ public:
     current_element_type=t_member;
   }
 
-  void  set_current_element_type_none (){
-    switch (current_element_type )
-      {
-      case t_node :
-      case t_way:
-      case t_relation:
-        parent_element_type=current_element_type;
-        break;
-
-      default:
-        break;
-      };
-    //cerr << "set_current_element_type_none" << endl;
-    if (get_current_element_type()!=t_none) {
-      if (current_cs==-1)   {
-        //  cerr<< "get_current_element_type:" << get_current_element_type() << endl;
-        //cerr<< "current_id:" << current_id << endl;
-        set_current_cs(-4); // was not set by the user
-      }
-      else   {
-        //cerr << "cs is"<< current_cs << endl;
-      }      
-
-      if (current_ver==-1)   {
-        //  cerr<< "get_current_element_type:" << get_current_element_type() << endl;
-        //cerr<< "current_id:" << current_id << endl;
-        set_current_ver(-4); // was not set by the user
-      }
-      else   {
-        //        cerr << "ver is"<< current_ver << endl;
-      }      
-
-      current_element_type=t_none;
-    }
-    else {
-      if (object_count)
-        {
-          //cerr << "element type was null" << endl;
-        }
-    }
-    object_count++;
-  }
 
   void add_node_position(){
     node_positions.push_back(marker);
@@ -397,19 +354,26 @@ public:
   {
     // make sure they all have the same count
     if (!(
-          (node_ids.count() == node_positions.count())
-          &&
-          (node_ids.count() ==  node_cs.count())
-          &&
-          (node_ids.count() ==  node_ver.count())
+             (node_ids.count() ==  node_positions.count())
+          && (node_ids.count() ==  node_cs.count())
+          && (node_ids.count() ==  node_ver.count())
+          && (node_ids.count() ==  node_lat.count())
+          && (node_ids.count() ==  node_lon.count())
+          && (node_ids.count() ==  node_uids.count())
+          && (node_ids.count() ==  node_vis.count())
           ))
       {
         cerr << "current id " << current_id << endl;
         cerr << "node counts are not aligned"    << endl;
-        cerr << "pos:" << node_positions.count() << endl;
-        cerr << "ids: " << node_ids.count()      << endl;
-        cerr << "cs :" << node_cs.count()        << endl;
+        cerr << "ids :" << node_ids.count()      << endl;
+        cerr << "pos :" << node_positions.count()<< endl;
+        cerr << "cs  :" << node_cs.count()       << endl;
         cerr << "ver :" << node_ver.count()      << endl;
+        cerr << "lat :" << node_lat.count()      << endl;
+        cerr << "lon :" << node_lon.count()      << endl;
+        cerr <<"uids :" << node_uids.count()     << endl;
+        cerr << "vis :" << node_vis.count()      << endl;
+
 
         // write the files
         node_positions.flush();
@@ -466,6 +430,11 @@ public:
 
   
   void set_current_id(long int id) {
+
+    if (id == 0) {
+      cerr << "there is no id  "  << endl;
+      return ; // 
+    }
 
     //    cerr << "Setting current id  " << id << endl;
 
@@ -596,8 +565,50 @@ public:
     return;
   }
 
-  void set_current_ts(string timestamp) {
-    long ts=0;
+  void set_current_ts_year(int year) {
+    //    cerr << "year " << year << endl;
+    current_tm.tm_year= year-1900;
+
+  }
+
+  void set_current_ts_month(int month) {
+    //    cerr << "month " << month << endl;
+    current_tm.tm_mon= month-1;
+  }
+
+  void set_current_ts_day(int day) {
+    //    cerr << "day " << day << endl;
+    current_tm.tm_mday= day;
+  }
+
+  void set_current_ts_hour(int hour) {
+    //    cerr << "hour " << hour << endl;
+    current_tm.tm_hour= hour;
+  }
+
+  void set_current_ts_minute(int min) {
+    //    cerr << "min " << min << endl;
+    current_tm.tm_min=min;
+  }
+
+  void set_current_ts_second(int sec) {
+
+    current_tm.tm_sec=sec;
+
+    // check this before
+    /*
+    cerr << "year "     <<   current_tm.tm_year << endl;
+    cerr << "month "    <<   current_tm.tm_mon << endl;
+    cerr << "day "      <<   current_tm.tm_mday << endl;
+    cerr << "hour "     <<   current_tm.tm_hour << endl;
+    cerr << "min "      <<   current_tm.tm_min  << endl;    
+    cerr << "sec "      <<   current_tm.tm_sec  << endl;
+    */
+    time_t ts= mktime ( &current_tm );
+    set_current_ts(ts);
+  }
+
+  void set_current_ts(time_t ts) {
     current_timestamp=ts;
     switch (get_current_element_type()) {
     case t_node:
@@ -694,8 +705,13 @@ void set_current_ver(long int id) {
   }
 
   void set_tag_val(const char * s) {
-    //cout << "tag value:" << s  << endl;
+
     current_tag_value =s;
+    if(current_id ==0)   {
+      cout << "no current id! bailing" << endl;
+      exit(0); //
+    }
+
     node_tags.push_back(current_id,current_tag_key,current_tag_value);
   }
 
@@ -728,13 +744,40 @@ void set_current_ver(long int id) {
     };
   }
 
+  void  set_current_element_type_none (){
+    switch (current_element_type )
+      {
+      case t_node :
+      case t_way:
+      case t_relation:
+        parent_element_type=current_element_type;
+        break;
+
+      default:
+        break;
+      };
+    //cerr << "set_current_element_type_none" << endl;
+    if (get_current_element_type()!=t_none) {
+        if (current_cs==-1)    { set_current_cs(-4);    }
+        if (current_uid ==-1)  { set_current_uid(-4);   }
+        if (current_ver==-1)   { set_current_ver(-4);   }
+        if (current_vis==-1)   { set_current_vis(1);   } // default yes visible
+        
+      current_element_type=t_none;
+    }
+
+    object_count++;
+  }
+
   void finish_current_object()
   {
     set_current_element_type_none ();
     // check default values
     current_cs=-1;// set the current value back to 0
     current_ver=-1;// set the current value back to 0
-    current_id=0;// set the current value back to 0
+    current_uid=-1;
+    current_vis=-1;
+    //current_id=0;// set the current value back to 0
 
   }
 

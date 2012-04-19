@@ -11,8 +11,8 @@ void process_line(const char * buffer)
 //  cerr << "BEGIN " << buffer << "ENDL"<< endl;
    int ret= scanner(world,buffer);
 
-   if (ret == 10)
-     {
-       cerr << "scanner returned ret " << ret << " for \"" << buffer << "\""<< endl;
-     }
+   //   if (ret == 10)
+   {
+     cerr << "scanner returned ret " << ret << " for \"" << buffer << "\""<< endl;
+   }
 }

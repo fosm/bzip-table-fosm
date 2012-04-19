@@ -171,15 +171,67 @@ uid_val_end   = ( quote  @ FinishUid );
 uid_val       = ( uid_val_start uid_val_value uid_val_end );
 
 #timestamp
-action FinishTs {
-     char *endptr;   // ignore
-//     cerr << "timestamp " << currenttoken << endl;
-     world.set_current_ts(currenttoken.c_str());
+action FinishTsYear {
+     char *endptr;   // ignore  
+     int year=strtol(currenttoken.c_str(), &endptr, 10);
+     currenttoken="";
+     world.set_current_ts_year(year);
 }
+
+action FinishTsMonth {
+     char *endptr;   // ignore  
+     int month=strtol(currenttoken.c_str(), &endptr, 10);
+     currenttoken="";                       
+     world.set_current_ts_month (month);
+}
+
+action FinishTsDay {
+     char *endptr;   // ignore  
+     int day=strtol(currenttoken.c_str(), &endptr, 10);
+     currenttoken="";
+     world.set_current_ts_day (day);
+}
+
+action FinishTsHour {
+     char *endptr;   // ignore  
+     int hour=strtol(currenttoken.c_str(), &endptr, 10);
+     currenttoken="";
+     world.set_current_ts_hour (hour);
+}
+
+action FinishTsMinute {
+     char *endptr;   // ignore  
+     int minute=strtol(currenttoken.c_str(), &endptr, 10);
+     currenttoken="";
+     world.set_current_ts_minute (minute);
+}
+
+action FinishTsSecond {
+     char *endptr;   // ignore  
+     int second=strtol(currenttoken.c_str(), &endptr, 10);
+     currenttoken="";
+     world.set_current_ts_second (second);
+}
+
+#timestamp="2011-05-16T15:03:45Z"/>"
+
 ts_val_start = ( 'timestamp' '=' quote  @StartValue);
-ts_val_value = ( [0-9TZ:\-]+  $AddChar );
-ts_val_end   = ( quote  @ FinishTs );
-ts_val       = ( ts_val_start ts_val_value ts_val_end );
+ts_val_value = ( [0-9]+  $AddChar );
+ts_val_year_end   = ( '-'  @ FinishTsYear );
+ts_val_month_end  = ( '-'  @ FinishTsMonth );
+ts_val_day_end    = ( 'T'  @ FinishTsDay );
+ts_val_hour_end   = ( ':'  @ FinishTsHour );
+ts_val_minute_end = ( ':'  @ FinishTsMinute );
+ts_val_sec_end    = ( 'Z'  @ FinishTsSecond );
+ts_val_end   = ( quote  @ FinishTsYear );
+ts_val       = ( ts_val_start 
+                 ts_val_value ts_val_year_end 
+                 ts_val_value ts_val_month_end
+                 ts_val_value ts_val_day_end                 
+                 ts_val_value ts_val_hour_end                 
+                 ts_val_value ts_val_minute_end                 
+                 ts_val_value ts_val_sec_end                 
+);
 
 #visible
 action FinishVisT {
@@ -200,7 +252,7 @@ action FinishUser {
      world.set_current_user(currenttoken.c_str());
 }
 user_val_start = ( 'user' '=' quote  @StartValue);
-user_val_value = ( [^\']+  $AddChar );
+user_val_value = ( [^\"\']+  $AddChar );
 user_val_end   = ( quote  @ FinishUser );
 user_val       = ( user_val_start user_val_value user_val_end );
 
@@ -214,6 +266,7 @@ action FinishV {
 action FinishK {
      char *endptr;   // ignore
      world.set_tag_key(currenttoken.c_str());
+     currenttoken="";
 }
 
 action AddCharDebug {
@@ -265,7 +318,7 @@ attribute =(
           uid_val   | 
           ts_val    | 
           vis_val   |         
-#          user_val  | this hangs
+          user_val  | 
           lat_val  |
           lon_val  |
           way_tag_key |
