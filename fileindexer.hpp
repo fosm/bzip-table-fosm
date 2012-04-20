@@ -6,7 +6,7 @@ using namespace std;
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
-
+const int blocksize=1024;
 template <class T> class DataFile {
 public:
   vector<T> data;
@@ -60,7 +60,7 @@ public:
     //    cout << "pushing " << filename << " value "<< v << endl;
     data.push_back(v);
     int count =data.size();
-    if (count > 4096)    
+    if (count > blocksize)    
       {
         write(count);
       }           
@@ -73,10 +73,12 @@ class Pair :
   public pair<A,B>
 {
 public:
-  Pair(const long int &,long int &);
+  Pair(const A & a,B & b)
+    : pair<A,B>(a,b)
+  {
+
+  }
 };
-
-
 
 template<class T, class T2>
 std::ostream& operator<<(std::ostream &out, const Pair<T,T2> &rhs){
@@ -95,7 +97,6 @@ public:
     id(id),
     key(k),
     value(v)  {      }
-
   void write (ostream & os) {
     os << id  << "\t" 
         << key << "\t" 
@@ -151,12 +152,91 @@ public:
   
   void push_back (long int pos, string & key, string & val){
     total_count++;
-
     TagFileEntry v (pos,key,val);
-
     data.push_back(v);
     int count =data.size();
-    if (count > 4096)   {
+    if (count > blocksize)   {
+      write(count);
+    }           
+  }
+       
+};
+
+//class WayNodeFile
+class WayNodeFileEntry
+{
+public:
+  long int way;
+  long int node;
+public:
+  WayNodeFileEntry(const long int & way,const long int & node):
+    way(way),
+    node(node)
+  {      }
+
+  void write (ostream & os) {
+    os << way  << "\t" 
+       << node   << endl;
+  }
+
+};
+
+
+class WayNodeFile {
+public:
+  vector< WayNodeFileEntry > data;
+  ofstream  txtfile;
+  ofstream  file;
+  string    filename;
+
+  long long total_count;
+  
+  WayNodeFile(const char * filename)
+    :txtfile(string(string ("datafiles/") +  string(filename) + ".txt").c_str()),
+     file(string(string ("datafiles/") + string(filename) + ".bin").c_str()),
+     total_count(0),
+     filename(filename)
+  {    
+  }           
+
+  ~WayNodeFile()
+  {
+    int count =data.size();
+    write(count);
+    data.clear();
+    txtfile.close();
+    cout << "Closing file " << filename << ", wrote " << total_count << endl;
+  }
+
+  void flush()
+  {
+    write(data.size());
+  }
+
+  long long count()
+  {
+    return total_count;
+  }
+
+  void write(int count)
+  {
+    // append the data to the file
+    file.write((const char*)&data[0], count * sizeof(WayNodeFileEntry)); // skip the binary file now
+    typename vector< WayNodeFileEntry >::iterator i;
+    for(i=data.begin();i!=data.end();i++)
+      {
+        i->write (txtfile);
+      }
+    cout << "wrote " << total_count << endl;
+    data.clear(); // erase the data
+  }
+  
+  void push_back (long int & way,long int & node ){
+    total_count++;
+    WayNodeFileEntry v (way,node);
+    data.push_back(v);
+    int count =data.size();
+    if (count > blocksize)   {
       write(count);
     }           
   }
@@ -172,21 +252,17 @@ public:
     t_node,
     t_way,
     t_relation,
-
     ///subobjects
     t_tag,
     t_nd,
-    t_member
-    
+    t_member   
   } current_element_type,parent_element_type;
 
   struct tm current_tm;
-
   string laststring;
   long int object_count;
   long int current_id;
   long int parent_id;
-
   long int current_node;
   long int current_way;
   long int current_rel;
@@ -198,6 +274,7 @@ public:
   string   current_tag_key;
   string   current_tag_value;
   istream::pos_type marker; // position in the file
+
   DataFile<long int> node_positions;
   DataFile<double>   node_lon;
   DataFile<double>   node_lat;
@@ -207,34 +284,27 @@ public:
   DataFile<long int> node_cs;
   DataFile<long int> node_ver;
   TagFile            node_tags;
+  DataFile<time_t>   node_timestamp;
 
   DataFile<int>     way_vis;
   DataFile<long int> way_positions;
-
-  //  DataFile<string>   way_user;
   DataFile<long int> way_ids;
   DataFile<long int> way_uids;
   DataFile<long int> way_cs;
+  DataFile<time_t>   way_timestamp;
   DataFile<long int> way_ver;
-
+  WayNodeFile  way_nodes;
+  
   DataFile<int>     rel_vis;
   DataFile<long int> rel_positions;
-
-  
-  //  DataFile<string>   rel_user;
   DataFile<long int> rel_ids;
   DataFile<long int> rel_uids;
   DataFile<long int> rel_cs;
   DataFile<long int> rel_ver;
-
-  // these are all
-  DataFile<time_t>   way_timestamp;
   DataFile<time_t>   rel_timestamp; 
-  DataFile<time_t>   node_timestamp;
+  
 
-  // way nodes are pairs!
-  DataFile< Pair<long int,long int> >  way_nodes;
-
+  
   OSMWorld () :
     current_id(0),
     current_cs(-1),
@@ -549,17 +619,17 @@ public:
 
   void set_way_node_ref(long int ref) {
     
-    switch (get_current_element_type()) {
-    
-    case t_node:
 
-      const long int cway=current_way;
-      Pair<long int,long int> apair(cway,ref);
-      way_nodes.push_back(apair);
+    switch (get_parent_element_type()) {
+    
+    case t_way:
+      way_nodes.push_back(current_way,ref);
 
       break;     
-
-
+      
+    default:
+      cerr << "bad type:" << get_parent_element_type() << endl;
+      break;
     };
   }
 
@@ -766,13 +836,17 @@ void set_current_ver(long int id) {
     object_count++;
   }
 
-  void finish_current_object()
-  {
-  }
+  bool debug_lines() { return false; }
   
   // 
   void scannerstatus(int stat, const char * buffer)
   {
+    if (debug_lines())
+      {
+        cerr << "stat:"<< stat 
+             << "buffer \"" << buffer 
+             << "\""<< endl;
+      }
     if (current_cs==-1)    { set_current_cs(-4);    }
     if (current_uid ==-1)  { set_current_uid(-4);   }
     if (current_ver==-1)   { set_current_ver(-4);   }

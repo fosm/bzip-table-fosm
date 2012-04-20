@@ -10,10 +10,10 @@ void process_line(const char * buffer)
 {
 //  cerr << "BEGIN " << buffer << "ENDL"<< endl;
    int ret= scanner(world,buffer);
-
-   //   if (ret == 10)
+   
+   if (ret != 1)
    {
-     //     cerr << "scanner returned ret " << ret << " for \"" << buffer << "\""<< endl;
+     cerr << "scanner returned ret " << ret << " for \"" << buffer << "\""<< endl;
    }
    world.scannerstatus(ret,buffer);
 }

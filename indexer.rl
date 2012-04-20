@@ -2,6 +2,16 @@
 %%{
 machine osmkeys;
 
+action DebugChar {
+       cerr << fc << endl;
+}
+
+action AddCharDebug {
+     cerr <<  "debug"<< fc << endl;
+     currenttoken.push_back(fc);
+}
+
+
 action some_err {
        cerr <<"an error has occured"  << endl;            
        res = 10;
@@ -51,31 +61,16 @@ el_member |
 el_tag
 );
 
-member_attr = (
-'type' |
-'ref'  |
-'role' 
-);
-
-
-
-tag_k_names = (
-'natural' |
-'highway' |
-'name'  |
-'landuse'  |
-'ref'  |
-'type'  |
-'place'  |
-'amenity'
-
-);
+#member_attr = (
+#'type' |
+#'ref'  |
+#'role' 
+#);
 
 coord = (
       /-?\d+\.\d+/ |
       /-?\d+/
       );
-
 
 end_element  = ('/>'
                 |'</node>'
@@ -83,8 +78,7 @@ end_element  = ('/>'
                 |'</relation>'
                 ) @{
 //		cerr << "end element " << endl;
-		world.finish_current_object();
-
+// removed this...		world.finish_current_object();
                 };
 
 action ActEnterAttribute {
@@ -119,9 +113,6 @@ action AddChar2 {
      currenttoken.push_back(fc);
 }
 
-action DebugChar {
-       cerr << fc << endl;
-}
 
 # ID Field
 action FinishID {
@@ -269,16 +260,11 @@ action FinishK {
      currenttoken="";
 }
 
-action AddCharDebug {
-//       cerr <<  "debug"<< fc << endl;
-     currenttoken.push_back(fc);
-}
 
-
+## way tag
 add_string_value = ( [^\'\"]+  $AddChar );
 way_tag_val_end   = ( quote space*  @ FinishV );
 way_tag_val       = ( 'v' space* '=' quote add_string_value way_tag_val_end );
-
 way_tag_key_end   = ( quote space*  @ FinishK );
 way_tag_key       = ( 'k' space* '=' quote add_string_value way_tag_key_end );
 
@@ -309,7 +295,18 @@ lon_val_start = ( 'lon' '=' quote  @StartValue);
 lon_val_end   = ( quote  @ FinishLon );
 lon_val       = ( lon_val_start latlon_val_value lon_val_end );
 
-#
+
+#way nd ref
+action FinishNdRef {
+     char *endptr;   // ignore
+//     cerr << "way node ref " << currenttoken << endl;
+     world.set_way_node_ref(strtol(currenttoken.c_str(), &endptr,10));
+     currenttoken ="";
+}
+way_node_start = ( 'ref' '=' quote  @StartValue);
+way_node_end   = ( quote  @ FinishNdRef );
+way_node_value_main = (  digit+ $AddChar );
+way_node_ref       = ( way_node_start way_node_value_main way_node_end           $err (some_err) );
 
 start_element = ( '<' tags @ RecordStart );
 attribute =(            
@@ -323,12 +320,12 @@ attribute =(
           lon_val  |
           way_tag_key |
           way_tag_val |
+          way_node_ref |
           id_val     
     @{ 
 //	       cerr <<"got attribute"  << endl;    
 	     }
 );
-
 
 attributes =(            
 	 (attribute space* )*  
@@ -358,6 +355,8 @@ main := (
      osmheader |
      space* .starter |
      starter2 + |
+     # for 
+     space*  starter end_element | 
      end_element  |
      space*  end_element  |
      space*  end_element  space*

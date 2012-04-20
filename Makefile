@@ -1,20 +1,30 @@
 CC = gcc -m64
 CFLAGS = # -O0 -g -DTESTING
 
-PROGS=bzip-table seek-bunzip bzip-table-fosm bzip-table-linecount bzip-table-lines-ragel
+PROGS=bzip-table seek-bunzip bzip-table-fosm bzip-table-linecount bzip-table-lines-ragel bziptablelinesragel2
 
 all: $(PROGS)
 
-bzip-table : bzip-table.o micro-bunzip.o
-bzip-table-fosm : bzip-table-fosm.o micro-bunzip.o
-bzip-table-linecount : bzip-table-linecount.o micro-bunzip.o
+bzip-table : bzip-table.c micro-bunzip.c
+	g++ $(CFLAGS) bzip-table.c micro-bunzip.c -o $@
 
+bzip-table2 : bzip-table2.c micro-bunzip.c
+	g++ $(CFLAGS) bzip-table2.c micro-bunzip.c -o $@
+
+bzip-table-fosm : bzip-table-fosm.c micro-bunzip.c
+	g++ $(CFLAGS) bzip-table-fosm.c micro-bunzip.c -o $@
+
+bzip-table-linecount : bzip-table-linecount.c micro-bunzip.c
+	g++ $(CFLAGS) bzip-table-linecount.c micro-bunzip.c -o $@
 
 indexer.c : indexer.rl
 	ragel -G1 indexer.rl
 
 bzip-table-lines-ragel : bzip-table-lines.c micro-bunzip.c process-fosm.cpp indexer.c  fileindexer.hpp
 	g++ $(CFLAGS) bzip-table-lines.c micro-bunzip.c process-fosm.cpp indexer.c -o $@
+
+bziptablelinesragel2 : bzip-table-lines2.c micro-bunzip.c process-fosm.cpp indexer.c  fileindexer.hpp
+	g++ $(CFLAGS) bzip-table-lines2.c micro-bunzip.c process-fosm.cpp indexer.c -lbz2 -o $@ 
 
 seek-bunzip : seek-bunzip.o micro-bunzip.o
 
@@ -52,5 +62,5 @@ format:
 testfosm: bzip-table-lines-ragel
 	./bzip-table-lines-ragel /xapi/planet/earth-20120401130001.osm.bz2
 
-testgeofabrik: bzip-table-lines-ragel
-	./bzip-table-lines-ragel  ~/OSM-API-Proxy/data/kosovo.osm.bz2 
+testgeofabrik: bziptablelinesragel2 
+	./bziptablelinesragel2   ~/OSM-API-Proxy/data/kosovo.osm.bz2  > test.out
