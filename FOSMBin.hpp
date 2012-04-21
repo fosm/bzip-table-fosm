@@ -33,9 +33,9 @@ public:
   int read_way_nodes() {
 
     FILE * pFile;
-    pFile = fopen ( "waynodes.bin" , "r" );
+    pFile = fopen ( "datafile/way_nodes.bin" , "r" );
     if (!pFile)   {
-      printf("file could not be opened\n");
+      printf("file datafile/waynodes.bin could not be opened\n");
       return 2;
     }
     int waycount;
@@ -85,7 +85,7 @@ public:
     FILE * pFile;
     pFile = fopen ( filename , "r" );
     if (!pFile)   {
-      printf("file could not be opened\n");
+      printf("file \'%s\' could not be opened\n",filename);
       return 2;
     }
     int count;
@@ -151,10 +151,10 @@ public:
         reverse_components();
   }
 
-  void read_node_lat(){ read_data<double> ("nodelat.bin"   , node_lat); }
-  void read_node_lon(){ read_data<double> ("nodelon.bin"   , node_lon); }
-  void read_node_id() { read_data<int>    ("nodeindex.bin" , node_id);  }
-  void read_way_id()  { read_data<int>    ("wayindex.bin"  , way_id);   }
+  void read_node_lat(){ read_data<double> ("datafiles/node_lat.bin"   , node_lat); }
+  void read_node_lon(){ read_data<double> ("datafiles/node_lon.bin"   , node_lon); }
+  void read_node_id() { read_data<int>    ("datafiles/node_ids.bin" , node_id);  }
+  void read_way_id()  { read_data<int>    ("datafiles/way_ids.bin"  , way_id);   }
 
 
 };
