@@ -651,15 +651,15 @@ void set_current_ver(long int id) {
 
   void finish_current_object()
   {
-    //    if (debug_lines())
+    if (debug_lines())
       {
         cerr << "finish current object" << endl;
       }
-    if (current_cs==-1)    { cerr << "adding cs" << endl; set_current_cs(-4);    }
-    if (current_uid ==-1)  { cerr << "adding uid" << endl; set_current_uid(-4);   }
-    if (current_ver==-1)   { cerr << "adding ver" << endl; set_current_ver(-4);   }
-    if (current_timestamp==-1)   { cerr << "adding ts" << endl; set_current_ts(0);   }
-    if (current_vis==-1)   { cerr << "adding vis" << endl; set_current_vis(1);   } // default yes visible
+    if (current_cs==-1)    { if (debug_lines()) cerr << "adding cs" << endl; set_current_cs(-4);    }
+    if (current_uid ==-1)  { if (debug_lines()) cerr << "adding uid" << endl; set_current_uid(-4);   }
+    if (current_ver==-1)   { if (debug_lines()) cerr << "adding ver" << endl; set_current_ver(-4);   }
+    if (current_timestamp==-1)   { if (debug_lines()) cerr << "adding ts" << endl; set_current_ts(0);   }
+    if (current_vis==-1)   { if (debug_lines()) cerr << "adding vis" << endl; set_current_vis(1);   } // default yes visible
     
     // reset the data
     set_current_element_type_none ();

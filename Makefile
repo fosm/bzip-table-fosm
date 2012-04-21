@@ -5,7 +5,7 @@ PROGS=bzip-table seek-bunzip bzip-table-fosm bzip-table-linecount ragelosm
 
 HEADERS= datafile.hpp tagfile.hpp wayfile.hpp fileindexer.hpp fileindexer.hpp ifileindexer.hpp
 
-all: $(PROGS)
+all: $(PROGS) all2
 
 bzip-table : bzip-table.c micro-bunzip.c
 	g++ $(CFLAGS) bzip-table.c micro-bunzip.c -o $@
@@ -91,3 +91,41 @@ testoffenbach: ragelosm
 viz : indexer.rl
 	ragel -V indexer.rl > indexer.dot
 	dotty indexer.dot
+
+#
+all2 : strgcomp componentsreadbin readalldata conncomp waysreadbin hierachy metisexport metisexport2
+	echo done
+#bgl 
+#
+bgl :
+	mpiCC -o bgl  bgl.cpp -lboost_system -lboost_mpi 
+
+strgcomp : strongcomponents.cpp
+	mpiCC -g -o strgcomp  strongcomponents.cpp -lboost_system  -lboost_graph
+#-save-temps
+metisexport : metisexport.cpp
+	g++ -g -o metisexport  metisexport.cpp 
+
+metisexport2 : metisexport2.cpp
+	g++ -g -o metisexport2  metisexport2.cpp -lboost_system  -lboost_graph
+
+conncomp : conncomponents.cpp
+	mpiCC -g -o conncomp  conncomponents.cpp -lboost_system  -lboost_graph
+
+componentsreadbin : componentsreadbin.c
+	gcc -o componentsreadbin componentsreadbin.c
+# use this to create a pack file perl process_components.pl
+
+readalldata : readalldata.cpp FOSMBin.hpp
+	g++ -g -o readalldata readalldata.cpp
+
+waysreadbin : waysreadbin.c 
+	g++ -o waysreadbin waysreadbin.c
+
+dumplatlon : dumplatlon.cpp FOSMBin.hpp
+	g++ -o dumplatlon dumplatlon.cpp
+
+hierachy : hierarchybuilder.cpp FOSMBin.hpp
+	g++ -o hierachy hierarchybuilder.cpp
+
+
