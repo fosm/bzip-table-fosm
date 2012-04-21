@@ -48,7 +48,8 @@ public:
   
   void push_back (const T& v){
     total_count++;
-    cout << "pushing " << filename << " value "<< v << endl;
+    //    cout << "pushing " << filename << " value "<< v << endl; 
+
     data.push_back(v);
     int count =data.size();
     if (count > blocksize)    

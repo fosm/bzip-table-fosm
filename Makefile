@@ -1,7 +1,7 @@
 CC = gcc 
 CFLAGS = # -O0 -g -DTESTING
 
-PROGS=bzip-table seek-bunzip bzip-table-fosm bzip-table-linecount bzip-table-lines-ragel bziptablelinesragel2
+PROGS=bzip-table seek-bunzip bzip-table-fosm bzip-table-linecount ragelosm
 
 HEADERS= datafile.hpp tagfile.hpp wayfile.hpp fileindexer.hpp fileindexer.hpp ifileindexer.hpp
 
@@ -19,7 +19,7 @@ bzip-table-fosm : bzip-table-fosm.c micro-bunzip.c
 bzip-table-linecount : bzip-table-linecount.c micro-bunzip.c
 	g++ $(CFLAGS) bzip-table-linecount.c micro-bunzip.c -o $@
 
-indexer.o : ifileindexer.hpp indexer.c ifileindexer_b.o
+indexer.o : ifileindexer.hpp indexer.c ifileindexer_b.o 
 	g++ $(CFLAGS) -c indexer.c -o $@ 
 
 indexer.c : indexer.rl
@@ -28,13 +28,19 @@ indexer.c : indexer.rl
 ifileindexer.hpp : ifileindexer.tt
 	tpage $< > $@ 	
 
-ifileindexer_b.cpp : ifileindexer_b.tt
+ifileindexer_b.cpp : ifileindexer_b.tt $(HEADERS)
 	tpage $< > $@ 	
 
 %.o : %.c 
 	g++ $(CFLAGS) -c $< -o $@ 	
 
-bziptablelinesragel2 : bzip-table-lines2.o process-fosm.o indexer.o ifileindexer_b.o $(HEADERS)
+ifileindexer_b.o : ifileindexer_b.cpp $(HEADERS)
+	g++ $(CFLAGS) -c $< -o $@ 	
+
+ragelosm : bzip-table-lines2.o process-fosm.o indexer.o ifileindexer_b.o $(HEADERS)
+	g++ $(CFLAGS)  bzip-table-lines2.o process-fosm.o indexer.o ifileindexer_b.o -lbz2 -o 
+
+ragelosm : bzip-table-lines2.o process-fosm.o indexer.o ifileindexer_b.o $(HEADERS)
 	g++ $(CFLAGS)  bzip-table-lines2.o process-fosm.o indexer.o ifileindexer_b.o -lbz2 -o $@ 
 
 seek-bunzip : seek-bunzip.o micro-bunzip.o
@@ -73,14 +79,14 @@ format:
 testfosm: bzip-table-lines-ragel
 	./bzip-table-lines-ragel /xapi/planet/earth-20120401130001.osm.bz2
 
-testgeofabrik: bziptablelinesragel2 
-	./bziptablelinesragel2   ~/OSM-API-Proxy/data/kosovo.osm.bz2  > test.out
+testgeofabrik: ragelosm 
+	./ragelosm   ~/OSM-API-Proxy/data/kosovo.osm.bz2  > test.out
 
-testways: bziptablelinesragel2 
-	./bziptablelinesragel2   testway2.osm.bz2  > test.out
+testways: ragelosm 
+	./ragelosm   testway2.osm.bz2  > test.out
 
-testoffenbach: bziptablelinesragel2 
-	./bziptablelinesragel2   ~/OSM-API-Proxy/data/offenbach.osm.bz2
+testoffenbach: ragelosm 
+	./ragelosm   ~/OSM-API-Proxy/data/offenbach.osm.bz2
 
 viz : indexer.rl
 	ragel -V indexer.rl > indexer.dot

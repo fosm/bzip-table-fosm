@@ -75,5 +75,5 @@ static const char * const bunzip_errors[] =
 extern int get_next_block( bunzip_data *bd );
 extern int start_bunzip( bunzip_data **bdp, int in_fd, char *inbuf, int len );
 extern int read_bunzip( bunzip_data *bd, char *outbuf, int len );
-
+extern unsigned int get_bits( bunzip_data *bd, char bits_wanted );
 #endif

@@ -3,13 +3,18 @@
 /*
     interface bridge
 */
+#include "fileindexer.hpp"
+
+OSMWorldImp world;
 
    [% FOREACH fieldname IN [  'record_start_position', 
 'set_current_element_type_member', 'set_current_element_type_nd', 'set_current_element_type_node', 'set_current_element_type_rel',                               'set_current_element_type_tag', 'set_current_element_type_way',
+                              'finish_current_object'
 ] %]
    //[%  fieldname %]
    void OSMWorld::[% fieldname %]() {
-       cout << "[% fieldname %]" << endl;
+//       cout << "[% fieldname %]:" << endl;
+       world.[% fieldname %]();
 }
    [% END %]
 
@@ -19,9 +24,11 @@
           'set_current_user',
           'set_tag_val',
           'set_tag_key',
+
 ] %]
     template <> void OSMWorld::[% fieldname %]<char const*>(char const* const&v) {
-        cout << "[% fieldname %]"<<  v << endl;
+//        cout << "[% fieldname %]"<<  v << endl;
+       world.[% fieldname %](v);
 }
    [% END %]
 
@@ -32,7 +39,8 @@
           'set_current_lon',
 ] %]
     template <> void OSMWorld::[% fieldname %]<double>(double const& v) {
-cout << "[% fieldname %]"<<  v << endl;
+// cout << "[% fieldname %]"<<  v << endl;
+       world.[% fieldname %](v);
 }
    [% END %]
 
@@ -48,7 +56,8 @@ cout << "[% fieldname %]"<<  v << endl;
 
 ] %]
      template <> void OSMWorld::[% fieldname %]<int>( int const & v) {
-cout << "[% fieldname %]"<<  v << endl;
+//         cout << "[% fieldname %]"<<  v << endl;
+       world.[% fieldname %](v);
 }
    [% END %]
 
@@ -58,7 +67,7 @@ cout << "[% fieldname %]"<<  v << endl;
       'set_current_cs', 
                                                  'set_current_id', 
                               'set_current_lat', 'set_current_lon', 
-                              'set_tag_key', 'set_tag_val', 
+
                               'set_way_node_ref' 
           'set_current_ver',                                                           
           'set_current_uid',                                                           
@@ -66,7 +75,15 @@ cout << "[% fieldname %]"<<  v << endl;
 ] %]
    //[%  fieldname %]
     template <> void OSMWorld::[% fieldname %]<long>(const long & v) {
-        cout << "[% fieldname %]"<<  v << endl;
+//        cout << "[% fieldname %]"<<  v << endl;
+       world.[% fieldname %](v);
 }
+
+
    [% END %]
+
+
+   void OSMWorld::scannerstatus(int s, char const* v){
+    world.scannerstatus(s, v);
+}
 

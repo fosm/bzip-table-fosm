@@ -42,6 +42,13 @@ action some_err_attr {
        res = 13;
 }
 
+action some_err_element {
+       cerr <<"an error has occured element"  << endl;            
+       cout << "CS:" << fcurs << endl;     
+       cout << "str:\'" << fpc << "\'" <<endl;     
+       res = 14;
+}
+
 action some_err_attr_uid {
        cerr <<"an error has occured attr uid"  << endl;            
        cout << "CS:" << fcurs << endl;     
@@ -97,7 +104,8 @@ el_way |
 el_relation |
 el_nd |
 el_member |
-el_tag
+el_tag 
+        $err (some_err_element  )
 );
 
 #member_attr = (
@@ -119,7 +127,7 @@ end_element  = (
                 |'</relation>'
                 ) @{
 //		cerr << "end element " << endl;
-// removed this...		world.finish_current_object();
+		world.finish_current_object();
                 };
 
 action ActEnterAttribute {
@@ -289,7 +297,7 @@ user_val       = ( user_val_start user_val_value user_val_end );
 #action
 action FinishAction {
      char *endptr;   // ignore
-     cerr << "action " << currenttoken << endl;
+//     cerr << "action " << currenttoken << endl;
      world.set_action(currenttoken.c_str());
 }
 action_val_start = ( 'action' '=' quote  @StartValue);
@@ -384,15 +392,18 @@ attributes =(
 );
 
 starter = (
+          ( '<bounds'  ) |
  	  start_element     | 	    
 	  start_element space+ attributes  | 
 	  start_element space+ attributes space+ end_element  | 
 	  start_element  attributes 
           $err (some_err_starter)
            );
-           
+
+
 
 xmlheader = ('<?xml version=\'1.0\' encoding=\'UTF-8\'?>');
+#bounds = ('<bounds' 'minlat=\'' \'' minlon='8.8074133' maxlat='50.045240199999995' maxlon='8.8274143' origin='CGImap 0.0.2' />
 osmheader = (space* '<osm' . any+ );
 starter2 = (
          space*  .starter+ space* |

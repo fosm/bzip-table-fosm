@@ -21,9 +21,14 @@ public:
                               'set_current_uid', 'set_current_user',
                               'set_current_ver', 'set_current_vis', 
                               'set_tag_key', 'set_tag_val', 
-                              'set_way_node_ref' ] %]
+                              'set_way_node_ref',
+                              'finish_current_object'
+                              ] %]
    //[%  fieldname %]
    void [% fieldname %](); 
    template <class T> void [% fieldname %](const T &);
    [% END %]
+
+   void scannerstatus(int s, char const* v);
+
 };

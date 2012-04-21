@@ -13,7 +13,7 @@ const int blocksize=1024;
 #include "wayfile.hpp"
 
 
-class OSMWorld
+class OSMWorldImp
 {
 public:
   enum element_type_t{
@@ -74,12 +74,13 @@ public:
   
 
   
-  OSMWorld () :
+  OSMWorldImp () :
     current_id(0),
     current_cs(-1),
     current_ver(-1),
     current_uid(-1),
     current_vis(-1),
+    current_timestamp(-1),
     current_element_type(t_none),
     parent_element_type(t_none),
 
@@ -239,10 +240,10 @@ public:
         )      
       {
         cerr << current_id << endl;
-        cerr << "way counts not aligned" << endl;
-        cerr << way_positions.count() << endl;
-        cerr << way_ids.count()       << endl;
-        cerr << way_cs.count()       << endl;
+        cerr << "way counts not aligned:" << endl;
+        cerr << "positions:"<< way_positions.count() << endl;
+        cerr << "way ids" << way_ids.count()       << endl;
+        cerr << "way cs"  <<  way_cs.count()       << endl;
         exit (233);
       }
   }
@@ -367,7 +368,7 @@ public:
   }
 
   void set_action(const string & action) {
-    cerr << action << endl;
+    //    cerr << action << endl;
   }
 
 
@@ -608,7 +609,11 @@ void set_current_ver(long int id) {
     object_count++;
   }
 
-  bool debug_lines() { return false; }
+  bool debug_lines() { 
+    return false; 
+    //return true; 
+  }
+
   
   // 
   void scannerstatus(int stat, const char * buffer)
@@ -631,6 +636,7 @@ void set_current_ver(long int id) {
     current_ver=-1;// set the current value back to 0
     current_uid=-1;
     current_vis=-1;
+    current_timestamp=-1;
     //current_id=0;// set the current value back to 0
 
     if (!check_counts_nodes())
@@ -641,6 +647,35 @@ void set_current_ver(long int id) {
       }
 
     laststring =buffer;
+  }
+
+  void finish_current_object()
+  {
+    //    if (debug_lines())
+      {
+        cerr << "finish current object" << endl;
+      }
+    if (current_cs==-1)    { cerr << "adding cs" << endl; set_current_cs(-4);    }
+    if (current_uid ==-1)  { cerr << "adding uid" << endl; set_current_uid(-4);   }
+    if (current_ver==-1)   { cerr << "adding ver" << endl; set_current_ver(-4);   }
+    if (current_timestamp==-1)   { cerr << "adding ts" << endl; set_current_ts(0);   }
+    if (current_vis==-1)   { cerr << "adding vis" << endl; set_current_vis(1);   } // default yes visible
+    
+    // reset the data
+    set_current_element_type_none ();
+    // check default values
+    current_cs=-1;// set the current value back to 0
+    current_ver=-1;// set the current value back to 0
+    current_uid=-1;
+    current_vis=-1;
+    //current_id=0;// set the current value back to 0
+
+    if (!check_counts_nodes())
+      {
+        cerr << "last   \"" << laststring << "\"" << endl;
+        exit (123);
+      }
+
   }
 
 };

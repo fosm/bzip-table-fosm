@@ -109,4 +109,11 @@ public:
    void set_way_node_ref(); 
    template <class T> void set_way_node_ref(const T &);
    
+   //finish_current_object
+   void finish_current_object(); 
+   template <class T> void finish_current_object(const T &);
+   
+
+   void scannerstatus(int s, char const* v);
+
 };
