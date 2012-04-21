@@ -8,7 +8,9 @@
 'set_current_element_type_member', 'set_current_element_type_nd', 'set_current_element_type_node', 'set_current_element_type_rel',                               'set_current_element_type_tag', 'set_current_element_type_way',
 ] %]
    //[%  fieldname %]
-   void OSMWorld::[% fieldname %]() {}
+   void OSMWorld::[% fieldname %]() {
+       cout << "[% fieldname %]" << endl;
+}
    [% END %]
 
 
@@ -18,7 +20,9 @@
           'set_tag_val',
           'set_tag_key',
 ] %]
-    template <> void OSMWorld::[% fieldname %]<char const*>(char const* const&) {}
+    template <> void OSMWorld::[% fieldname %]<char const*>(char const* const&v) {
+        cout << "[% fieldname %]"<<  v << endl;
+}
    [% END %]
 
 
@@ -27,7 +31,9 @@
           'set_current_lat',  
           'set_current_lon',
 ] %]
-    template <> void OSMWorld::[% fieldname %]<double>(double const&) {}
+    template <> void OSMWorld::[% fieldname %]<double>(double const& v) {
+cout << "[% fieldname %]"<<  v << endl;
+}
    [% END %]
 
 
@@ -41,7 +47,9 @@
           'set_current_vis',                                                           
 
 ] %]
-     template <> void OSMWorld::[% fieldname %]<int>( int const & v) {}
+     template <> void OSMWorld::[% fieldname %]<int>( int const & v) {
+cout << "[% fieldname %]"<<  v << endl;
+}
    [% END %]
 
 
@@ -57,6 +65,8 @@
 
 ] %]
    //[%  fieldname %]
-   template <> void OSMWorld::[% fieldname %]<long>(const long & l) {}
+    template <> void OSMWorld::[% fieldname %]<long>(const long & v) {
+        cout << "[% fieldname %]"<<  v << endl;
+}
    [% END %]
 

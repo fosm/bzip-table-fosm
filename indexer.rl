@@ -14,10 +14,46 @@ action AddCharDebug {
 
 action some_err {
        cerr <<"an error has occured"  << endl;            
-       cout << "str:\'" << fpc << "\'" <<endl;     
        cout << "CS:" << fcurs << endl;     
+       cout << "str:\'" << fpc << "\'" <<endl;     
+
 
        res = 10;
+}
+
+action some_err_starter {
+       cerr <<"an error has occured starter"  << endl;            
+       cout << "CS:" << fcurs << endl;     
+       cout << "str:\'" << fpc << "\'" <<endl;     
+       res = 11;
+}
+
+action some_err_node {
+       cerr <<"an error has occured node"  << endl;            
+       cout << "CS:" << fcurs << endl;     
+       cout << "str:\'" << fpc << "\'" <<endl;     
+       res = 12;
+}
+
+action some_err_attr {
+       cerr <<"an error has occured attr"  << endl;            
+       cout << "CS:" << fcurs << endl;     
+       cout << "str:\'" << fpc << "\'" <<endl;     
+       res = 13;
+}
+
+action some_err_attr_uid {
+       cerr <<"an error has occured attr uid"  << endl;            
+       cout << "CS:" << fcurs << endl;     
+       cout << "str:\'" << fpc << "\'" <<endl;     
+       res = 131;
+}
+
+action some_err_attr_ts {
+       cerr <<"an error has occured attr ts"  << endl;            
+       cout << "CS:" << fcurs << endl;     
+       cout << "str:\'" << fpc << "\'" <<endl;     
+       res = 132;
 }
 
 el_node = (
@@ -75,7 +111,9 @@ coord = (
       /-?\d+/
       );
 
-end_element  = ('/>'
+end_element  = (
+             '>'       
+               |'/>'
                 |'</node>'
                 |'</way>'
                 |'</relation>'
@@ -158,7 +196,7 @@ action FinishUid {
 uid_val_start = ( 'uid' '=' quote  @StartValue);
 uid_val_value = ( digit+  $AddChar );
 uid_val_end   = ( quote  @ FinishUid );
-uid_val       = ( uid_val_start uid_val_value uid_val_end );
+uid_val       = ( uid_val_start uid_val_value uid_val_end $err (some_err_attr_uid)              );
 
 #timestamp
 action FinishTsYear {
@@ -221,6 +259,8 @@ ts_val       = ( ts_val_start
                  ts_val_value ts_val_hour_end                 
                  ts_val_value ts_val_minute_end                 
                  ts_val_value ts_val_sec_end                 
+                 quote
+                  $err (some_err_attr_ts)              
 );
 
 #visible
@@ -316,7 +356,7 @@ action FinishNdRef {
 way_node_start = ( 'ref' '=' quote  @StartValue);
 way_node_end   = ( quote  @ FinishNdRef );
 way_node_value_main = (  digit+ $AddChar );
-way_node_ref       = ( way_node_start way_node_value_main way_node_end           $err (some_err) );
+way_node_ref       = ( way_node_start way_node_value_main way_node_end   $err (some_err_node) );
 
 start_element = ( '<' tags @ RecordStart );
 attribute =(            
@@ -333,7 +373,7 @@ attribute =(
           way_tag_val |
           way_node_ref |
           id_val     
-          $err (some_err)      
+          $err (some_err_attr)      
 #    @{ 
 # //	       cerr <<"got attribute"  << endl;    
 #     }
@@ -348,7 +388,7 @@ starter = (
 	  start_element space+ attributes  | 
 	  start_element space+ attributes space+ end_element  | 
 	  start_element  attributes 
-          $err (some_err)
+          $err (some_err_starter)
            );
            
 

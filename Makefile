@@ -81,3 +81,7 @@ testways: bziptablelinesragel2
 
 testoffenbach: bziptablelinesragel2 
 	./bziptablelinesragel2   ~/OSM-API-Proxy/data/offenbach.osm.bz2
+
+viz : indexer.rl
+	ragel -V indexer.rl > indexer.dot
+	dotty indexer.dot
