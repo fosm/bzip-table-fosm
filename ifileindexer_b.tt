@@ -1,0 +1,62 @@
+// the file ifileindexer_b.cpp was generated from ifileindexer_b.tt and should not be edited
+#include "ifileindexer.hpp"
+/*
+    interface bridge
+*/
+
+   [% FOREACH fieldname IN [  'record_start_position', 
+'set_current_element_type_member', 'set_current_element_type_nd', 'set_current_element_type_node', 'set_current_element_type_rel',                               'set_current_element_type_tag', 'set_current_element_type_way',
+] %]
+   //[%  fieldname %]
+   void OSMWorld::[% fieldname %]() {}
+   [% END %]
+
+
+   [% FOREACH fieldname IN [  
+          'set_action',  
+          'set_current_user',
+          'set_tag_val',
+          'set_tag_key',
+] %]
+    template <> void OSMWorld::[% fieldname %]<char const*>(char const* const&) {}
+   [% END %]
+
+
+
+   [% FOREACH fieldname IN [  
+          'set_current_lat',  
+          'set_current_lon',
+] %]
+    template <> void OSMWorld::[% fieldname %]<double>(double const&) {}
+   [% END %]
+
+
+   [% FOREACH fieldname IN [  
+          'set_current_ts_year',
+          'set_current_ts_month',
+          'set_current_ts_day',
+          'set_current_ts_hour',
+          'set_current_ts_minute',  
+          'set_current_ts_second',                                                           
+          'set_current_vis',                                                           
+
+] %]
+     template <> void OSMWorld::[% fieldname %]<int>( int const & v) {}
+   [% END %]
+
+
+
+   [% FOREACH fieldname IN [  
+      'set_current_cs', 
+                                                 'set_current_id', 
+                              'set_current_lat', 'set_current_lon', 
+                              'set_tag_key', 'set_tag_val', 
+                              'set_way_node_ref' 
+          'set_current_ver',                                                           
+          'set_current_uid',                                                           
+
+] %]
+   //[%  fieldname %]
+   template <> void OSMWorld::[% fieldname %]<long>(const long & l) {}
+   [% END %]
+

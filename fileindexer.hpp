@@ -6,242 +6,11 @@ using namespace std;
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+
 const int blocksize=1024;
-template <class T> class DataFile {
-public:
-  vector<T> data;
-  ofstream  file;
-  ofstream  txtfile;
-  string    filename;
-  long long total_count;
-  
-  DataFile(const char * filename)
-    :file(string(string ("datafiles/") + string(filename) + ".bin").c_str()),
-     txtfile(string(string ("datafiles/") +  string(filename) + ".txt").c_str()),
-     total_count(0),
-     filename(filename)
-  {    
-  }           
-
-  ~DataFile()
-  {
-    int count =data.size();
-    write(count);
-    file.close();
-    txtfile.close();
-    cout << "Closing file " << filename << ", wrote " << total_count << endl;
-  }
-
-  void flush()
-  {
-    write(data.size());
-  }
-
-  long long count()
-  {
-    return total_count;
-  }
-
-  void write(int count)
-  {
-    // append the data to the file
-    file.write((const char*)&data[0], count * sizeof(T));
-
-    typename vector<T>::iterator i;
-    for(i=data.begin();i!=data.end();i++)
-      {
-        txtfile << *i << endl;
-      }
-    data.clear(); // erase the data
-  }
-  
-  void push_back (const T& v){
-    total_count++;
-    //    cout << "pushing " << filename << " value "<< v << endl;
-    data.push_back(v);
-    int count =data.size();
-    if (count > blocksize)    
-      {
-        write(count);
-      }           
-  }
-       
-};
-
-template <class A, class B>
-class Pair :
-  public pair<A,B>
-{
-public:
-  Pair(const A & a,B & b)
-    : pair<A,B>(a,b)
-  {
-
-  }
-};
-
-template<class T, class T2>
-std::ostream& operator<<(std::ostream &out, const Pair<T,T2> &rhs){
-  out << rhs.first << "\t" << rhs.second;
-  return out;
-}
-
-class TagFileEntry
-{
-public:
-  long int id;
-  string key;
-  string value;
-public:
-  TagFileEntry(const long int & id,string & k,string & v ):
-    id(id),
-    key(k),
-    value(v)  {      }
-  void write (ostream & os) {
-    os << id  << "\t" 
-        << key << "\t" 
-        << value  <<  endl;
-  }
-
-};
-
-
-class TagFile {
-public:
-  vector< TagFileEntry > data;
-  ofstream  txtfile;
-  string    filename;
-  long long total_count;
-  
-  TagFile(const char * filename)
-    :txtfile(string(string ("datafiles/") +  string(filename) + ".txt").c_str()),
-     total_count(0),
-     filename(filename)
-  {    
-  }           
-
-  ~TagFile()
-  {
-    int count =data.size();
-    write(count);
-    txtfile.close();
-    cout << "Closing file " << filename << ", wrote " << total_count << endl;
-  }
-
-  void flush()
-  {
-    write(data.size());
-  }
-
-  long long count()
-  {
-    return total_count;
-  }
-
-  void write(int count)
-  {
-    // append the data to the file
-    // file.write((const char*)&data[0], count * sizeof(T)); // skip the binary file now
-    typename vector< TagFileEntry >::iterator i;
-    for(i=data.begin();i!=data.end();i++)
-      {
-        i->write (txtfile);
-      }
-    data.clear(); // erase the data
-  }
-  
-  void push_back (long int pos, string & key, string & val){
-    total_count++;
-    TagFileEntry v (pos,key,val);
-    data.push_back(v);
-    int count =data.size();
-    if (count > blocksize)   {
-      write(count);
-    }           
-  }
-       
-};
-
-//class WayNodeFile
-class WayNodeFileEntry
-{
-public:
-  long int way;
-  long int node;
-public:
-  WayNodeFileEntry(const long int & way,const long int & node):
-    way(way),
-    node(node)
-  {      }
-
-  void write (ostream & os) {
-    os << way  << "\t" 
-       << node   << endl;
-  }
-
-};
-
-
-class WayNodeFile {
-public:
-  vector< WayNodeFileEntry > data;
-  ofstream  txtfile;
-  ofstream  file;
-  string    filename;
-
-  long long total_count;
-  
-  WayNodeFile(const char * filename)
-    :txtfile(string(string ("datafiles/") +  string(filename) + ".txt").c_str()),
-     file(string(string ("datafiles/") + string(filename) + ".bin").c_str()),
-     total_count(0),
-     filename(filename)
-  {    
-  }           
-
-  ~WayNodeFile()
-  {
-    int count =data.size();
-    write(count);
-    data.clear();
-    txtfile.close();
-    cout << "Closing file " << filename << ", wrote " << total_count << endl;
-  }
-
-  void flush()
-  {
-    write(data.size());
-  }
-
-  long long count()
-  {
-    return total_count;
-  }
-
-  void write(int count)
-  {
-    // append the data to the file
-    file.write((const char*)&data[0], count * sizeof(WayNodeFileEntry)); // skip the binary file now
-    typename vector< WayNodeFileEntry >::iterator i;
-    for(i=data.begin();i!=data.end();i++)
-      {
-        i->write (txtfile);
-      }
-    cout << "wrote " << total_count << endl;
-    data.clear(); // erase the data
-  }
-  
-  void push_back (long int & way,long int & node ){
-    total_count++;
-    WayNodeFileEntry v (way,node);
-    data.push_back(v);
-    int count =data.size();
-    if (count > blocksize)   {
-      write(count);
-    }           
-  }
-       
-};
+#include "datafile.hpp"
+#include "tagfile.hpp"
+#include "wayfile.hpp"
 
 
 class OSMWorld
@@ -597,6 +366,11 @@ public:
     };
   }
 
+  void set_action(const string & action) {
+    cerr << action << endl;
+  }
+
+
   void set_current_lat(double lat) {
     switch (get_current_element_type()) {
     case t_node:
@@ -619,12 +393,10 @@ public:
 
   void set_way_node_ref(long int ref) {
     
-
     switch (get_parent_element_type()) {
     
     case t_way:
       way_nodes.push_back(current_way,ref);
-
       break;     
       
     default:

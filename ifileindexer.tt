@@ -1,0 +1,29 @@
+// the file ifileindexer.hpp was generated from ifileindexer.tt and should not be edited
+#include <string.h>
+#include <string>
+#include <iostream>
+#include <stdlib.h>
+using namespace std;
+class OSMWorld
+{
+public:
+
+   [% FOREACH fieldname IN [  'record_start_position', 'set_action', 'set_current_cs', 
+                              'set_current_element_type_member', 'set_current_element_type_nd', 'set_current_element_type_node', 'set_current_element_type_rel',
+                              'set_current_element_type_tag', 'set_current_element_type_way', 'set_current_id', 
+                              'set_current_lat', 'set_current_lon', 
+
+                              'set_current_ts_year',
+                              'set_current_ts_month',
+                              'set_current_ts_day', 
+                              'set_current_ts_hour', 'set_current_ts_minute',  'set_current_ts_second', 
+                              
+                              'set_current_uid', 'set_current_user',
+                              'set_current_ver', 'set_current_vis', 
+                              'set_tag_key', 'set_tag_val', 
+                              'set_way_node_ref' ] %]
+   //[%  fieldname %]
+   void [% fieldname %](); 
+   template <class T> void [% fieldname %](const T &);
+   [% END %]
+};

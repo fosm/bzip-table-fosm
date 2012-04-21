@@ -1,7 +1,9 @@
-CC = gcc -m64
+CC = gcc 
 CFLAGS = # -O0 -g -DTESTING
 
 PROGS=bzip-table seek-bunzip bzip-table-fosm bzip-table-linecount bzip-table-lines-ragel bziptablelinesragel2
+
+HEADERS= datafile.hpp tagfile.hpp wayfile.hpp fileindexer.hpp fileindexer.hpp ifileindexer.hpp
 
 all: $(PROGS)
 
@@ -17,14 +19,23 @@ bzip-table-fosm : bzip-table-fosm.c micro-bunzip.c
 bzip-table-linecount : bzip-table-linecount.c micro-bunzip.c
 	g++ $(CFLAGS) bzip-table-linecount.c micro-bunzip.c -o $@
 
+indexer.o : ifileindexer.hpp indexer.c ifileindexer_b.o
+	g++ $(CFLAGS) -c indexer.c -o $@ 
+
 indexer.c : indexer.rl
 	ragel -G1 indexer.rl
 
-bzip-table-lines-ragel : bzip-table-lines.c micro-bunzip.c process-fosm.cpp indexer.c  fileindexer.hpp
-	g++ $(CFLAGS) bzip-table-lines.c micro-bunzip.c process-fosm.cpp indexer.c -o $@
+ifileindexer.hpp : ifileindexer.tt
+	tpage $< > $@ 	
 
-bziptablelinesragel2 : bzip-table-lines2.c micro-bunzip.c process-fosm.cpp indexer.c  fileindexer.hpp
-	g++ $(CFLAGS) bzip-table-lines2.c micro-bunzip.c process-fosm.cpp indexer.c -lbz2 -o $@ 
+ifileindexer_b.cpp : ifileindexer_b.tt
+	tpage $< > $@ 	
+
+%.o : %.c 
+	g++ $(CFLAGS) -c $< -o $@ 	
+
+bziptablelinesragel2 : bzip-table-lines2.o process-fosm.o indexer.o ifileindexer_b.o $(HEADERS)
+	g++ $(CFLAGS)  bzip-table-lines2.o process-fosm.o indexer.o ifileindexer_b.o -lbz2 -o $@ 
 
 seek-bunzip : seek-bunzip.o micro-bunzip.o
 
@@ -64,3 +75,9 @@ testfosm: bzip-table-lines-ragel
 
 testgeofabrik: bziptablelinesragel2 
 	./bziptablelinesragel2   ~/OSM-API-Proxy/data/kosovo.osm.bz2  > test.out
+
+testways: bziptablelinesragel2 
+	./bziptablelinesragel2   testway2.osm.bz2  > test.out
+
+testoffenbach: bziptablelinesragel2 
+	./bziptablelinesragel2   ~/OSM-API-Proxy/data/offenbach.osm.bz2

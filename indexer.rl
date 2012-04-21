@@ -14,6 +14,9 @@ action AddCharDebug {
 
 action some_err {
        cerr <<"an error has occured"  << endl;            
+       cout << "str:\'" << fpc << "\'" <<endl;     
+       cout << "CS:" << fcurs << endl;     
+
        res = 10;
 }
 
@@ -108,10 +111,6 @@ action AddChar {
      currenttoken.push_back(fc);
 }
 
-action AddChar2 {
-       cerr << fc << endl;
-     currenttoken.push_back(fc);
-}
 
 
 # ID Field
@@ -122,7 +121,7 @@ action FinishID {
 }
 
 id_val_start = ( 'id' '=' quote  @StartValue);
-id_val_negvalue = (  '-'?  $AddChar2 );
+id_val_negvalue = (  '-'?  $AddChar );
 id_val_value = (  id_val_negvalue digit+  $AddChar );
 id_val_end   = (  quote  @ FinishID );
 id_val = ( id_val_start id_val_value id_val_end );
@@ -247,6 +246,17 @@ user_val_value = ( [^\"\']+  $AddChar );
 user_val_end   = ( quote  @ FinishUser );
 user_val       = ( user_val_start user_val_value user_val_end );
 
+#action
+action FinishAction {
+     char *endptr;   // ignore
+     cerr << "action " << currenttoken << endl;
+     world.set_action(currenttoken.c_str());
+}
+action_val_start = ( 'action' '=' quote  @StartValue);
+action_val_value = ( [^\"\']+  $AddChar );
+action_val_end   = ( quote  @ FinishAction );
+action_val       = ( action_val_start action_val_value action_val_end );
+
 #tag v
 action FinishV {
      char *endptr;   // ignore
@@ -311,6 +321,7 @@ way_node_ref       = ( way_node_start way_node_value_main way_node_end          
 start_element = ( '<' tags @ RecordStart );
 attribute =(            
           cs_val    |
+          action_val  |        
           ver_val    | 
           uid_val   | 
           ts_val    | 
@@ -322,9 +333,10 @@ attribute =(
           way_tag_val |
           way_node_ref |
           id_val     
-    @{ 
-//	       cerr <<"got attribute"  << endl;    
-	     }
+          $err (some_err)      
+#    @{ 
+# //	       cerr <<"got attribute"  << endl;    
+#     }
 );
 
 attributes =(            
@@ -356,7 +368,7 @@ main := (
      space* .starter |
      starter2 + |
      # for 
-     space*  starter end_element | 
+     space*  starter space* end_element | 
      end_element  |
      space*  end_element  |
      space*  end_element  space*
@@ -368,7 +380,7 @@ main := (
 %% write data nofinal;
 
 #define BUFSIZE 128
-#include "fileindexer.hpp"
+#include "ifileindexer.hpp"
 int scanner(OSMWorld & world,const char *s)
 {
   int cs;
@@ -376,13 +388,9 @@ int scanner(OSMWorld & world,const char *s)
   string currenttoken;
   char *p= (char *)s;
   char *pe = (char *)s + strlen(s) +1 ;
-
-  char *eof = 0;
-     
+  char *eof = 0;    
   %% write init;
   %% write exec;
-
-
   return res;
 }
 
