@@ -55,7 +55,7 @@ public:
   {
     // append the data to the file
     // file.write((const char*)&data[0], count * sizeof(T)); // skip the binary file now
-    typename vector< TagFileEntry >::iterator i;
+    vector< TagFileEntry >::iterator i;
     for(i=data.begin();i!=data.end();i++)
       {
         i->write (txtfile);
@@ -65,10 +65,12 @@ public:
   
   void push_back (long int pos, string & key, string & val){
     total_count++;
+    //cerr << "tag:"<< key << " = "<< val << endl;
     TagFileEntry v (pos,key,val);
     data.push_back(v);
     int count =data.size();
-    if (count > blocksize)   {
+    if (count > 100)   {
+      cerr << "wrote tags count " << total_count << endl;
       write(count);
     }           
   }

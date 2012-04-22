@@ -83,7 +83,8 @@ el_relation = (
 
 el_tag = (
 'tag' @{
-       world.set_current_element_type_tag();
+//      cerr << "tag" << endl;
+	world.set_current_element_type_tag();
        }
      );
 
@@ -154,7 +155,8 @@ action StartValue {
 }
 
 action AddChar {
-     currenttoken.push_back(fc);
+//       cerr << fcurs << ":" << fc << endl;	
+       currenttoken.push_back(fc);
 }
 
 
@@ -308,6 +310,7 @@ action_val       = ( action_val_start action_val_value action_val_end );
 #tag v
 action FinishV {
      char *endptr;   // ignore
+//     cerr << "v:"<< currenttoken << endl;
      world.set_tag_val(currenttoken.c_str());
 }
 
@@ -321,9 +324,12 @@ action FinishK {
 
 ## way tag
 add_string_value = ( [^\'\"]+  $AddChar );
-way_tag_val_end   = ( quote space*  @ FinishV );
+way_tag_val_end   = ( quote space*  |
+		      quote @ FinishV );
 way_tag_val       = ( 'v' space* '=' quote add_string_value way_tag_val_end );
-way_tag_key_end   = ( quote space*  @ FinishK );
+#>{ cerr << "start value\n" << endl;}
+
+way_tag_key_end   = ( quote space* | quote  @ FinishK );
 way_tag_key       = ( 'k' space* '=' quote add_string_value way_tag_key_end );
 
 
@@ -395,7 +401,7 @@ starter = (
           ( '<bounds'  ) |
  	  start_element     | 	    
 	  start_element space+ attributes  | 
-	  start_element space+ attributes space+ end_element  | 
+	  start_element space+ attributes space* end_element  | 
 	  start_element  attributes 
           $err (some_err_starter)
            );
@@ -416,10 +422,12 @@ starter2 = (
 main := (
      xmlheader |
      osmheader |
+     space*       |
      space* .starter |
      starter2 + |
      # for 
      space*  starter space* end_element | 
+     space*  starter space* end_element space*| 
      end_element  |
      space*  end_element  |
      space*  end_element  space*

@@ -77,6 +77,7 @@ public:
 
   typedef std::map<int, int > node_index_t; // node id to node idx
 
+  int scanlines;
   // simple id -> int
   node_index_t node_index;
   node_index_t way_index;
@@ -136,7 +137,8 @@ public:
     way_nodes ("way_nodes"),
 
     node_tags("node_tags"), // node tags
-    object_count(0)
+    object_count(0),
+    scanlines(0)
   {
 
   }
@@ -230,6 +232,8 @@ public:
         node_cs.flush();
         node_ver.flush();
 
+	//	cerr << "buffer \"" << laststring      << "\""<< endl;
+	
         //exit (233);
         return false;
       }
@@ -644,6 +648,10 @@ void set_current_ver(long int id) {
   // 
   void scannerstatus(int stat, const char * buffer)
   {
+    if (scanlines++ % 10000 ==0)
+      {
+	cerr << "L"<< scanlines << endl;
+      }
     if (debug_lines())
       {
         cerr << "stat:"<< stat 
@@ -667,8 +675,9 @@ void set_current_ver(long int id) {
 
     if (!check_counts_nodes())
       {
-        cerr << "last   \"" << laststring << "\"" << endl;
-        cerr << "buffer \"" << buffer << "\""<< endl;
+	cerr << "error" << endl;
+	//        cerr << "last   \"" << laststring << "\"" << endl;
+	//        cerr << "buffer \"" << buffer << "\""<< endl;
         exit (123);
       }
 

@@ -16,8 +16,8 @@
 #include <boost/graph/graph_utility.hpp>
 
 typedef boost::adjacency_list<boost::listS, boost::vecS, boost::undirectedS> Graph;
-typedef typename Graph::vertex_descriptor vertex_descriptor;
-typedef typename Graph::edge_property_type edge_property; 
+typedef Graph::vertex_descriptor vertex_descriptor;
+typedef Graph::edge_property_type edge_property; 
 
 int read_graph(Graph & g) {
   // now read the graph
@@ -70,7 +70,7 @@ int main(int, char*[])
 
   Graph G;
   boost::dynamic_properties dp; 
-  typedef typename Graph::vertex_descriptor vertex_descriptor;
+  typedef Graph::vertex_descriptor vertex_descriptor;
   //dp.property("node_id", boost::make_null_property<vertex_descriptor, string>); 
 
   int ok =read_graph(G);

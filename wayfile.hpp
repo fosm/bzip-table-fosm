@@ -72,7 +72,7 @@ public:
 
   void write(int count)
   {
-    typename vector< WayNodeFileEntry >::iterator i;
+    vector< WayNodeFileEntry >::iterator i;
     int index=0;
     int way=-1;
     for(i=way_nodes.begin();i!=way_nodes.end();i++)

@@ -1,7 +1,9 @@
 CC = gcc 
-CFLAGS = -O0 -g -DTESTING
+CFLAGS = -O3 -DTESTING -I ~/perl5/include -L ~/perl5/lib
 
-PROGS=bzip-table seek-bunzip bzip-table-fosm bzip-table-linecount ragelosm
+PROGS=bzip-table  bzip-table-fosm bzip-table-linecount ragelosm
+
+#seek-bunzip
 
 HEADERS= datafile.hpp tagfile.hpp wayfile.hpp fileindexer.hpp fileindexer.hpp ifileindexer.hpp
 
@@ -80,8 +82,8 @@ clean:
 format:
 	astyle --options=astyle.opts *.c *.h
 
-testfosm: bzip-table-lines-ragel
-	./bzip-table-lines-ragel /xapi/planet/earth-20120401130001.osm.bz2
+testfosm: ragelosm
+	./ragelosm /xapi/planet/earth-20120401130001.osm.bz2
 
 testgeofabrik: ragelosm 
 	./ragelosm   ~/OSM-API-Proxy/data/kosovo.osm.bz2  > test.out
@@ -97,24 +99,21 @@ viz : indexer.rl
 	dotty indexer.dot
 
 #
-all2 : strgcomp componentsreadbin readalldata conncomp waysreadbin hierachy metisexport metisexport2
+all2 :  componentsreadbin readalldata conncomp waysreadbin hierachy metisexport metisexport2
 	echo done
 #bgl 
 #
 bgl :
-	mpiCC -o bgl  bgl.cpp -lboost_system -lboost_mpi 
+	g++ -o bgl  bgl.cpp -lboost_system -lboost_mpi 
 
 strgcomp : strongcomponents.cpp
-	mpiCC -g -o strgcomp  strongcomponents.cpp -lboost_system  -lboost_graph
-#-save-temps
-metisexport : metisexport.cpp
-	g++ -g -o metisexport  metisexport.cpp 
+	g++ -g -o strgcomp  strongcomponents.cpp -lboost_system  -lboost_graph
 
-metisexport2 : metisexport2.cpp
-	g++ -g -o metisexport2  metisexport2.cpp -lboost_system  -lboost_graph
+metisexport2 : metisexport2.cpp FOSMBin.o
+	g++ -g -o metisexport2  metisexport2.cpp -lboost_system  -lboost_graph $(CFLAGS) FOSMBin.o
 
 conncomp : conncomponents.cpp
-	mpiCC -g -o conncomp  conncomponents.cpp -lboost_system  -lboost_graph
+	g++ -g -o conncomp  conncomponents.cpp -lboost_system  -lboost_graph $(CFLAGS)
 
 componentsreadbin : componentsreadbin.c
 	gcc -o componentsreadbin componentsreadbin.c

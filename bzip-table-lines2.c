@@ -11,7 +11,7 @@
 #include "fcntl.h"
 #include "errno.h"
 
-#define BUF_SIZE 256
+#define BUF_SIZE 4096 * 100 
 
 /**
  * Read a bzip2 file from stdin and print
@@ -23,6 +23,7 @@
  * first if desired.
  */
 
+int debug() {return 0;}
 // the user define process function, is not defined, user has to define it to link
 void process_line(const char * buffer); // null terminated
 
@@ -54,7 +55,7 @@ bunzip_one(FILE *f) {
       const char * pc;
       const char * lc;
       lc=pc=buf;
-      //      printf("got count %d\n",nread); // debug
+      printf("got count %d\n",nread); // debug
       //      printf("got buffer to check \"%s\"\n",buf); // debug
       
       ///size_t nwritten = fwrite(buf, 1, nread, stdout);
@@ -67,19 +68,22 @@ bunzip_one(FILE *f) {
           
           if ((*pc=='\r') ||(*pc=='\n')) 
             {
-              //                    printf("Check this curr :%d\n",*pc); //
-              //printf("Check this remainder:%d\n",remainder); //
-              //printf("Check this size :%d\n",pc-lc); //
-              //              printf("increment count :%d\n",inccount); //
-              
+	      if (debug()) {
+	      printf("Check this curr :%d\n",*pc); //
+              printf("Check this remainder:%d\n",remainder); //
+              printf("Check this size :%d\n",pc-lc); //
+	      
+              }
               // now we first process the remainder from the previous block		
               memset(buffer3,0,sizeof(buffer2));
               strncpy(buffer3,lc,(pc-lc)); 
               
-              //printf("going to add : \"%s\" to remainder \"%s\" \n",buffer3,buffer2); // 
+	      if (debug())
+		printf("going to add : \"%s\" to remainder \"%s\" \n",buffer3,buffer2); // 
               
               if (remainder) {
-                //                printf("before adding, remainder: \"%s\"\n",buffer2); // debug
+		if (debug())
+		  printf("before adding, remainder: \"%s\"\n",buffer2); // debug
                 if (pc-lc>0)    {
                   strncpy(buffer2 +(remainder ),buffer3,strlen(buffer3)); 
                 }
@@ -88,7 +92,8 @@ bunzip_one(FILE *f) {
                 strncpy(buffer2,buffer3,strlen(buffer3)); 
               }
               
-              //              printf("after adding \"%s\"\n",buffer2); // debug
+	      if (debug())
+		printf("after adding \"%s\"\n",buffer2); // debug
               // process a line
               process_line(buffer2);
 

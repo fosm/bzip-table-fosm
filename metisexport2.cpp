@@ -17,8 +17,8 @@
 #include "FOSMBin.hpp"
 
 typedef boost::adjacency_list<boost::listS, boost::vecS, boost::undirectedS> Graph;
-typedef typename Graph::vertex_descriptor vertex_descriptor;
-typedef typename Graph::edge_property_type edge_property; 
+typedef  Graph::vertex_descriptor vertex_descriptor;
+typedef Graph::edge_property_type edge_property; 
 
 
 int edgecount;
