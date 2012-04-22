@@ -12,7 +12,7 @@ const int blocksize=1024;
 #include "tagfile.hpp"
 #include "wayfile.hpp"
 
-
+#include <map>
 class OSMWorldImp
 {
 public:
@@ -33,8 +33,11 @@ public:
   long int current_id;
   long int parent_id;
   long int current_node;
+  int current_inode;
   long int current_way;
+  int current_iway;
   long int current_rel;
+  int current_irel;
   long int current_uid;
   long int current_cs;
   long int current_ver;
@@ -71,7 +74,13 @@ public:
   DataFile<long int> rel_cs;
   DataFile<long int> rel_ver;
   DataFile<time_t>   rel_timestamp; 
-  
+
+  typedef std::map<int, int > node_index_t; // node id to node idx
+
+  // simple id -> int
+  node_index_t node_index;
+  node_index_t way_index;
+  node_index_t rel_index;
 
   
   OSMWorldImp () :
@@ -307,28 +316,39 @@ public:
 
 
     current_id=id;
-
+    int index=node_ids.count();
     // write to disk
     switch (get_current_element_type()) {
     case t_node:
       node_ids.push_back(id);
+      index=node_ids.count();
+      node_index[id]=index; // save the index for referencing
+      //      cerr << "node id:" << id  << "idx: "<< index << endl;
       current_node=id;
+      current_inode=index;
       break;
      
     case    t_way:
       way_ids.push_back(id);
+      index=way_ids.count();
+      way_index[id]=index; // save the index for referencing
       current_way=id;
+      current_iway=index;
       break;
       
     case    t_relation:
       rel_ids.push_back(id);
+      index=rel_ids.count();
+      rel_index[id]=index; // save the index for referencing
       current_rel=id;
+      current_irel=index;
       break;
 
     default:
       break;
 
     };
+
   }
 
   void set_current_uid(long int uid) {
@@ -393,11 +413,17 @@ public:
   }
 
   void set_way_node_ref(long int ref) {
-    
-    switch (get_parent_element_type()) {
-    
+
+    int index =node_index[ref];
+    /*
+    cerr << "REF " << ref << "\t";
+    cerr << "iREF " << index << "\t";
+    cerr << "way " << current_way << "\t";
+    cerr << "iway " << current_iway << endl;
+    */
+    switch (get_parent_element_type()) {   
     case t_way:
-      way_nodes.push_back(current_way,ref);
+      way_nodes.push_back(current_iway,index);
       break;     
       
     default:

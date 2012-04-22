@@ -13,7 +13,7 @@ public:
     
     component_map_t::iterator iter;
     for (iter=component_map.begin();iter!=component_map.end();iter++)    {
-      cout << "component " << iter->first << endl;
+          cout << "component " << iter->first << endl;
       vector<int>::const_iterator cii;
       vector<int> &data =iter->second;
       std::map<int, int> component_ways; //each way from this component, with a count   
@@ -23,6 +23,10 @@ public:
       sprintf(buffer,"split/%d.osm",component);
       
       ofstream of(buffer);
+      if(!of){
+        cerr << "cannot open " << buffer << endl;
+        return ;
+      }
       of << "<?xml version='1.0' encoding='UTF-8'?>" << endl;
       of << "<osm version=\"0.6\" generator=\"fosmbin2osm\">" << endl;
 
@@ -128,6 +132,18 @@ int main()
 {
   EmitOSM geo;
   geo.read_data();
-  geo.read_components(); // this optional data is read in
+  //  geo.read_components(); // this optional data is read in
+  
+  vector<int>::const_iterator cii;
+  int i=0;
+  for(i=0; i < geo.way_id.size(); i++) {
+    geo.component_map[0].push_back(i);
+  }
+
+  for(i=0; i < geo.node_id.size(); i++) {
+    geo.node_components.push_back(0);
+  }
+
   geo.ProcessNodes();  
+  geo.report();
 }

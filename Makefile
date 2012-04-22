@@ -1,11 +1,15 @@
 CC = gcc 
-CFLAGS = # -O0 -g -DTESTING
+CFLAGS = -O0 -g -DTESTING
 
 PROGS=bzip-table seek-bunzip bzip-table-fosm bzip-table-linecount ragelosm
 
 HEADERS= datafile.hpp tagfile.hpp wayfile.hpp fileindexer.hpp fileindexer.hpp ifileindexer.hpp
 
 all: $(PROGS) all2
+
+FOSMBin.o : FOSMBin.cpp FOSMBin.hpp
+	g++ $(CFLAGS) -c $< -o $@ 	
+
 
 bzip-table : bzip-table.c micro-bunzip.c
 	g++ $(CFLAGS) bzip-table.c micro-bunzip.c -o $@
@@ -116,8 +120,9 @@ componentsreadbin : componentsreadbin.c
 	gcc -o componentsreadbin componentsreadbin.c
 # use this to create a pack file perl process_components.pl
 
-readalldata : readalldata.cpp FOSMBin.hpp
-	g++ -g -o readalldata readalldata.cpp
+
+readalldata : readalldata.cpp FOSMBin.hpp FOSMBin.o
+	g++ -g -o readalldata readalldata.cpp FOSMBin.o
 
 waysreadbin : waysreadbin.c 
 	g++ -o waysreadbin waysreadbin.c
@@ -125,7 +130,12 @@ waysreadbin : waysreadbin.c
 dumplatlon : dumplatlon.cpp FOSMBin.hpp
 	g++ -o dumplatlon dumplatlon.cpp
 
-hierachy : hierarchybuilder.cpp FOSMBin.hpp
-	g++ -o hierachy hierarchybuilder.cpp
+hierachy : hierarchybuilder.cpp FOSMBin.hpp FOSMBin.o
+	g++ -o hierachy hierarchybuilder.cpp FOSMBin.o
 
 
+testral: readalldata
+	./readalldata
+
+retest : testoffenbach testral
+	echo ok

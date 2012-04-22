@@ -2,17 +2,27 @@
 class WayNodeFileEntry
 {
 public:
-  long int way;
-  long int node;
+  //  long int way;
+  //  long int node;
+  int iway;
+  int inode;
 public:
-  WayNodeFileEntry(const long int & way,const long int & node):
-    way(way),
-    node(node)
-  {      }
+  WayNodeFileEntry(//const long int & way,
+                   const int & iway,
+                   //const long int & node,
+                   const int & inode):
+    //    way(way),
+    //    node(node),
+    iway(iway),
+    inode(inode)
+  {      
+  }
 
   void write (ostream & os) {
-    os << way  << "\t" 
-       << node   << endl;
+    //    os << way  << "[" << iway << "]\t" 
+    //       << node << "[" << inode << "]\t" << endl;
+    os <<  iway <<"\t" 
+       <<  inode << endl;
   }
 
 };
@@ -20,8 +30,9 @@ public:
 
 class WayNodeFile {
 public:
-  vector< WayNodeFileEntry > data;
+  vector< WayNodeFileEntry > way_nodes;
   ofstream txtfile;
+  ofstream txtfile2; // debug of the bin file
   ofstream file;
   string   filename;
   long int total_count;
@@ -30,28 +41,28 @@ public:
   
   WayNodeFile(const char * filename)
     :txtfile(string(string ("datafiles/") +  string(filename) + ".txt").c_str()),
+     txtfile2(string(string ("datafiles/") +  string(filename) + "2.txt").c_str()),
      file(string(string ("datafiles/") + string(filename) + ".bin").c_str()),
      total_way_count(0),
      total_count(0),
      write_count(0),
      filename(filename)
   {    
-    // now write a 0 that is the count of object, it will be filled in at the end with the count of ways
-    file.write((const char*)&total_way_count, sizeof(long int)); // skip the binary file now
   }           
 
   ~WayNodeFile()
   {
-    int count =data.size();
+    int count =way_nodes.size();
     write(count);
-    data.clear();
+    way_nodes.clear();
     txtfile.close();
+    txtfile2.close();
     cout << "Closing file " << filename << ", wrote " << total_count << endl;
   }
 
   void flush()
   {
-    write(data.size());
+    write(way_nodes.size());
   }
 
   long long count()
@@ -61,43 +72,42 @@ public:
 
   void write(int count)
   {
-
-    // way count
-    file.write((const char*)&write_count, sizeof(long int)); // skip the binary file now
-    // append the data to the file
-
-
     typename vector< WayNodeFileEntry >::iterator i;
     int index=0;
-    int way=0;
-    for(i=data.begin();i!=data.end();i++)
+    int way=-1;
+    for(i=way_nodes.begin();i!=way_nodes.end();i++)
       {
-        // check this
-        //file.write((const char*)&data[i], 1 * sizeof(WayNodeFileEntry)); // skip the binary file now
-        //        typename vector< WayNodeFileEntry >::iterator i2=data[i];
-        if (way != i->way)
+        if (way != i->iway)
           {
+            long int zero=-1;
+            file.write((const char*)&zero, 1 * sizeof(int)); // zero before each list
+            txtfile2 << "Z" << zero << endl;
+
             // new way
-            file.write((const char*)&i->way, 1 * sizeof(long int)); // skip the binary file now
-            way = i->way; // we look for changes
+            file.write((const char*)&i->iway, 1 * sizeof(int)); // skip the binary file now
+            way = i->iway; // we look for changes
+            txtfile2 << "W:"<< way<< endl; // way
             total_way_count++;
           }
-        file.write((const char*)&i->node, 1 * sizeof(long int)); // write a node cound, set to zero and we will fix it later.
-        //file.write((const char*)&data[i].node, 1 * sizeof(long int)); // write a node
+
+        // write the node referenced in this way as a long 
+        file.write((const char*)&(i->inode), 1 * sizeof(int));
+        txtfile2 << "ND:"<< i->inode; // way
+
         i->write (txtfile);
         write_count++;
         index ++;
 
       }
     cout << "wrote " << total_count << endl;
-    data.clear(); // erase the data
+    way_nodes.clear(); // erase the way_nodes
   }
   
-  void push_back (long int & way,long int & node ){
+  void push_back (int & iway,int & inode ){
     total_count++;
-    WayNodeFileEntry v (way,node);
-    data.push_back(v);
-    int count =data.size();
+    WayNodeFileEntry v (iway,inode);
+    way_nodes.push_back(v);
+    int count =way_nodes.size();
     if (count > blocksize)   {
       write(count);
     }           
