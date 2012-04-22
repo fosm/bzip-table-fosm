@@ -5,11 +5,13 @@ void process_line(const char * buffer); // null terminated
 
 OSMWorld iworld; 
 int scanner(OSMWorld & world,const char *s);
-
+long int seen=0;
 void process_line(const char * buffer)
 {
 //  cerr << "BEGIN " << buffer << "ENDL"<< endl;
-   int ret= scanner(iworld,buffer);
+  iworld.set_current_position(seen);
+  seen += strlen(buffer);
+  int ret= scanner(iworld,buffer);
    
    if (ret != 1)
    {

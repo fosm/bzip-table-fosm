@@ -195,5 +195,9 @@ OSMWorldImp world;
 
    void OSMWorld::scannerstatus(int s, char const* v){
     world.scannerstatus(s, v);
-}
+    }
+
+   void OSMWorld::set_current_position(int p){
+    world.set_current_position(p);
+    }
 
