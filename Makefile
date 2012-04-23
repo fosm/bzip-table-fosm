@@ -1,5 +1,5 @@
 CC = gcc 
-CFLAGS = -O3 -DTESTING -I ~/perl5/include -L ~/perl5/lib
+CFLAGS = -g -O3 -DTESTING -I ~/perl5/include -L ~/perl5/lib
 
 PROGS=bzip-table  bzip-table-fosm bzip-table-linecount ragelosm
 
@@ -94,6 +94,9 @@ testways: ragelosm
 testoffenbach: ragelosm 
 	./ragelosm   ~/OSM-API-Proxy/data/offenbach.osm.bz2
 
+vgtestoffenbach: ragelosm 
+	valgrind  --log-file=valgrind.txt -v --ignore-ranges=0xbeaa40ec-0xbeadd0cc --leak-check=full  --show-reachable=yes	--track-origins=yes  ./ragelosm   ~/OSM-API-Proxy/data/offenbach.osm.bz2
+#
 viz : indexer.rl
 	ragel -V indexer.rl > indexer.dot
 	dotty indexer.dot
@@ -121,7 +124,7 @@ componentsreadbin : componentsreadbin.c
 
 
 readalldata : readalldata.cpp FOSMBin.hpp FOSMBin.o
-	g++ -g -o readalldata readalldata.cpp FOSMBin.o
+	g++ $(CFLAGS) -g -o readalldata readalldata.cpp FOSMBin.o
 
 waysreadbin : waysreadbin.c 
 	g++ -o waysreadbin waysreadbin.c

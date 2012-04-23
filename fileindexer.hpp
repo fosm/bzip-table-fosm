@@ -28,7 +28,7 @@ public:
   } current_element_type,parent_element_type;
 
   struct tm current_tm;
-  string laststring;
+  //string laststring;
   long int object_count;
   long int current_id;
   long int parent_id;
@@ -43,8 +43,9 @@ public:
   long int current_ver;
   int      current_vis;
   time_t   current_timestamp;
-  string   current_tag_key;
-  string   current_tag_value;
+  //string   current_tag_key;
+  const char *   current_tag_key; // lets see if this works
+  //string   current_tag_value;
   istream::pos_type marker; // position in the file
 
   DataFile<long int> node_positions;
@@ -392,7 +393,7 @@ public:
     };
   }
 
-  void set_action(const string & action) {
+  void set_action(const char * action) {
     //    cerr << action << endl;
   }
 
@@ -438,7 +439,7 @@ public:
     };
   }
 
-  void set_current_user(string user) { // we dont need this, the uid should be ok
+  void set_current_user(const char * user) { // we dont need this, the uid should be ok
     return;
   }
 
@@ -583,13 +584,13 @@ void set_current_ver(long int id) {
 
   void set_tag_val(const char * s) {
 
-    current_tag_value =s;
+    //    current_tag_value =s;
     if(current_id ==0)   {
       cout << "no current id! bailing" << endl;
       exit(0); //
     }
 
-    node_tags.push_back(current_id,current_tag_key,current_tag_value);
+    node_tags.push_back(current_id,current_tag_key,s);
   }
 
 
@@ -683,7 +684,7 @@ void set_current_ver(long int id) {
         exit (123);
       }
 
-    laststring =buffer;
+    //    laststring =buffer;
   }
 
   void finish_current_object()
@@ -709,7 +710,7 @@ void set_current_ver(long int id) {
 
     if (!check_counts_nodes())
       {
-        cerr << "last   \"" << laststring << "\"" << endl;
+        //        cerr << "last   \"" << laststring << "\"" << endl;
         exit (123);
       }
 
