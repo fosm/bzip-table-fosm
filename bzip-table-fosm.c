@@ -3,7 +3,7 @@
 
 #include "micro-bunzip.h"
 
-#define BUF_SIZE 819200
+#define BUF_SIZE 8192
 /**
  * Read a bzip2 file from stdin and print
  * 1) The block size

@@ -7,7 +7,7 @@ using namespace std;
 #include <stdlib.h>
 #include <time.h>
 
-const int blocksize=1024;
+const int blocksize=512;
 #include "datafile.hpp"
 #include "tagfile.hpp"
 #include "wayfile.hpp"
@@ -79,9 +79,10 @@ public:
 
   int scanlines;
   // simple id -> int
-  node_index_t node_index;
-  node_index_t way_index;
-  node_index_t rel_index;
+  // removeing for size
+  //  node_index_t node_index;
+  ///  node_index_t way_index;
+  //  node_index_t rel_index;
 
   
   OSMWorldImp () :
@@ -326,7 +327,7 @@ public:
     case t_node:
       node_ids.push_back(id);
       index=node_ids.count();
-      node_index[id]=index; // save the index for referencing
+      //node_index[id]=index; // save the index for referencing
       //      cerr << "node id:" << id  << "idx: "<< index << endl;
       current_node=id;
       current_inode=index;
@@ -335,7 +336,7 @@ public:
     case    t_way:
       way_ids.push_back(id);
       index=way_ids.count();
-      way_index[id]=index; // save the index for referencing
+      //      way_index[id]=index; // save the index for referencing
       current_way=id;
       current_iway=index;
       break;
@@ -343,7 +344,7 @@ public:
     case    t_relation:
       rel_ids.push_back(id);
       index=rel_ids.count();
-      rel_index[id]=index; // save the index for referencing
+      //      rel_index[id]=index; // save the index for referencing
       current_rel=id;
       current_irel=index;
       break;
@@ -418,7 +419,8 @@ public:
 
   void set_way_node_ref(long int ref) {
 
-    int index =node_index[ref];
+    //too big    int index =node_index[ref];
+    //    int index =node_index[ref];
     /*
     cerr << "REF " << ref << "\t";
     cerr << "iREF " << index << "\t";
@@ -427,7 +429,7 @@ public:
     */
     switch (get_parent_element_type()) {   
     case t_way:
-      way_nodes.push_back(current_iway,index);
+      way_nodes.push_back(current_iway,ref);
       break;     
       
     default:
