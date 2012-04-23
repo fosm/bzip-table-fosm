@@ -9,7 +9,7 @@ long int seen=0;
 void process_line(const char * buffer)
 {
 //  cerr << "BEGIN " << buffer << "ENDL"<< endl;
-  iworld.set_current_position(seen);
+  iworld.set_current_pos(seen);
   seen += strlen(buffer);
   int ret= scanner(iworld,buffer);
    

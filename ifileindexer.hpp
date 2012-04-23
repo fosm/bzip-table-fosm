@@ -8,7 +8,7 @@ class OSMWorld
 {
 public:
 
-  void set_current_position(int pos); 
+  void set_current_pos(int pos); 
    //record_start_position
    void record_start_position(); 
    template <class T> void record_start_position(const T &);

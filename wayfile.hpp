@@ -5,12 +5,12 @@ public:
   //  long int way;
   //  long int node;
   int iway;
-  int inode;
+  long int inode;
 public:
   WayNodeFileEntry(//const long int & way,
                    const int & iway,
                    //const long int & node,
-                   const int & inode):
+                   const long int & inode):
     //    way(way),
     //    node(node),
     iway(iway),
@@ -84,13 +84,13 @@ public:
             txtfile2 << "Z" << zero << endl;
 
             // new way
-            file.write((const char*)&i->iway, 1 * sizeof(int)); // skip the binary file now
+            file.write((const char*)&i->iway, 1 * sizeof(long int)); // skip the binary file now
             way = i->iway; // we look for changes
             txtfile2 << "W:"<< way<< endl; // way
             total_way_count++;
           }
 
-        // write the node referenced in this way as a long 
+        // write the null int node to end
         file.write((const char*)&(i->inode), 1 * sizeof(int));
         txtfile2 << "ND:"<< i->inode; // way
 
@@ -103,7 +103,7 @@ public:
     way_nodes.clear(); // erase the way_nodes
   }
   
-  void push_back (int & iway,int & inode ){
+  void push_back (int & iway,long int & inode ){
     total_count++;
     WayNodeFileEntry v (iway,inode);
     way_nodes.push_back(v);

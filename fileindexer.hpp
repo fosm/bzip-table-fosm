@@ -197,7 +197,7 @@ public:
     rel_positions.push_back(marker);
   }
 
-  void set_current_position(int pos)
+  void set_current_pos(int pos)
   {
     // cout << "Current pos is " << pos << endl;
     marker =pos;

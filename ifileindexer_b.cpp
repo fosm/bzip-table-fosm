@@ -197,7 +197,7 @@ OSMWorldImp world;
     world.scannerstatus(s, v);
     }
 
-   void OSMWorld::set_current_position(int p){
-    world.set_current_position(p);
+   void OSMWorld::set_current_pos(int p){
+    world.set_current_pos(p);
     }
 
