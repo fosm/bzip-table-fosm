@@ -72,7 +72,7 @@ public:
     data.push_back(v);
     int count =data.size();
     if (count > 100)   {
-      cerr << "wrote tags count " << total_count << endl;
+      //cerr << "wrote tags count " << total_count << endl;
       write(count);
     }           
   }

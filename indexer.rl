@@ -2,11 +2,19 @@
 %%{
 machine osmkeys;
 
+action AddChar {
+//       cout << "CS:" << fcurs << endl;          
+//        cerr <<  "debug"<< fc << endl;
+//       cerr << fcurs << ":" << fc << endl;	
+       currenttoken.push_back(fc);
+}
+
 action DebugChar {
        cerr << fc << endl;
 }
 
 action AddCharDebug {
+     cout << "CS:" << fcurs << endl;          
      cerr <<  "debug"<< fc << endl;
      currenttoken.push_back(fc);
 }
@@ -154,10 +162,6 @@ action StartValue {
      currenttoken.clear();  
 }
 
-action AddChar {
-//       cerr << fcurs << ":" << fc << endl;	
-       currenttoken.push_back(fc);
-}
 
 
 

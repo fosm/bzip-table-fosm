@@ -25,7 +25,7 @@
 
 int debug() {return 0;}
 // the user define process function, is not defined, user has to define it to link
-void process_line(const char * buffer); // null terminated
+int process_line(const char * buffer); // null terminated
 
 
 
@@ -34,6 +34,7 @@ bunzip_one(FILE *f) {
   int bzError=0;
   BZFILE *bzf=0;
   char buf[BUF_SIZE]={0};
+
 
   bzf = BZ2_bzReadOpen(&bzError, f, 0, 0, NULL, 0);
   if (bzError != BZ_OK) {
@@ -45,6 +46,8 @@ bunzip_one(FILE *f) {
   int remainder  =0;
   char buffer2[(BUF_SIZE * 2)+1]={0};
   char buffer3[(BUF_SIZE * 2)+1]={0};
+
+  char buffer_last[(BUF_SIZE * 2)+1]={0};
   //memset(buf,0,sizeof(buf)); 
   //  memset(buffer3,0,sizeof(buffer3)); 
   //  memset(buffer2,0,sizeof(buffer2)); 
@@ -56,7 +59,7 @@ bunzip_one(FILE *f) {
       const char * lc;
       lc=pc=buf;
       printf("got count %d\n",nread); // debug
-      //      printf("got buffer to check \"%s\"\n",buf); // debug
+      //printf("got buffer to check \"%s\"\n",buf); // debug
       
       ///size_t nwritten = fwrite(buf, 1, nread, stdout);
       // now we look for newlines
@@ -90,19 +93,20 @@ bunzip_one(FILE *f) {
       /*   	  printf("before adding, remainder: \"%s\"\n",buffer2); // debug */
       /*           if (pc-lc>0)    { */
                 //int len=strlen(buffer2);
-                //                printf("remainder :%d\n",remainder); 
+                printf("remainder :%d\n",remainder); 
                 //                printf("new len :%d\n",len); 
                 //                int len2=strlen(buffer3);
                 //                printf("new len2 :%d\n",len2); 
                 //                int lenc=len+len2;
-                strncpy(buffer2 +(remainder ),buffer3,strlen(buffer3)); 
+                strcpy(buffer2 +(remainder ),buffer3); 
+                remainder=0;
       /*           } */
                 //len=strlen(buffer2);
                 //                printf("Check this curr :%.*s\n",80,buffer2); 
                 //                printf("new len3 :%d %d\n",len, lenc); 
 
               } else {
-                strncpy(buffer2,buffer3,strlen(buffer3)); 
+                strcpy(buffer2,buffer3); 
               } 
 
               //              printf("Check this curr :%.*s\n",40,buffer2); 
@@ -113,12 +117,24 @@ bunzip_one(FILE *f) {
       /*         // process a line */
               // for valgrind.              
               
-              process_line(buffer2);
+              //              printf("processline(%.*s)\n",200,buffer2);
+              //printf("C(%.*s,%d)\n",100,pc,*pc);
+              int ok = process_line(buffer2);
+              //              printf ("Process line returned %d\n",ok);
 
-                 remainder=0;
-      /*         memset(buffer2,0,sizeof(buffer2)); */
-              buffer2[0]=0;
-              buffer3[0]=0;
+              if(ok==0) {
+                
+              }else {               
+                printf("error last buffer \"%s\"\n",buffer_last); // debug */
+                printf("current buffer \"%s\"\n",buffer2); // debug */
+                return (233);
+              }
+              strcpy(buffer_last, buffer2);
+
+              memset(buffer2,0,sizeof(buffer2)); 
+              memset(buffer3,0,sizeof(buffer3)); 
+              //buffer2[0]=0;
+              //buffer3[0]=0;
               lc=pc;
               linecount ++; 
               
@@ -126,8 +142,6 @@ bunzip_one(FILE *f) {
 
           /*     char buf[2]={0,0}; */
           /*     buf[0]=*pc; */
-          
-          /*   //printf("C(%s,%d:%d)\t",buf,*pc,inccount); // */
           /*   // printf(">%s",buf); // */
           
           pc++; 
@@ -149,12 +163,12 @@ bunzip_one(FILE *f) {
       /*     remainder += length; */
       /*     //printf("leftover check2:\"%d\"\n",length);  */
       /*   } */
-       }      
-
+       }
+       
       blockcount++;
 
-
     }
+    
   }
 
   if (bzError != BZ_STREAM_END) {

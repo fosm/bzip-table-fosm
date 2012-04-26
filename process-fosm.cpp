@@ -1,4 +1,4 @@
-void process_line(const char * buffer); // null terminated
+int process_line(const char * buffer); // null terminated
 //#include <iostream>
 //using namespace std;
 #include "ifileindexer.hpp"
@@ -6,7 +6,7 @@ void process_line(const char * buffer); // null terminated
 OSMWorld iworld; 
 int scanner(OSMWorld & world,const char *s);
 long int seen=0;
-void process_line(const char * buffer)
+int process_line(const char * buffer)
 {
   //  cerr << "BEGIN " << buffer << "ENDL"<< endl;
   iworld.set_current_pos(seen);
@@ -18,15 +18,21 @@ void process_line(const char * buffer)
    
       if (ret != 1)
         {
-          //     cerr << "scanner returned ret " << ret << " for \"" << buffer << "\""<< endl;
+          
           cerr << "scanner returned ret " << ret << " for len :" << strlen(buffer) << endl;
+
         }
       else
         {
-          ///      cerr << "scanner returned ret " << ret << " for len :" << strlen(buffer) << endl;
+          //cerr << "OK scanner returned ret " << ret << " for len :" << strlen(buffer) << endl;
         }
       
-      iworld.scannerstatus(ret,buffer);
+      if (iworld.scannerstatus(ret,buffer)!=0)
+        {
+          cerr << "ERROR: status returned ret " << ret << " for \"" << buffer << "\""<< endl;
+          //          exit(233);
+          return -1;
+        }
     }
-
+  return 0;
 }

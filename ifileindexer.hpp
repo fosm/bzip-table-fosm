@@ -114,6 +114,6 @@ public:
    template <class T> void finish_current_object(const T &);
    
 
-   void scannerstatus(int s, char const* v);
+  int scannerstatus(int s, char const* v);
 
 };

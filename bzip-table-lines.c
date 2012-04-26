@@ -18,7 +18,7 @@
  */
 
 // the user define process function, is not defined, user has to define it to link
-void process_line(const char * buffer); // null terminated
+int process_line(const char * buffer); // null terminated
 
 int main( int argc, char*argv[] ) {
   bunzip_data *bd;

@@ -649,7 +649,7 @@ void set_current_ver(long int id) {
 
   
   // 
-  void scannerstatus(int stat, const char * buffer)
+  int scannerstatus(int stat, const char * buffer)
   {
     if (scanlines++ % 10000 ==0)
       {
@@ -681,10 +681,12 @@ void set_current_ver(long int id) {
 	cerr << "error" << endl;
 	//        cerr << "last   \"" << laststring << "\"" << endl;
 	//        cerr << "buffer \"" << buffer << "\""<< endl;
-        exit (123);
+        return -1;
+        //exit (123);
       }
 
     //    laststring =buffer;
+    return 0;
   }
 
   void finish_current_object()

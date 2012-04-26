@@ -2,7 +2,7 @@
 #line 1 "indexer.rl"
 
 
-#line 437 "indexer.rl"
+#line 441 "indexer.rl"
 
 
 
@@ -96,7 +96,7 @@ static const int osmkeys_error = 0;
 static const int osmkeys_en_main = 612;
 
 
-#line 440 "indexer.rl"
+#line 444 "indexer.rl"
 
 #define BUFSIZE 128
 #include "ifileindexer.hpp"
@@ -114,7 +114,7 @@ int scanner(OSMWorld & world,const char *s)
 	cs = osmkeys_start;
 	}
 
-#line 452 "indexer.rl"
+#line 456 "indexer.rl"
   
 #line 120 "indexer.c"
 	{
@@ -4239,8 +4239,17 @@ case 638:
 	tr619: cs = 637; goto f7;
 	tr658: cs = 638; goto f2;
 
+f10:
+#line 5 "indexer.rl"
+	{
+//       cout << "CS:" << fcurs << endl;          
+//        cerr <<  "debug"<< fc << endl;
+//       cerr << fcurs << ":" << fc << endl;	
+       currenttoken.push_back((*p));
+}
+	goto _again;
 f8:
-#line 24 "indexer.rl"
+#line 32 "indexer.rl"
 	{
        cerr <<"an error has occured starter"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4249,7 +4258,7 @@ f8:
 }
 	goto _again;
 f36:
-#line 31 "indexer.rl"
+#line 39 "indexer.rl"
 	{
        cerr <<"an error has occured node"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4258,7 +4267,7 @@ f36:
 }
 	goto _again;
 f35:
-#line 38 "indexer.rl"
+#line 46 "indexer.rl"
 	{
        cerr <<"an error has occured attr"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4267,7 +4276,7 @@ f35:
 }
 	goto _again;
 f1:
-#line 45 "indexer.rl"
+#line 53 "indexer.rl"
 	{
        cerr <<"an error has occured element"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4276,7 +4285,7 @@ f1:
 }
 	goto _again;
 f38:
-#line 52 "indexer.rl"
+#line 60 "indexer.rl"
 	{
        cerr <<"an error has occured attr uid"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4285,7 +4294,7 @@ f38:
 }
 	goto _again;
 f37:
-#line 59 "indexer.rl"
+#line 67 "indexer.rl"
 	{
        cerr <<"an error has occured attr ts"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4294,20 +4303,13 @@ f37:
 }
 	goto _again;
 f9:
-#line 153 "indexer.rl"
+#line 161 "indexer.rl"
 	{
      currenttoken.clear();  
 }
 	goto _again;
-f10:
-#line 157 "indexer.rl"
-	{
-//       cerr << fcurs << ":" << fc << endl;	
-       currenttoken.push_back((*p));
-}
-	goto _again;
 f20:
-#line 212 "indexer.rl"
+#line 216 "indexer.rl"
 	{
      char *endptr;   // ignore  
      int year=strtol(currenttoken.c_str(), &endptr, 10);
@@ -4316,7 +4318,7 @@ f20:
 }
 	goto _again;
 f21:
-#line 219 "indexer.rl"
+#line 223 "indexer.rl"
 	{
      char *endptr;   // ignore  
      int month=strtol(currenttoken.c_str(), &endptr, 10);
@@ -4325,7 +4327,7 @@ f21:
 }
 	goto _again;
 f22:
-#line 226 "indexer.rl"
+#line 230 "indexer.rl"
 	{
      char *endptr;   // ignore  
      int day=strtol(currenttoken.c_str(), &endptr, 10);
@@ -4334,7 +4336,7 @@ f22:
 }
 	goto _again;
 f23:
-#line 233 "indexer.rl"
+#line 237 "indexer.rl"
 	{
      char *endptr;   // ignore  
      int hour=strtol(currenttoken.c_str(), &endptr, 10);
@@ -4343,7 +4345,7 @@ f23:
 }
 	goto _again;
 f24:
-#line 240 "indexer.rl"
+#line 244 "indexer.rl"
 	{
      char *endptr;   // ignore  
      int minute=strtol(currenttoken.c_str(), &endptr, 10);
@@ -4352,7 +4354,7 @@ f24:
 }
 	goto _again;
 f25:
-#line 247 "indexer.rl"
+#line 251 "indexer.rl"
 	{
      char *endptr;   // ignore  
      int second=strtol(currenttoken.c_str(), &endptr, 10);
@@ -4361,30 +4363,30 @@ f25:
 }
 	goto _again;
 f32:
-#line 277 "indexer.rl"
+#line 281 "indexer.rl"
 	{
      world.set_current_vis(1);
 }
 	goto _again;
 f31:
-#line 280 "indexer.rl"
+#line 284 "indexer.rl"
 	{
      world.set_current_vis(0);
 }
 	goto _again;
 f2:
-#line 435 "indexer.rl"
+#line 439 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f18:
-#line 31 "indexer.rl"
+#line 39 "indexer.rl"
 	{
        cerr <<"an error has occured node"  << endl;            
        cout << "CS:" << (_ps) << endl;     
        cout << "str:\'" << p << "\'" <<endl;     
        res = 12;
 }
-#line 24 "indexer.rl"
+#line 32 "indexer.rl"
 	{
        cerr <<"an error has occured starter"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4393,14 +4395,14 @@ f18:
 }
 	goto _again;
 f43:
-#line 31 "indexer.rl"
+#line 39 "indexer.rl"
 	{
        cerr <<"an error has occured node"  << endl;            
        cout << "CS:" << (_ps) << endl;     
        cout << "str:\'" << p << "\'" <<endl;     
        res = 12;
 }
-#line 38 "indexer.rl"
+#line 46 "indexer.rl"
 	{
        cerr <<"an error has occured attr"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4409,14 +4411,14 @@ f43:
 }
 	goto _again;
 f13:
-#line 38 "indexer.rl"
+#line 46 "indexer.rl"
 	{
        cerr <<"an error has occured attr"  << endl;            
        cout << "CS:" << (_ps) << endl;     
        cout << "str:\'" << p << "\'" <<endl;     
        res = 13;
 }
-#line 24 "indexer.rl"
+#line 32 "indexer.rl"
 	{
        cerr <<"an error has occured starter"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4425,14 +4427,14 @@ f13:
 }
 	goto _again;
 f27:
-#line 52 "indexer.rl"
+#line 60 "indexer.rl"
 	{
        cerr <<"an error has occured attr uid"  << endl;            
        cout << "CS:" << (_ps) << endl;     
        cout << "str:\'" << p << "\'" <<endl;     
        res = 131;
 }
-#line 24 "indexer.rl"
+#line 32 "indexer.rl"
 	{
        cerr <<"an error has occured starter"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4441,14 +4443,14 @@ f27:
 }
 	goto _again;
 f45:
-#line 52 "indexer.rl"
+#line 60 "indexer.rl"
 	{
        cerr <<"an error has occured attr uid"  << endl;            
        cout << "CS:" << (_ps) << endl;     
        cout << "str:\'" << p << "\'" <<endl;     
        res = 131;
 }
-#line 38 "indexer.rl"
+#line 46 "indexer.rl"
 	{
        cerr <<"an error has occured attr"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4457,14 +4459,14 @@ f45:
 }
 	goto _again;
 f26:
-#line 59 "indexer.rl"
+#line 67 "indexer.rl"
 	{
        cerr <<"an error has occured attr ts"  << endl;            
        cout << "CS:" << (_ps) << endl;     
        cout << "str:\'" << p << "\'" <<endl;     
        res = 132;
 }
-#line 24 "indexer.rl"
+#line 32 "indexer.rl"
 	{
        cerr <<"an error has occured starter"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4473,14 +4475,14 @@ f26:
 }
 	goto _again;
 f44:
-#line 59 "indexer.rl"
+#line 67 "indexer.rl"
 	{
        cerr <<"an error has occured attr ts"  << endl;            
        cout << "CS:" << (_ps) << endl;     
        cout << "str:\'" << p << "\'" <<endl;     
        res = 132;
 }
-#line 38 "indexer.rl"
+#line 46 "indexer.rl"
 	{
        cerr <<"an error has occured attr"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4489,140 +4491,140 @@ f44:
 }
 	goto _again;
 f0:
-#line 129 "indexer.rl"
+#line 137 "indexer.rl"
 	{
 //		cerr << "end element " << endl;
 		world.finish_current_object();
                 }
-#line 435 "indexer.rl"
+#line 439 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f14:
-#line 165 "indexer.rl"
+#line 169 "indexer.rl"
 	{
      char *endptr;   // ignore  
 //     cerr << "currenttoken" << currenttoken << endl;
      world.set_current_id(strtol(currenttoken.c_str(), &endptr, 10));
 }
-#line 435 "indexer.rl"
+#line 439 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f12:
-#line 179 "indexer.rl"
+#line 183 "indexer.rl"
 	{
      char *endptr;   // ignore
      world.set_current_cs(strtol(currenttoken.c_str(), &endptr, 10));
 }
-#line 435 "indexer.rl"
+#line 439 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f30:
-#line 190 "indexer.rl"
+#line 194 "indexer.rl"
 	{
      char *endptr;   // ignore
 //     cerr << "Version " << currenttoken << endl;
      world.set_current_ver(strtol(currenttoken.c_str(), &endptr, 10));
 }
-#line 435 "indexer.rl"
+#line 439 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f28:
-#line 201 "indexer.rl"
+#line 205 "indexer.rl"
 	{
      char *endptr;   // ignore
 //     cerr << "user " << currenttoken << endl;
      world.set_current_uid(strtol(currenttoken.c_str(), &endptr, 10));
 }
-#line 435 "indexer.rl"
+#line 439 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f33:
-#line 289 "indexer.rl"
+#line 293 "indexer.rl"
 	{
      char *endptr;   // ignore
 //     cerr << "user " << currenttoken << endl;
      world.set_current_user(currenttoken.c_str());
 }
-#line 435 "indexer.rl"
+#line 439 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f11:
-#line 300 "indexer.rl"
+#line 304 "indexer.rl"
 	{
      char *endptr;   // ignore
 //     cerr << "action " << currenttoken << endl;
      world.set_action(currenttoken.c_str());
 }
-#line 435 "indexer.rl"
+#line 439 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f29:
-#line 311 "indexer.rl"
+#line 315 "indexer.rl"
 	{
      char *endptr;   // ignore
 //     cerr << "v:"<< currenttoken << endl;
      world.set_tag_val(currenttoken.c_str());
 }
-#line 435 "indexer.rl"
+#line 439 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f15:
-#line 318 "indexer.rl"
+#line 322 "indexer.rl"
 	{
      char *endptr;   // ignore
      world.set_tag_key(currenttoken.c_str());
      currenttoken="";
 }
-#line 435 "indexer.rl"
+#line 439 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f16:
-#line 343 "indexer.rl"
+#line 347 "indexer.rl"
 	{
      char *endptr;   // ignore
 //     cerr << "lat" << currenttoken << endl;
      world.set_current_lat(strtod(currenttoken.c_str(), &endptr));
 }
-#line 435 "indexer.rl"
+#line 439 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f17:
-#line 353 "indexer.rl"
+#line 357 "indexer.rl"
 	{
      char *endptr;   // ignore
 //     cerr << "lon" << currenttoken << endl;
      world.set_current_lon(strtod(currenttoken.c_str(), &endptr));
 }
-#line 435 "indexer.rl"
+#line 439 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f19:
-#line 364 "indexer.rl"
+#line 368 "indexer.rl"
 	{
      char *endptr;   // ignore
 //     cerr << "way node ref " << currenttoken << endl;
      world.set_way_node_ref(strtol(currenttoken.c_str(), &endptr,10));
      currenttoken ="";
 }
-#line 435 "indexer.rl"
+#line 439 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f40:
-#line 31 "indexer.rl"
+#line 39 "indexer.rl"
 	{
        cerr <<"an error has occured node"  << endl;            
        cout << "CS:" << (_ps) << endl;     
        cout << "str:\'" << p << "\'" <<endl;     
        res = 12;
 }
-#line 38 "indexer.rl"
+#line 46 "indexer.rl"
 	{
        cerr <<"an error has occured attr"  << endl;            
        cout << "CS:" << (_ps) << endl;     
        cout << "str:\'" << p << "\'" <<endl;     
        res = 13;
 }
-#line 24 "indexer.rl"
+#line 32 "indexer.rl"
 	{
        cerr <<"an error has occured starter"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4631,21 +4633,21 @@ f40:
 }
 	goto _again;
 f39:
-#line 45 "indexer.rl"
+#line 53 "indexer.rl"
 	{
        cerr <<"an error has occured element"  << endl;            
        cout << "CS:" << (_ps) << endl;     
        cout << "str:\'" << p << "\'" <<endl;     
        res = 14;
 }
-#line 38 "indexer.rl"
+#line 46 "indexer.rl"
 	{
        cerr <<"an error has occured attr"  << endl;            
        cout << "CS:" << (_ps) << endl;     
        cout << "str:\'" << p << "\'" <<endl;     
        res = 13;
 }
-#line 24 "indexer.rl"
+#line 32 "indexer.rl"
 	{
        cerr <<"an error has occured starter"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4654,21 +4656,21 @@ f39:
 }
 	goto _again;
 f42:
-#line 52 "indexer.rl"
+#line 60 "indexer.rl"
 	{
        cerr <<"an error has occured attr uid"  << endl;            
        cout << "CS:" << (_ps) << endl;     
        cout << "str:\'" << p << "\'" <<endl;     
        res = 131;
 }
-#line 38 "indexer.rl"
+#line 46 "indexer.rl"
 	{
        cerr <<"an error has occured attr"  << endl;            
        cout << "CS:" << (_ps) << endl;     
        cout << "str:\'" << p << "\'" <<endl;     
        res = 13;
 }
-#line 24 "indexer.rl"
+#line 32 "indexer.rl"
 	{
        cerr <<"an error has occured starter"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4677,21 +4679,21 @@ f42:
 }
 	goto _again;
 f41:
-#line 59 "indexer.rl"
+#line 67 "indexer.rl"
 	{
        cerr <<"an error has occured attr ts"  << endl;            
        cout << "CS:" << (_ps) << endl;     
        cout << "str:\'" << p << "\'" <<endl;     
        res = 132;
 }
-#line 38 "indexer.rl"
+#line 46 "indexer.rl"
 	{
        cerr <<"an error has occured attr"  << endl;            
        cout << "CS:" << (_ps) << endl;     
        cout << "str:\'" << p << "\'" <<endl;     
        res = 13;
 }
-#line 24 "indexer.rl"
+#line 32 "indexer.rl"
 	{
        cerr <<"an error has occured starter"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4700,88 +4702,88 @@ f41:
 }
 	goto _again;
 f5:
-#line 67 "indexer.rl"
+#line 75 "indexer.rl"
 	{
        world.set_current_element_type_node();
        }
-#line 145 "indexer.rl"
+#line 153 "indexer.rl"
 	{
        // record the start of a type of object
 //       cout << "Record Start CS" << cs << endl;     
        world.record_start_position();
 }
-#line 435 "indexer.rl"
+#line 439 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f34:
-#line 73 "indexer.rl"
+#line 81 "indexer.rl"
 	{
        world.set_current_element_type_way();
        }
-#line 145 "indexer.rl"
+#line 153 "indexer.rl"
 	{
        // record the start of a type of object
 //       cout << "Record Start CS" << cs << endl;     
        world.record_start_position();
 }
-#line 435 "indexer.rl"
+#line 439 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f6:
-#line 79 "indexer.rl"
+#line 87 "indexer.rl"
 	{
        world.set_current_element_type_rel();
        }
-#line 145 "indexer.rl"
+#line 153 "indexer.rl"
 	{
        // record the start of a type of object
 //       cout << "Record Start CS" << cs << endl;     
        world.record_start_position();
 }
-#line 435 "indexer.rl"
+#line 439 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f7:
-#line 85 "indexer.rl"
+#line 93 "indexer.rl"
 	{
 //      cerr << "tag" << endl;
 	world.set_current_element_type_tag();
        }
-#line 145 "indexer.rl"
+#line 153 "indexer.rl"
 	{
        // record the start of a type of object
 //       cout << "Record Start CS" << cs << endl;     
        world.record_start_position();
 }
-#line 435 "indexer.rl"
+#line 439 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f4:
-#line 92 "indexer.rl"
+#line 100 "indexer.rl"
 	{
        world.set_current_element_type_nd();
        }
-#line 145 "indexer.rl"
+#line 153 "indexer.rl"
 	{
        // record the start of a type of object
 //       cout << "Record Start CS" << cs << endl;     
        world.record_start_position();
 }
-#line 435 "indexer.rl"
+#line 439 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f3:
-#line 97 "indexer.rl"
+#line 105 "indexer.rl"
 	{
        world.set_current_element_type_member();
        }
-#line 145 "indexer.rl"
+#line 153 "indexer.rl"
 	{
        // record the start of a type of object
 //       cout << "Record Start CS" << cs << endl;     
        world.record_start_position();
 }
-#line 435 "indexer.rl"
+#line 439 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 
@@ -4795,7 +4797,7 @@ _again:
 	{
 	switch ( _osmkeys_eof_actions[cs] ) {
 	case 9:
-#line 24 "indexer.rl"
+#line 32 "indexer.rl"
 	{
        cerr <<"an error has occured starter"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4804,7 +4806,7 @@ _again:
 }
 	break;
 	case 37:
-#line 31 "indexer.rl"
+#line 39 "indexer.rl"
 	{
        cerr <<"an error has occured node"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4813,7 +4815,7 @@ _again:
 }
 	break;
 	case 36:
-#line 38 "indexer.rl"
+#line 46 "indexer.rl"
 	{
        cerr <<"an error has occured attr"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4822,7 +4824,7 @@ _again:
 }
 	break;
 	case 2:
-#line 45 "indexer.rl"
+#line 53 "indexer.rl"
 	{
        cerr <<"an error has occured element"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4831,7 +4833,7 @@ _again:
 }
 	break;
 	case 39:
-#line 52 "indexer.rl"
+#line 60 "indexer.rl"
 	{
        cerr <<"an error has occured attr uid"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4840,7 +4842,7 @@ _again:
 }
 	break;
 	case 38:
-#line 59 "indexer.rl"
+#line 67 "indexer.rl"
 	{
        cerr <<"an error has occured attr ts"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4849,14 +4851,14 @@ _again:
 }
 	break;
 	case 19:
-#line 31 "indexer.rl"
+#line 39 "indexer.rl"
 	{
        cerr <<"an error has occured node"  << endl;            
        cout << "CS:" << (_ps) << endl;     
        cout << "str:\'" << p << "\'" <<endl;     
        res = 12;
 }
-#line 24 "indexer.rl"
+#line 32 "indexer.rl"
 	{
        cerr <<"an error has occured starter"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4865,14 +4867,14 @@ _again:
 }
 	break;
 	case 14:
-#line 38 "indexer.rl"
+#line 46 "indexer.rl"
 	{
        cerr <<"an error has occured attr"  << endl;            
        cout << "CS:" << (_ps) << endl;     
        cout << "str:\'" << p << "\'" <<endl;     
        res = 13;
 }
-#line 24 "indexer.rl"
+#line 32 "indexer.rl"
 	{
        cerr <<"an error has occured starter"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4881,14 +4883,14 @@ _again:
 }
 	break;
 	case 28:
-#line 52 "indexer.rl"
+#line 60 "indexer.rl"
 	{
        cerr <<"an error has occured attr uid"  << endl;            
        cout << "CS:" << (_ps) << endl;     
        cout << "str:\'" << p << "\'" <<endl;     
        res = 131;
 }
-#line 24 "indexer.rl"
+#line 32 "indexer.rl"
 	{
        cerr <<"an error has occured starter"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4897,14 +4899,14 @@ _again:
 }
 	break;
 	case 27:
-#line 59 "indexer.rl"
+#line 67 "indexer.rl"
 	{
        cerr <<"an error has occured attr ts"  << endl;            
        cout << "CS:" << (_ps) << endl;     
        cout << "str:\'" << p << "\'" <<endl;     
        res = 132;
 }
-#line 24 "indexer.rl"
+#line 32 "indexer.rl"
 	{
        cerr <<"an error has occured starter"  << endl;            
        cout << "CS:" << (_ps) << endl;     
@@ -4912,14 +4914,14 @@ _again:
        res = 11;
 }
 	break;
-#line 4916 "indexer.c"
+#line 4918 "indexer.c"
 	}
 	}
 
 	_out: {}
 	}
 
-#line 453 "indexer.rl"
+#line 457 "indexer.rl"
   return res;
 }
 

@@ -141,3 +141,6 @@ testral: readalldata
 
 retest : testoffenbach testral
 	echo ok
+
+testfosmpart : ragelosm
+	./ragelosm data/earth-20120401130001.osm.bz2 > debug.txt 2>&1

@@ -193,8 +193,8 @@ OSMWorldImp world;
    
 
 
-   void OSMWorld::scannerstatus(int s, char const* v){
-    world.scannerstatus(s, v);
+   int OSMWorld::scannerstatus(int s, char const* v){
+      return  world.scannerstatus(s, v);
     }
 
    void OSMWorld::set_current_pos(int p){
