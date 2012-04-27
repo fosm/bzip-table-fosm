@@ -340,7 +340,10 @@ way_tag_key       = ( 'k' space* '=' quote add_string_value way_tag_key_end );
 # lat lon
 latlon_val_value_neg = (  '-' $AddChar );
 latlon_val_value_main = (  digit+ $AddChar );
-latlon_val_value_dec = ( ( '.' . digit+)  $AddChar );
+
+sci = 'E' '-' digit+;
+
+latlon_val_value_dec = ( ( '.' . digit + sci? )  $AddChar );
 latlon_val_value = (  latlon_val_value_neg? latlon_val_value_main latlon_val_value_dec?  );
 
 #lat 
