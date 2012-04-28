@@ -91,3 +91,7 @@ OSMWorldImp world;
     world.set_current_pos(p);
     }
 
+  void OSMWorld::set_action_delete() {world.set_action_delete();}
+  void OSMWorld::set_action_create() {world.set_action_create();}
+  void OSMWorld::set_action_modify() {world.set_action_modify();}
+

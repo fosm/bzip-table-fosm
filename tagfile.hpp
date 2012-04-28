@@ -3,12 +3,12 @@ class TagFileEntry
 {
 public:
   long int id;
-  //  string key;
-  //  string value;
-  const char * key;
-  const char * value;
+  string key;
+  string value;
+  //const char * key;
+  //const char * value;
 public:
-  TagFileEntry(const long int & id,const char * k,const char * v ):
+  TagFileEntry(const long int & id,string & k,const char * v ):
     id(id),
     key(k),
     value(v)  {      }
@@ -65,7 +65,7 @@ public:
     data.clear(); // erase the data
   }
   
-  void push_back (long int pos, const char * key, const char * val){
+  void push_back (long int pos, string & key, const char * val){
     total_count++;
     //cerr << "tag:"<< key << " = "<< val << endl;
     TagFileEntry v (pos,key,val);

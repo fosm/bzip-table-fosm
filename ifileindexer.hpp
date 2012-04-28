@@ -116,4 +116,8 @@ public:
 
   int scannerstatus(int s, char const* v);
 
+  void set_action_delete(); 
+  void set_action_create(); 
+  void set_action_modify(); 
+
 };

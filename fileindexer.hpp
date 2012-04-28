@@ -43,8 +43,8 @@ public:
   long int current_ver;
   int      current_vis;
   time_t   current_timestamp;
-  //string   current_tag_key;
-  const char *   current_tag_key; // lets see if this works
+  string   current_tag_key;
+  //const char *   current_tag_key; // lets see if this works
   //string   current_tag_value;
   istream::pos_type marker; // position in the file
 
@@ -599,7 +599,7 @@ void set_current_ver(long int id) {
 
     switch (get_current_element_type()) {
     case         t_none:
-      cout << "This should never happen none" << endl;
+      //      cout << "This should never happen none" << endl;
       break;      
     case t_node:
       add_node_position();            
@@ -717,7 +717,9 @@ void set_current_ver(long int id) {
       }
 
   }
-
+  void set_action_modify (){}
+  void set_action_delete (){}
+  void set_action_create (){}
 };
 
 

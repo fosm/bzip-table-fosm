@@ -107,13 +107,38 @@ el_member = (
        }
      );
 
+
+el_delete = (
+'delete' @{
+       world.set_action_delete();
+       }
+     );
+el_modify = (
+'modify' @{
+       world.set_action_modify();
+       }
+     );
+
+el_create = (
+'create' @{
+       world.set_action_create();
+       }
+     );
+
+
+
+
 tags = (
 el_node | 
 el_way |
 el_relation |
 el_nd |
 el_member |
-el_tag 
+el_tag | 
+el_delete | 
+el_modify | 
+el_create 
+
         $err (some_err_element  )
 );
 
@@ -403,6 +428,7 @@ attribute =(
 attributes =(            
 	 (attribute space* )*  
 );
+
 
 starter = (
           ( '<bounds'  ) |
