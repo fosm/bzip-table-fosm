@@ -48,7 +48,7 @@ public:
   //string   current_tag_value;
   istream::pos_type marker; // position in the file
 
-  DataFile<long int> node_positions;
+  DataFile<istream::pos_type> node_positions;
   DataFile<double>   node_lon;
   DataFile<double>   node_lat;
   DataFile<long int> node_ids;
