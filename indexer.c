@@ -2,7 +2,7 @@
 #line 1 "indexer.rl"
 
 
-#line 470 "indexer.rl"
+#line 468 "indexer.rl"
 
 
 
@@ -103,7 +103,7 @@ static const int osmkeys_error = 0;
 static const int osmkeys_en_main = 664;
 
 
-#line 473 "indexer.rl"
+#line 471 "indexer.rl"
 
 #define BUFSIZE 128
 #include "ifileindexer.hpp"
@@ -121,7 +121,7 @@ int scanner(OSMWorld & world,const char *s)
 	cs = osmkeys_start;
 	}
 
-#line 485 "indexer.rl"
+#line 483 "indexer.rl"
   
 #line 127 "indexer.c"
 	{
@@ -4704,7 +4704,7 @@ f28:
 }
 	goto _again;
 f2:
-#line 468 "indexer.rl"
+#line 466 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f15:
@@ -4825,7 +4825,7 @@ f0:
 //		cerr << "end element " << endl;
 		world.finish_current_object();
                 }
-#line 468 "indexer.rl"
+#line 466 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f11:
@@ -4835,7 +4835,7 @@ f11:
 //     cerr << "currenttoken" << currenttoken << endl;
      world.set_current_id(strtol(currenttoken.c_str(), &endptr, 10));
 }
-#line 468 "indexer.rl"
+#line 466 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f9:
@@ -4844,7 +4844,7 @@ f9:
      char *endptr;   // ignore
      world.set_current_cs(strtol(currenttoken.c_str(), &endptr, 10));
 }
-#line 468 "indexer.rl"
+#line 466 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f27:
@@ -4854,7 +4854,7 @@ f27:
 //     cerr << "Version " << currenttoken << endl;
      world.set_current_ver(strtol(currenttoken.c_str(), &endptr, 10));
 }
-#line 468 "indexer.rl"
+#line 466 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f25:
@@ -4864,7 +4864,7 @@ f25:
 //     cerr << "user " << currenttoken << endl;
      world.set_current_uid(strtol(currenttoken.c_str(), &endptr, 10));
 }
-#line 468 "indexer.rl"
+#line 466 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f30:
@@ -4874,7 +4874,7 @@ f30:
 //     cerr << "user " << currenttoken << endl;
      world.set_current_user(currenttoken.c_str());
 }
-#line 468 "indexer.rl"
+#line 466 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f8:
@@ -4884,58 +4884,56 @@ f8:
 //     cerr << "action " << currenttoken << endl;
      world.set_action(currenttoken.c_str());
 }
-#line 468 "indexer.rl"
+#line 466 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f26:
 #line 340 "indexer.rl"
 	{
-     char *endptr;   // ignore
-//     cerr << "v:"<< currenttoken << endl;
      world.set_tag_val(currenttoken.c_str());
+     currenttoken ="";
 }
-#line 468 "indexer.rl"
+#line 466 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f12:
-#line 347 "indexer.rl"
+#line 346 "indexer.rl"
 	{
-     char *endptr;   // ignore
      world.set_tag_key(currenttoken.c_str());
      currenttoken="";
 }
-#line 468 "indexer.rl"
+#line 466 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f13:
-#line 375 "indexer.rl"
+#line 373 "indexer.rl"
 	{
      char *endptr;   // ignore
 //     cerr << "lat" << currenttoken << endl;
      world.set_current_lat(strtod(currenttoken.c_str(), &endptr));
 }
-#line 468 "indexer.rl"
+#line 466 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f14:
-#line 385 "indexer.rl"
+#line 383 "indexer.rl"
 	{
      char *endptr;   // ignore
 //     cerr << "lon" << currenttoken << endl;
      world.set_current_lon(strtod(currenttoken.c_str(), &endptr));
 }
-#line 468 "indexer.rl"
+#line 466 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f16:
-#line 396 "indexer.rl"
+#line 394 "indexer.rl"
 	{
      char *endptr;   // ignore
 //     cerr << "way node ref " << currenttoken << endl;
      world.set_way_node_ref(strtol(currenttoken.c_str(), &endptr,10));
-     currenttoken ="";
+          currenttoken ="";
 }
-#line 468 "indexer.rl"
+#line 466 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f43:
@@ -5041,7 +5039,7 @@ f34:
 //       cout << "Record Start CS" << cs << endl;     
        world.record_start_position();
 }
-#line 468 "indexer.rl"
+#line 466 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f37:
@@ -5055,7 +5053,7 @@ f37:
 //       cout << "Record Start CS" << cs << endl;     
        world.record_start_position();
 }
-#line 468 "indexer.rl"
+#line 466 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f35:
@@ -5069,7 +5067,7 @@ f35:
 //       cout << "Record Start CS" << cs << endl;     
        world.record_start_position();
 }
-#line 468 "indexer.rl"
+#line 466 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f36:
@@ -5084,7 +5082,7 @@ f36:
 //       cout << "Record Start CS" << cs << endl;     
        world.record_start_position();
 }
-#line 468 "indexer.rl"
+#line 466 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f33:
@@ -5098,7 +5096,7 @@ f33:
 //       cout << "Record Start CS" << cs << endl;     
        world.record_start_position();
 }
-#line 468 "indexer.rl"
+#line 466 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f31:
@@ -5112,7 +5110,7 @@ f31:
 //       cout << "Record Start CS" << cs << endl;     
        world.record_start_position();
 }
-#line 468 "indexer.rl"
+#line 466 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f4:
@@ -5126,7 +5124,7 @@ f4:
 //       cout << "Record Start CS" << cs << endl;     
        world.record_start_position();
 }
-#line 468 "indexer.rl"
+#line 466 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f32:
@@ -5140,7 +5138,7 @@ f32:
 //       cout << "Record Start CS" << cs << endl;     
        world.record_start_position();
 }
-#line 468 "indexer.rl"
+#line 466 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f3:
@@ -5154,7 +5152,7 @@ f3:
 //       cout << "Record Start CS" << cs << endl;     
        world.record_start_position();
 }
-#line 468 "indexer.rl"
+#line 466 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 
@@ -5285,14 +5283,14 @@ _again:
        res = 11;
 }
 	break;
-#line 5289 "indexer.c"
+#line 5287 "indexer.c"
 	}
 	}
 
 	_out: {}
 	}
 
-#line 486 "indexer.rl"
+#line 484 "indexer.rl"
   return res;
 }
 

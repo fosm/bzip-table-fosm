@@ -338,14 +338,12 @@ action_val       = ( action_val_start action_val_value action_val_end );
 
 #tag v
 action FinishV {
-     char *endptr;   // ignore
-//     cerr << "v:"<< currenttoken << endl;
      world.set_tag_val(currenttoken.c_str());
+     currenttoken ="";
 }
 
 #tag k
 action FinishK {
-     char *endptr;   // ignore
      world.set_tag_key(currenttoken.c_str());
      currenttoken="";
 }
@@ -397,7 +395,7 @@ action FinishNdRef {
      char *endptr;   // ignore
 //     cerr << "way node ref " << currenttoken << endl;
      world.set_way_node_ref(strtol(currenttoken.c_str(), &endptr,10));
-     currenttoken ="";
+          currenttoken ="";
 }
 way_node_start = ( 'ref' '=' quote  @StartValue);
 way_node_end   = ( quote  @ FinishNdRef );
