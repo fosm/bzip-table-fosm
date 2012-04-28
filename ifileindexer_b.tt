@@ -22,14 +22,25 @@ OSMWorldImp world;
    [% FOREACH fieldname IN [  
           'set_action',  
           'set_current_user',
-          'set_tag_val',
-          'set_tag_key',
 
 ] %]
     template <> void OSMWorld::[% fieldname %]<char const*>(char const* const&v) {
 //        cout << "[% fieldname %]"<<  v << endl;
        world.[% fieldname %](v);
 }
+   [% END %]
+
+
+
+   [% FOREACH fieldname IN [  
+
+          'set_tag_val',
+          'set_tag_key',
+
+] %]
+      template <> void OSMWorld::[% fieldname %]<string>(const string &v) {
+       world.[% fieldname %](v);
+   }
    [% END %]
 
 

@@ -69,15 +69,17 @@ OSMWorldImp world;
        world.set_current_user(v);
 }
    
-    template <> void OSMWorld::set_tag_val<char const*>(char const* const&v) {
-//        cout << "set_tag_val"<<  v << endl;
-       world.set_tag_val(v);
-}
+
+
+
    
-    template <> void OSMWorld::set_tag_key<char const*>(char const* const&v) {
-//        cout << "set_tag_key"<<  v << endl;
+      template <> void OSMWorld::set_tag_val<string>(const string &v) {
+       world.set_tag_val(v);
+   }
+   
+      template <> void OSMWorld::set_tag_key<string>(const string &v) {
        world.set_tag_key(v);
-}
+   }
    
 
 

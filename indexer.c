@@ -2,7 +2,7 @@
 #line 1 "indexer.rl"
 
 
-#line 468 "indexer.rl"
+#line 477 "indexer.rl"
 
 
 
@@ -22,10 +22,10 @@ static const unsigned char _osmkeys_eof_actions[] = {
 	6, 6, 6, 6, 6, 6, 6, 6, 
 	6, 6, 6, 6, 6, 6, 6, 6, 
 	6, 6, 6, 6, 6, 6, 6, 6, 
-	16, 6, 6, 6, 6, 6, 6, 6, 
+	17, 6, 6, 6, 6, 6, 6, 6, 
 	6, 6, 6, 6, 6, 6, 6, 6, 
-	6, 6, 6, 6, 6, 6, 6, 24, 
-	6, 6, 6, 6, 6, 25, 6, 6, 
+	6, 6, 6, 6, 6, 6, 6, 25, 
+	6, 6, 6, 6, 6, 26, 6, 6, 
 	6, 6, 6, 6, 6, 6, 6, 6, 
 	6, 6, 6, 6, 6, 6, 6, 6, 
 	6, 6, 6, 6, 6, 6, 6, 6, 
@@ -35,16 +35,16 @@ static const unsigned char _osmkeys_eof_actions[] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 39, 39, 
-	39, 39, 39, 39, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 41, 41, 
+	41, 41, 41, 41, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 40, 0, 0, 0, 
+	0, 0, 0, 0, 42, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 41, 0, 0, 0, 0, 
-	0, 42, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 43, 0, 0, 0, 0, 
+	0, 44, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
@@ -53,16 +53,16 @@ static const unsigned char _osmkeys_eof_actions[] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 39, 
-	39, 39, 39, 39, 39, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 41, 
+	41, 41, 41, 41, 41, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 40, 0, 0, 
+	0, 0, 0, 0, 0, 42, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 41, 0, 0, 0, 
-	0, 0, 42, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 43, 0, 0, 0, 
+	0, 0, 44, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
@@ -74,10 +74,10 @@ static const unsigned char _osmkeys_eof_actions[] = {
 	6, 6, 6, 6, 6, 6, 6, 6, 
 	6, 6, 6, 6, 6, 6, 6, 6, 
 	6, 6, 6, 6, 6, 6, 6, 6, 
-	6, 6, 16, 6, 6, 6, 6, 6, 
+	6, 6, 17, 6, 6, 6, 6, 6, 
 	6, 6, 6, 6, 6, 6, 6, 6, 
 	6, 6, 6, 6, 6, 6, 6, 6, 
-	6, 24, 6, 6, 6, 6, 6, 25, 
+	6, 25, 6, 6, 6, 6, 6, 26, 
 	6, 6, 6, 6, 6, 6, 6, 6, 
 	6, 6, 6, 6, 6, 6, 6, 6, 
 	6, 6, 6, 6, 6, 6, 6, 6, 
@@ -103,7 +103,7 @@ static const int osmkeys_error = 0;
 static const int osmkeys_en_main = 664;
 
 
-#line 471 "indexer.rl"
+#line 480 "indexer.rl"
 
 #define BUFSIZE 128
 #include "ifileindexer.hpp"
@@ -112,18 +112,20 @@ int scanner(OSMWorld & world,const char *s)
   int cs;
   int res = 0;
   string currenttoken;
+  string currenttokenk;
+  string currenttokenv;
   char *p= (char *)s;
   char *pe = (char *)s + strlen(s) +1 ;
   char *eof = 0;    
   
-#line 120 "indexer.c"
+#line 122 "indexer.c"
 	{
 	cs = osmkeys_start;
 	}
 
-#line 483 "indexer.rl"
+#line 494 "indexer.rl"
   
-#line 127 "indexer.c"
+#line 129 "indexer.c"
 	{
 	int _ps = 0;
 	if ( p == pe )
@@ -3807,20 +3809,20 @@ case 690:
 	tr2: _ps = cs;cs = 0; goto f1;
 	tr69: _ps = cs;cs = 0; goto f5;
 	tr91: _ps = cs;cs = 0; goto f10;
-	tr132: _ps = cs;cs = 0; goto f15;
-	tr156: _ps = cs;cs = 0; goto f23;
-	tr164: _ps = cs;cs = 0; goto f24;
-	tr251: _ps = cs;cs = 0; goto f38;
-	tr292: _ps = cs;cs = 0; goto f39;
-	tr316: _ps = cs;cs = 0; goto f40;
-	tr324: _ps = cs;cs = 0; goto f41;
-	tr723: _ps = cs;cs = 0; goto f42;
-	tr741: _ps = cs;cs = 0; goto f43;
-	tr742: _ps = cs;cs = 0; goto f44;
-	tr743: _ps = cs;cs = 0; goto f45;
-	tr744: _ps = cs;cs = 0; goto f46;
-	tr745: _ps = cs;cs = 0; goto f47;
-	tr746: _ps = cs;cs = 0; goto f48;
+	tr132: _ps = cs;cs = 0; goto f16;
+	tr156: _ps = cs;cs = 0; goto f24;
+	tr164: _ps = cs;cs = 0; goto f25;
+	tr251: _ps = cs;cs = 0; goto f40;
+	tr292: _ps = cs;cs = 0; goto f41;
+	tr316: _ps = cs;cs = 0; goto f42;
+	tr324: _ps = cs;cs = 0; goto f43;
+	tr723: _ps = cs;cs = 0; goto f44;
+	tr741: _ps = cs;cs = 0; goto f45;
+	tr742: _ps = cs;cs = 0; goto f46;
+	tr743: _ps = cs;cs = 0; goto f47;
+	tr744: _ps = cs;cs = 0; goto f48;
+	tr745: _ps = cs;cs = 0; goto f49;
+	tr746: _ps = cs;cs = 0; goto f50;
 	tr18: cs = 1; goto _again;
 	tr719: cs = 2; goto _again;
 	tr3: cs = 3; goto _again;
@@ -3903,7 +3905,7 @@ case 690:
 	tr98: cs = 80; goto _again;
 	tr99: cs = 81; goto _again;
 	tr100: cs = 82; goto _again;
-	tr101: cs = 83; goto f7;
+	tr101: cs = 83; goto f12;
 	tr727: cs = 84; goto _again;
 	tr103: cs = 85; goto _again;
 	tr105: cs = 86; goto _again;
@@ -3945,17 +3947,17 @@ case 690:
 	tr142: cs = 122; goto _again;
 	tr143: cs = 123; goto f6;
 	tr144: cs = 124; goto f7;
-	tr145: cs = 125; goto f17;
+	tr145: cs = 125; goto f18;
 	tr146: cs = 126; goto f7;
-	tr147: cs = 127; goto f18;
+	tr147: cs = 127; goto f19;
 	tr148: cs = 128; goto f7;
-	tr149: cs = 129; goto f19;
+	tr149: cs = 129; goto f20;
 	tr150: cs = 130; goto f7;
-	tr151: cs = 131; goto f20;
+	tr151: cs = 131; goto f21;
 	tr152: cs = 132; goto f7;
-	tr153: cs = 133; goto f21;
+	tr153: cs = 133; goto f22;
 	tr154: cs = 134; goto f7;
-	tr155: cs = 135; goto f22;
+	tr155: cs = 135; goto f23;
 	tr730: cs = 136; goto _again;
 	tr158: cs = 137; goto _again;
 	tr160: cs = 138; goto _again;
@@ -3966,7 +3968,7 @@ case 690:
 	tr166: cs = 143; goto _again;
 	tr167: cs = 144; goto _again;
 	tr170: cs = 145; goto _again;
-	tr171: cs = 146; goto f7;
+	tr171: cs = 146; goto f27;
 	tr168: cs = 147; goto _again;
 	tr173: cs = 148; goto _again;
 	tr174: cs = 149; goto _again;
@@ -3988,8 +3990,8 @@ case 690:
 	tr191: cs = 165; goto _again;
 	tr192: cs = 166; goto _again;
 	tr193: cs = 167; goto _again;
-	tr194: cs = 168; goto f28;
-	tr198: cs = 168; goto f29;
+	tr194: cs = 168; goto f30;
+	tr198: cs = 168; goto f31;
 	tr190: cs = 169; goto _again;
 	tr196: cs = 170; goto _again;
 	tr197: cs = 171; goto _again;
@@ -4052,7 +4054,7 @@ case 690:
 	tr258: cs = 228; goto _again;
 	tr259: cs = 229; goto _again;
 	tr260: cs = 230; goto _again;
-	tr261: cs = 231; goto f7;
+	tr261: cs = 231; goto f12;
 	tr736: cs = 232; goto _again;
 	tr263: cs = 233; goto _again;
 	tr265: cs = 234; goto _again;
@@ -4094,17 +4096,17 @@ case 690:
 	tr302: cs = 270; goto _again;
 	tr303: cs = 271; goto f6;
 	tr304: cs = 272; goto f7;
-	tr305: cs = 273; goto f17;
+	tr305: cs = 273; goto f18;
 	tr306: cs = 274; goto f7;
-	tr307: cs = 275; goto f18;
+	tr307: cs = 275; goto f19;
 	tr308: cs = 276; goto f7;
-	tr309: cs = 277; goto f19;
+	tr309: cs = 277; goto f20;
 	tr310: cs = 278; goto f7;
-	tr311: cs = 279; goto f20;
+	tr311: cs = 279; goto f21;
 	tr312: cs = 280; goto f7;
-	tr313: cs = 281; goto f21;
+	tr313: cs = 281; goto f22;
 	tr314: cs = 282; goto f7;
-	tr315: cs = 283; goto f22;
+	tr315: cs = 283; goto f23;
 	tr739: cs = 284; goto _again;
 	tr318: cs = 285; goto _again;
 	tr320: cs = 286; goto _again;
@@ -4115,7 +4117,7 @@ case 690:
 	tr326: cs = 291; goto _again;
 	tr327: cs = 292; goto _again;
 	tr330: cs = 293; goto _again;
-	tr331: cs = 294; goto f7;
+	tr331: cs = 294; goto f27;
 	tr328: cs = 295; goto _again;
 	tr333: cs = 296; goto _again;
 	tr334: cs = 297; goto _again;
@@ -4137,8 +4139,8 @@ case 690:
 	tr351: cs = 313; goto _again;
 	tr352: cs = 314; goto _again;
 	tr353: cs = 315; goto _again;
-	tr354: cs = 316; goto f28;
-	tr358: cs = 316; goto f29;
+	tr354: cs = 316; goto f30;
+	tr358: cs = 316; goto f31;
 	tr350: cs = 317; goto _again;
 	tr356: cs = 318; goto _again;
 	tr357: cs = 319; goto _again;
@@ -4198,7 +4200,7 @@ case 690:
 	tr412: cs = 373; goto _again;
 	tr413: cs = 374; goto _again;
 	tr414: cs = 375; goto _again;
-	tr415: cs = 376; goto f7;
+	tr415: cs = 376; goto f12;
 	tr759: cs = 377; goto _again;
 	tr417: cs = 378; goto _again;
 	tr419: cs = 379; goto _again;
@@ -4240,17 +4242,17 @@ case 690:
 	tr455: cs = 415; goto _again;
 	tr456: cs = 416; goto f6;
 	tr457: cs = 417; goto f7;
-	tr458: cs = 418; goto f17;
+	tr458: cs = 418; goto f18;
 	tr459: cs = 419; goto f7;
-	tr460: cs = 420; goto f18;
+	tr460: cs = 420; goto f19;
 	tr461: cs = 421; goto f7;
-	tr462: cs = 422; goto f19;
+	tr462: cs = 422; goto f20;
 	tr463: cs = 423; goto f7;
-	tr464: cs = 424; goto f20;
+	tr464: cs = 424; goto f21;
 	tr465: cs = 425; goto f7;
-	tr466: cs = 426; goto f21;
+	tr466: cs = 426; goto f22;
 	tr467: cs = 427; goto f7;
-	tr468: cs = 428; goto f22;
+	tr468: cs = 428; goto f23;
 	tr762: cs = 429; goto _again;
 	tr470: cs = 430; goto _again;
 	tr472: cs = 431; goto _again;
@@ -4261,7 +4263,7 @@ case 690:
 	tr477: cs = 436; goto _again;
 	tr478: cs = 437; goto _again;
 	tr481: cs = 438; goto _again;
-	tr482: cs = 439; goto f7;
+	tr482: cs = 439; goto f27;
 	tr479: cs = 440; goto _again;
 	tr484: cs = 441; goto _again;
 	tr485: cs = 442; goto _again;
@@ -4283,8 +4285,8 @@ case 690:
 	tr502: cs = 458; goto _again;
 	tr503: cs = 459; goto _again;
 	tr504: cs = 460; goto _again;
-	tr505: cs = 461; goto f28;
-	tr509: cs = 461; goto f29;
+	tr505: cs = 461; goto f30;
+	tr509: cs = 461; goto f31;
 	tr501: cs = 462; goto _again;
 	tr507: cs = 463; goto _again;
 	tr508: cs = 464; goto _again;
@@ -4324,7 +4326,7 @@ case 690:
 	tr543: cs = 498; goto _again;
 	tr544: cs = 499; goto _again;
 	tr545: cs = 500; goto _again;
-	tr546: cs = 501; goto f7;
+	tr546: cs = 501; goto f12;
 	tr750: cs = 502; goto _again;
 	tr548: cs = 503; goto _again;
 	tr550: cs = 504; goto _again;
@@ -4366,17 +4368,17 @@ case 690:
 	tr586: cs = 540; goto _again;
 	tr587: cs = 541; goto f6;
 	tr588: cs = 542; goto f7;
-	tr589: cs = 543; goto f17;
+	tr589: cs = 543; goto f18;
 	tr590: cs = 544; goto f7;
-	tr591: cs = 545; goto f18;
+	tr591: cs = 545; goto f19;
 	tr592: cs = 546; goto f7;
-	tr593: cs = 547; goto f19;
+	tr593: cs = 547; goto f20;
 	tr594: cs = 548; goto f7;
-	tr595: cs = 549; goto f20;
+	tr595: cs = 549; goto f21;
 	tr596: cs = 550; goto f7;
-	tr597: cs = 551; goto f21;
+	tr597: cs = 551; goto f22;
 	tr598: cs = 552; goto f7;
-	tr599: cs = 553; goto f22;
+	tr599: cs = 553; goto f23;
 	tr753: cs = 554; goto _again;
 	tr601: cs = 555; goto _again;
 	tr603: cs = 556; goto _again;
@@ -4387,7 +4389,7 @@ case 690:
 	tr608: cs = 561; goto _again;
 	tr609: cs = 562; goto _again;
 	tr612: cs = 563; goto _again;
-	tr613: cs = 564; goto f7;
+	tr613: cs = 564; goto f27;
 	tr610: cs = 565; goto _again;
 	tr615: cs = 566; goto _again;
 	tr616: cs = 567; goto _again;
@@ -4409,8 +4411,8 @@ case 690:
 	tr633: cs = 583; goto _again;
 	tr634: cs = 584; goto _again;
 	tr635: cs = 585; goto _again;
-	tr636: cs = 586; goto f28;
-	tr640: cs = 586; goto f29;
+	tr636: cs = 586; goto f30;
+	tr640: cs = 586; goto f31;
 	tr632: cs = 587; goto _again;
 	tr638: cs = 588; goto _again;
 	tr639: cs = 589; goto _again;
@@ -4500,71 +4502,71 @@ case 690:
 	tr238: cs = 670; goto f8;
 	tr250: cs = 670; goto f9;
 	tr257: cs = 670; goto f11;
-	tr262: cs = 670; goto f12;
-	tr270: cs = 670; goto f13;
-	tr281: cs = 670; goto f14;
-	tr332: cs = 670; goto f26;
-	tr341: cs = 670; goto f27;
-	tr364: cs = 670; goto f30;
+	tr262: cs = 670; goto f13;
+	tr270: cs = 670; goto f14;
+	tr281: cs = 670; goto f15;
+	tr332: cs = 670; goto f28;
+	tr341: cs = 670; goto f29;
+	tr364: cs = 670; goto f32;
 	tr68: cs = 671; goto f4;
-	tr210: cs = 671; goto f31;
-	tr214: cs = 671; goto f32;
-	tr215: cs = 671; goto f33;
-	tr218: cs = 671; goto f34;
-	tr225: cs = 671; goto f35;
-	tr227: cs = 671; goto f36;
-	tr229: cs = 671; goto f37;
+	tr210: cs = 671; goto f33;
+	tr214: cs = 671; goto f34;
+	tr215: cs = 671; goto f35;
+	tr218: cs = 671; goto f36;
+	tr225: cs = 671; goto f37;
+	tr227: cs = 671; goto f38;
+	tr229: cs = 671; goto f39;
 	tr195: cs = 672; goto f2;
 	tr78: cs = 672; goto f8;
 	tr90: cs = 672; goto f9;
 	tr97: cs = 672; goto f11;
-	tr102: cs = 672; goto f12;
-	tr110: cs = 672; goto f13;
-	tr121: cs = 672; goto f14;
-	tr172: cs = 672; goto f26;
-	tr181: cs = 672; goto f27;
-	tr204: cs = 672; goto f30;
-	tr133: cs = 673; goto f16;
+	tr102: cs = 672; goto f13;
+	tr110: cs = 672; goto f14;
+	tr121: cs = 672; goto f15;
+	tr172: cs = 672; goto f28;
+	tr181: cs = 672; goto f29;
+	tr204: cs = 672; goto f32;
+	tr133: cs = 673; goto f17;
 	tr157: cs = 674; goto f2;
-	tr165: cs = 675; goto f25;
-	tr293: cs = 676; goto f16;
+	tr165: cs = 675; goto f26;
+	tr293: cs = 676; goto f17;
 	tr317: cs = 677; goto f2;
-	tr325: cs = 678; goto f25;
+	tr325: cs = 678; goto f26;
 	tr369: cs = 679; goto f3;
 	tr506: cs = 680; goto f2;
 	tr393: cs = 680; goto f8;
 	tr405: cs = 680; goto f9;
 	tr411: cs = 680; goto f11;
-	tr416: cs = 680; goto f12;
-	tr424: cs = 680; goto f13;
-	tr435: cs = 680; goto f14;
-	tr483: cs = 680; goto f26;
-	tr492: cs = 680; goto f27;
-	tr515: cs = 680; goto f30;
-	tr446: cs = 681; goto f16;
+	tr416: cs = 680; goto f13;
+	tr424: cs = 680; goto f14;
+	tr435: cs = 680; goto f15;
+	tr483: cs = 680; goto f28;
+	tr492: cs = 680; goto f29;
+	tr515: cs = 680; goto f32;
+	tr446: cs = 681; goto f17;
 	tr469: cs = 682; goto f2;
-	tr476: cs = 683; goto f25;
+	tr476: cs = 683; goto f26;
 	tr637: cs = 684; goto f2;
 	tr524: cs = 684; goto f8;
 	tr536: cs = 684; goto f9;
 	tr542: cs = 684; goto f11;
-	tr547: cs = 684; goto f12;
-	tr555: cs = 684; goto f13;
-	tr566: cs = 684; goto f14;
-	tr614: cs = 684; goto f26;
-	tr623: cs = 684; goto f27;
-	tr646: cs = 684; goto f30;
-	tr577: cs = 685; goto f16;
+	tr547: cs = 684; goto f13;
+	tr555: cs = 684; goto f14;
+	tr566: cs = 684; goto f15;
+	tr614: cs = 684; goto f28;
+	tr623: cs = 684; goto f29;
+	tr646: cs = 684; goto f32;
+	tr577: cs = 685; goto f17;
 	tr600: cs = 686; goto f2;
-	tr607: cs = 687; goto f25;
+	tr607: cs = 687; goto f26;
 	tr651: cs = 688; goto f4;
-	tr657: cs = 688; goto f31;
-	tr661: cs = 688; goto f32;
-	tr662: cs = 688; goto f33;
-	tr665: cs = 688; goto f34;
-	tr675: cs = 688; goto f35;
-	tr677: cs = 688; goto f36;
-	tr679: cs = 688; goto f37;
+	tr657: cs = 688; goto f33;
+	tr661: cs = 688; goto f34;
+	tr662: cs = 688; goto f35;
+	tr665: cs = 688; goto f36;
+	tr675: cs = 688; goto f37;
+	tr677: cs = 688; goto f38;
+	tr679: cs = 688; goto f39;
 	tr668: cs = 689; goto f2;
 	tr716: cs = 690; goto f2;
 
@@ -4586,7 +4588,7 @@ f5:
        res = 11;
 }
 	goto _again;
-f39:
+f41:
 #line 39 "indexer.rl"
 	{
        cerr <<"an error has occured node"  << endl;            
@@ -4595,7 +4597,7 @@ f39:
        res = 12;
 }
 	goto _again;
-f38:
+f40:
 #line 46 "indexer.rl"
 	{
        cerr <<"an error has occured attr"  << endl;            
@@ -4613,7 +4615,7 @@ f1:
        res = 14;
 }
 	goto _again;
-f41:
+f43:
 #line 60 "indexer.rl"
 	{
        cerr <<"an error has occured attr uid"  << endl;            
@@ -4622,7 +4624,7 @@ f41:
        res = 131;
 }
 	goto _again;
-f40:
+f42:
 #line 67 "indexer.rl"
 	{
        cerr <<"an error has occured attr ts"  << endl;            
@@ -4637,7 +4639,7 @@ f6:
      currenttoken.clear();  
 }
 	goto _again;
-f17:
+f18:
 #line 241 "indexer.rl"
 	{
      char *endptr;   // ignore  
@@ -4646,7 +4648,7 @@ f17:
      world.set_current_ts_year(year);
 }
 	goto _again;
-f18:
+f19:
 #line 248 "indexer.rl"
 	{
      char *endptr;   // ignore  
@@ -4655,7 +4657,7 @@ f18:
      world.set_current_ts_month (month);
 }
 	goto _again;
-f19:
+f20:
 #line 255 "indexer.rl"
 	{
      char *endptr;   // ignore  
@@ -4664,7 +4666,7 @@ f19:
      world.set_current_ts_day (day);
 }
 	goto _again;
-f20:
+f21:
 #line 262 "indexer.rl"
 	{
      char *endptr;   // ignore  
@@ -4673,7 +4675,7 @@ f20:
      world.set_current_ts_hour (hour);
 }
 	goto _again;
-f21:
+f22:
 #line 269 "indexer.rl"
 	{
      char *endptr;   // ignore  
@@ -4682,7 +4684,7 @@ f21:
      world.set_current_ts_minute (minute);
 }
 	goto _again;
-f22:
+f23:
 #line 276 "indexer.rl"
 	{
      char *endptr;   // ignore  
@@ -4691,23 +4693,35 @@ f22:
      world.set_current_ts_second (second);
 }
 	goto _again;
-f29:
+f31:
 #line 306 "indexer.rl"
 	{
      world.set_current_vis(1);
 }
 	goto _again;
-f28:
+f30:
 #line 309 "indexer.rl"
 	{
      world.set_current_vis(0);
 }
 	goto _again;
+f12:
+#line 353 "indexer.rl"
+	{
+       currenttokenk.push_back((*p));
+}
+	goto _again;
+f27:
+#line 357 "indexer.rl"
+	{
+       currenttokenv.push_back((*p));
+}
+	goto _again;
 f2:
-#line 466 "indexer.rl"
+#line 475 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
-f15:
+f16:
 #line 39 "indexer.rl"
 	{
        cerr <<"an error has occured node"  << endl;            
@@ -4723,7 +4737,7 @@ f15:
        res = 11;
 }
 	goto _again;
-f46:
+f48:
 #line 39 "indexer.rl"
 	{
        cerr <<"an error has occured node"  << endl;            
@@ -4755,7 +4769,7 @@ f10:
        res = 11;
 }
 	goto _again;
-f24:
+f25:
 #line 60 "indexer.rl"
 	{
        cerr <<"an error has occured attr uid"  << endl;            
@@ -4771,7 +4785,7 @@ f24:
        res = 11;
 }
 	goto _again;
-f48:
+f50:
 #line 60 "indexer.rl"
 	{
        cerr <<"an error has occured attr uid"  << endl;            
@@ -4787,7 +4801,7 @@ f48:
        res = 13;
 }
 	goto _again;
-f23:
+f24:
 #line 67 "indexer.rl"
 	{
        cerr <<"an error has occured attr ts"  << endl;            
@@ -4803,7 +4817,7 @@ f23:
        res = 11;
 }
 	goto _again;
-f47:
+f49:
 #line 67 "indexer.rl"
 	{
        cerr <<"an error has occured attr ts"  << endl;            
@@ -4825,7 +4839,7 @@ f0:
 //		cerr << "end element " << endl;
 		world.finish_current_object();
                 }
-#line 466 "indexer.rl"
+#line 475 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f11:
@@ -4835,7 +4849,7 @@ f11:
 //     cerr << "currenttoken" << currenttoken << endl;
      world.set_current_id(strtol(currenttoken.c_str(), &endptr, 10));
 }
-#line 466 "indexer.rl"
+#line 475 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f9:
@@ -4844,37 +4858,37 @@ f9:
      char *endptr;   // ignore
      world.set_current_cs(strtol(currenttoken.c_str(), &endptr, 10));
 }
-#line 466 "indexer.rl"
+#line 475 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
-f27:
+f29:
 #line 219 "indexer.rl"
 	{
      char *endptr;   // ignore
 //     cerr << "Version " << currenttoken << endl;
      world.set_current_ver(strtol(currenttoken.c_str(), &endptr, 10));
 }
-#line 466 "indexer.rl"
+#line 475 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
-f25:
+f26:
 #line 230 "indexer.rl"
 	{
      char *endptr;   // ignore
 //     cerr << "user " << currenttoken << endl;
      world.set_current_uid(strtol(currenttoken.c_str(), &endptr, 10));
 }
-#line 466 "indexer.rl"
+#line 475 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
-f30:
+f32:
 #line 318 "indexer.rl"
 	{
      char *endptr;   // ignore
 //     cerr << "user " << currenttoken << endl;
      world.set_current_user(currenttoken.c_str());
 }
-#line 466 "indexer.rl"
+#line 475 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f8:
@@ -4884,59 +4898,59 @@ f8:
 //     cerr << "action " << currenttoken << endl;
      world.set_action(currenttoken.c_str());
 }
-#line 466 "indexer.rl"
+#line 475 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
-f26:
+f28:
 #line 340 "indexer.rl"
 	{
-     world.set_tag_val(currenttoken.c_str());
-     currenttoken ="";
+     world.set_tag_val(currenttokenv);
+     currenttokenv ="";
 }
-#line 466 "indexer.rl"
-	{ res = 1;      }
-	goto _again;
-f12:
-#line 346 "indexer.rl"
-	{
-     world.set_tag_key(currenttoken.c_str());
-     currenttoken="";
-}
-#line 466 "indexer.rl"
+#line 475 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f13:
-#line 373 "indexer.rl"
+#line 346 "indexer.rl"
+	{
+     world.set_tag_key(currenttokenk);
+     currenttokenk="";
+}
+#line 475 "indexer.rl"
+	{ res = 1;      }
+	goto _again;
+f14:
+#line 382 "indexer.rl"
 	{
      char *endptr;   // ignore
 //     cerr << "lat" << currenttoken << endl;
      world.set_current_lat(strtod(currenttoken.c_str(), &endptr));
 }
-#line 466 "indexer.rl"
+#line 475 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
-f14:
-#line 383 "indexer.rl"
+f15:
+#line 392 "indexer.rl"
 	{
      char *endptr;   // ignore
 //     cerr << "lon" << currenttoken << endl;
      world.set_current_lon(strtod(currenttoken.c_str(), &endptr));
 }
-#line 466 "indexer.rl"
+#line 475 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
-f16:
-#line 394 "indexer.rl"
+f17:
+#line 403 "indexer.rl"
 	{
      char *endptr;   // ignore
 //     cerr << "way node ref " << currenttoken << endl;
      world.set_way_node_ref(strtol(currenttoken.c_str(), &endptr,10));
           currenttoken ="";
 }
-#line 466 "indexer.rl"
+#line 475 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
-f43:
+f45:
 #line 39 "indexer.rl"
 	{
        cerr <<"an error has occured node"  << endl;            
@@ -4959,7 +4973,7 @@ f43:
        res = 11;
 }
 	goto _again;
-f42:
+f44:
 #line 53 "indexer.rl"
 	{
        cerr <<"an error has occured element"  << endl;            
@@ -4982,7 +4996,7 @@ f42:
        res = 11;
 }
 	goto _again;
-f45:
+f47:
 #line 60 "indexer.rl"
 	{
        cerr <<"an error has occured attr uid"  << endl;            
@@ -5005,7 +5019,7 @@ f45:
        res = 11;
 }
 	goto _again;
-f44:
+f46:
 #line 67 "indexer.rl"
 	{
        cerr <<"an error has occured attr ts"  << endl;            
@@ -5028,7 +5042,7 @@ f44:
        res = 11;
 }
 	goto _again;
-f34:
+f36:
 #line 75 "indexer.rl"
 	{
        world.set_current_element_type_node();
@@ -5039,10 +5053,10 @@ f34:
 //       cout << "Record Start CS" << cs << endl;     
        world.record_start_position();
 }
-#line 466 "indexer.rl"
+#line 475 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
-f37:
+f39:
 #line 81 "indexer.rl"
 	{
        world.set_current_element_type_way();
@@ -5053,10 +5067,10 @@ f37:
 //       cout << "Record Start CS" << cs << endl;     
        world.record_start_position();
 }
-#line 466 "indexer.rl"
+#line 475 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
-f35:
+f37:
 #line 87 "indexer.rl"
 	{
        world.set_current_element_type_rel();
@@ -5067,10 +5081,10 @@ f35:
 //       cout << "Record Start CS" << cs << endl;     
        world.record_start_position();
 }
-#line 466 "indexer.rl"
+#line 475 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
-f36:
+f38:
 #line 93 "indexer.rl"
 	{
 //      cerr << "tag" << endl;
@@ -5082,10 +5096,10 @@ f36:
 //       cout << "Record Start CS" << cs << endl;     
        world.record_start_position();
 }
-#line 466 "indexer.rl"
+#line 475 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
-f33:
+f35:
 #line 100 "indexer.rl"
 	{
        world.set_current_element_type_nd();
@@ -5096,10 +5110,10 @@ f33:
 //       cout << "Record Start CS" << cs << endl;     
        world.record_start_position();
 }
-#line 466 "indexer.rl"
+#line 475 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
-f31:
+f33:
 #line 105 "indexer.rl"
 	{
        world.set_current_element_type_member();
@@ -5110,7 +5124,7 @@ f31:
 //       cout << "Record Start CS" << cs << endl;     
        world.record_start_position();
 }
-#line 466 "indexer.rl"
+#line 475 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f4:
@@ -5124,10 +5138,10 @@ f4:
 //       cout << "Record Start CS" << cs << endl;     
        world.record_start_position();
 }
-#line 466 "indexer.rl"
+#line 475 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
-f32:
+f34:
 #line 117 "indexer.rl"
 	{
        world.set_action_modify();
@@ -5138,7 +5152,7 @@ f32:
 //       cout << "Record Start CS" << cs << endl;     
        world.record_start_position();
 }
-#line 466 "indexer.rl"
+#line 475 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 f3:
@@ -5152,7 +5166,7 @@ f3:
 //       cout << "Record Start CS" << cs << endl;     
        world.record_start_position();
 }
-#line 466 "indexer.rl"
+#line 475 "indexer.rl"
 	{ res = 1;      }
 	goto _again;
 
@@ -5174,7 +5188,7 @@ _again:
        res = 11;
 }
 	break;
-	case 40:
+	case 42:
 #line 39 "indexer.rl"
 	{
        cerr <<"an error has occured node"  << endl;            
@@ -5183,7 +5197,7 @@ _again:
        res = 12;
 }
 	break;
-	case 39:
+	case 41:
 #line 46 "indexer.rl"
 	{
        cerr <<"an error has occured attr"  << endl;            
@@ -5201,7 +5215,7 @@ _again:
        res = 14;
 }
 	break;
-	case 42:
+	case 44:
 #line 60 "indexer.rl"
 	{
        cerr <<"an error has occured attr uid"  << endl;            
@@ -5210,7 +5224,7 @@ _again:
        res = 131;
 }
 	break;
-	case 41:
+	case 43:
 #line 67 "indexer.rl"
 	{
        cerr <<"an error has occured attr ts"  << endl;            
@@ -5219,7 +5233,7 @@ _again:
        res = 132;
 }
 	break;
-	case 16:
+	case 17:
 #line 39 "indexer.rl"
 	{
        cerr <<"an error has occured node"  << endl;            
@@ -5251,7 +5265,7 @@ _again:
        res = 11;
 }
 	break;
-	case 25:
+	case 26:
 #line 60 "indexer.rl"
 	{
        cerr <<"an error has occured attr uid"  << endl;            
@@ -5267,7 +5281,7 @@ _again:
        res = 11;
 }
 	break;
-	case 24:
+	case 25:
 #line 67 "indexer.rl"
 	{
        cerr <<"an error has occured attr ts"  << endl;            
@@ -5283,14 +5297,14 @@ _again:
        res = 11;
 }
 	break;
-#line 5287 "indexer.c"
+#line 5301 "indexer.c"
 	}
 	}
 
 	_out: {}
 	}
 
-#line 484 "indexer.rl"
+#line 495 "indexer.rl"
   return res;
 }
 

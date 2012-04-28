@@ -569,7 +569,7 @@ void set_current_ver(long int id) {
   }
 
 
-  void set_tag_key(const char * s) {
+  void set_tag_key(const string & s) {
     /*
       cout << "current id" << current_id << " current type:" 
          << get_current_element_type_name()
@@ -582,7 +582,7 @@ void set_current_ver(long int id) {
     current_tag_key =s;
   }
 
-  void set_tag_val(const char * s) {
+  void set_tag_val(const string & s) {
 
     //    current_tag_value =s;
     if(current_id ==0)   {

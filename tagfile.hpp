@@ -8,7 +8,7 @@ public:
   //const char * key;
   //const char * value;
 public:
-  TagFileEntry(const long int & id,string & k,const char * v ):
+  TagFileEntry(const long int & id,const string & k,const string & v ):
     id(id),
     key(k),
     value(v)  {      }
@@ -20,7 +20,7 @@ public:
 
 };
 
-
+ 
 class TagFile {
 public:
   vector< TagFileEntry > data;
@@ -65,7 +65,7 @@ public:
     data.clear(); // erase the data
   }
   
-  void push_back (long int pos, string & key, const char * val){
+  void push_back (long int pos, const string & key, const string & val){
     total_count++;
     //cerr << "tag:"<< key << " = "<< val << endl;
     TagFileEntry v (pos,key,val);

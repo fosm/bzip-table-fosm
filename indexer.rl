@@ -338,26 +338,35 @@ action_val       = ( action_val_start action_val_value action_val_end );
 
 #tag v
 action FinishV {
-     world.set_tag_val(currenttoken.c_str());
-     currenttoken ="";
+     world.set_tag_val(currenttokenv);
+     currenttokenv ="";
 }
 
 #tag k
 action FinishK {
-     world.set_tag_key(currenttoken.c_str());
-     currenttoken="";
+     world.set_tag_key(currenttokenk);
+     currenttokenk="";
 }
 
 
 ## way tag
-add_string_value = ( [^\'\"]+  $AddChar );
+action AddCharK {
+       currenttokenk.push_back(fc);
+}
+
+action AddCharV {
+       currenttokenv.push_back(fc);
+}
+
+add_string_value = ( [^\'\"]+  $AddCharV );
+add_string_key   = ( [^\'\"]+  $AddCharK );
 way_tag_val_end   = ( quote space*  |
 		      quote @ FinishV );
 way_tag_val       = ( 'v' space* '=' quote add_string_value way_tag_val_end );
 #>{ cerr << "start value\n" << endl;}
 
 way_tag_key_end   = ( quote space* | quote  @ FinishK );
-way_tag_key       = ( 'k' space* '=' quote add_string_value way_tag_key_end );
+way_tag_key       = ( 'k' space* '=' quote add_string_key way_tag_key_end );
 
 
 # lat lon
@@ -476,6 +485,8 @@ int scanner(OSMWorld & world,const char *s)
   int cs;
   int res = 0;
   string currenttoken;
+  string currenttokenk;
+  string currenttokenv;
   char *p= (char *)s;
   char *pe = (char *)s + strlen(s) +1 ;
   char *eof = 0;    
