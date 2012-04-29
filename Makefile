@@ -46,6 +46,12 @@ ifileindexer_b.o : ifileindexer_b.cpp $(HEADERS)
 ragelosm : bzip-table-lines2.o process-fosm.o indexer.o ifileindexer_b.o $(HEADERS)
 	g++ $(CFLAGS)  bzip-table-lines2.o process-fosm.o indexer.o ifileindexer_b.o -lbz2 -o $@
 
+bzip-table-lines-threaded.o : bzip-table-lines-threaded.c $(HEADERS)
+	g++ $(CFLAGS) -c -std=c++0x $< -o $@
+
+ragelosmt : bzip-table-lines-threaded.o process-fosm.o indexer.o ifileindexer_b.o $(HEADERS)
+	g++   -static-libgcc -pthread $(CFLAGS)  bzip-table-lines-threaded.o process-fosm.o indexer.o ifileindexer_b.o -lbz2 -o $@
+
 #ragelosm : bzip-table-lines2.o process-fosm.o indexer.o ifileindexer_b.o $(HEADERS)
 #	1g++ $(CFLAGS)  bzip-table-lines2.o process-fosm.o indexer.o ifileindexer_b.o -lbz2 -o $@ 
 
