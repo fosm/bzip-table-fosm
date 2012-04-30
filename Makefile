@@ -1,5 +1,8 @@
 CC = gcc 
 CFLAGS = -g -O3 -DTESTING -I ~/perl5/include -L ~/perl5/lib
+LANGUAGE = C
+LC_ALL = C
+LANG = "us_us"
 
 PROGS=bzip-table  bzip-table-fosm bzip-table-linecount ragelosm ragelosmt
 
@@ -28,13 +31,13 @@ bzip-table-linecount : bzip-table-linecount.c micro-bunzip.c
 indexer.o : ifileindexer.hpp indexer.c ifileindexer_b.o 
 	g++ $(CFLAGS) -c indexer.c -o $@ 
 
-preindexer.o : ifileindexer.hpp preindexer.c 
+preindexer.o : ifileindexer.hpp preindexer.c  filepreindexer.hpp
 	g++ $(CFLAGS) -c preindexer.c -o $@ 
 
 indexer.c : indexer.rl
 	ragel -G1 indexer.rl
 
-preindexer.c : preindexer.rl
+preindexer.c : preindexer.rl filepreindexer.hpp
 	ragel -G1 preindexer.rl
 
 ifileindexer.hpp : ifileindexer.tt

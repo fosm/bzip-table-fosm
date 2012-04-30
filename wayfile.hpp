@@ -63,7 +63,7 @@ public:
     way_nodes.clear();
     txtfile.close();
     txtfile2.close();
-    cout << "Closing file " << filename << ", wrote " << total_count << endl;
+    cout << "Closing file " << dirname<<  filename << ", wrote " << total_count << endl;
   }
 
   void flush()

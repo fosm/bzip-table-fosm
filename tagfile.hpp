@@ -46,7 +46,7 @@ public:
     int count =data.size();
     write(count);
     txtfile.close();
-    cout << "Closing file " << filename << ", wrote " << total_count << endl;
+    cout << "Closing file " << dirname << filename << ", wrote " << total_count << endl;
   }
 
   void flush()

@@ -10,7 +10,7 @@
 #include <queue>
 #include <mutex>
 #include "filepreindexer.hpp"
-const int threadcount=50;
+const int threadcount=10;
 
 #define BUF_SIZE 4096 * 100 
 
@@ -54,28 +54,32 @@ class Datablock {
   Datablock() {
     blockcount=0;
     buf[0]=0;
+    buf[BUF_SIZE]=0;
+    buf[BUF_SIZE+1]=0;
   }
  Datablock(int blockcount,  const char * pbuf) :
   blockcount(blockcount)  {
+    //    cerr << "Created block " << blockcount << endl;
     strncpy(buf,pbuf,BUF_SIZE);
+    //    cerr << "Check data:\"" << buf[BUF_SIZE -1] << "\""<< endl;
     buf[BUF_SIZE]=0;
+    buf[BUF_SIZE+1]=0;
   }
   Datablock(const Datablock & r)    {
     blockcount=r.blockcount;
     strncpy(buf,r.buf,BUF_SIZE);
     buf[BUF_SIZE]=0;
+    buf[BUF_SIZE+1]=0;
   }
   
   int process() {
     // skip over everything until we get a <node/<way/<relation and send the stuff before to the previous block
     // skip all unfinished data
-    //    int ret=preprocess_line(buf)
     runmkdir("datafiles");
     char dirbuf[255];
-    sprintf(dirbuf,"datafiles/%06ld/",blockcount);
+    sprintf(dirbuf,"datafiles/%06d/",blockcount);
     runmkdir(dirbuf);
     OSMWorldPreindex iworld2(dirbuf,blockcount); 
-    iworld2.set_current_pos(seen);
     seen +=  BUF_SIZE;
     int ret=0;
     ret=prescanner(iworld2,buf);
@@ -126,12 +130,12 @@ static void threadprocess ()
       //      printf("begin of while thread process %llu\n",id);
       {
 
-        if (dataqueue.size()>1)    {
+        if (dataqueue.size()>0)    {
           Datablock  b;
           {
             std::unique_lock<std::mutex> lk(queuelock);
             // now we have the lock, check the size again
-            if (dataqueue.size()>1)    {
+            if (dataqueue.size()>0)    {
               printf("queue size %d\n",dataqueue.size());
               Datablock b2 = dataqueue.front();
               b=b2;
@@ -139,7 +143,7 @@ static void threadprocess ()
 
             }
           }
-          if (b.blockcount>0)
+          if (b.blockcount>=0)
             {
               printf("block %d, size %d\n",b.blockcount,strlen(b.buf));
               //std::this_thread::sleep_for(std::chrono::milliseconds(400)); // simulate processing, dont do this inside the 
@@ -175,7 +179,7 @@ static void threadprocess ()
 class MyThread : public std::thread {
  public :
  MyThread() : std::thread(threadprocess) {
-    printf("my thread created\n");
+    //printf("my thread created\n");
   }
 
 };
@@ -224,9 +228,11 @@ bunzip_one(FILE *f) {
   int blockcount =0;
   char buf[BUF_SIZE];    
   while (bzError == BZ_OK) {
-    int nread = BZ2_bzRead(&bzError, bzf, buf, sizeof buf);
+    int nread = BZ2_bzRead(&bzError, bzf, buf, sizeof(buf));
     if (bzError == BZ_OK || bzError == BZ_STREAM_END) {
-      //      printf("got count %d\n",nread); // debug
+      if (blockcount ==0) {
+        //printf("got count %d data:%s\n",nread,buf); 
+      }
       
       // each block depends on the previous block, but can skip the first items until the previoud block is finished.
       Datablock data(blockcount,buf);

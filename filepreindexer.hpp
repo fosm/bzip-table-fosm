@@ -16,6 +16,12 @@ const int blocksize=512;
 class OSMWorldPreindex
 {
 public:
+  void skip() {
+    //report_finished();
+    header << "SKIP:" << object_count << " data:" << currentobject << endl;
+    currentobject.clear();
+  }
+
   void debug_start_char(char s, int state)
   {
     body << "start:" <<s << "\t" << state << endl;
@@ -45,8 +51,10 @@ public:
     body << "end:" << s << "\t" << state << endl;
   }
   string currentobject;
-  void debug_general_char(const char * type,char s, int state)
+  
+  void add_char(char s)
   {
+    marker++; // count chars read
     if (s != '\r'){
       currentobject.push_back(s);
     }
@@ -82,47 +90,17 @@ public:
   int      current_vis;
   time_t   current_timestamp;
   string   current_tag_key;
-  //const char *   current_tag_key; // lets see if this works
-  //string   current_tag_value;
-  istream::pos_type marker; // position in the file
 
-  DataFile<istream::pos_type> node_positions;
-  DataFile<istream::pos_type> way_positions;
-  DataFile<istream::pos_type> rel_positions;
+  long int marker; // position in the file
+
+  DataFile<long int> node_positions;
+  DataFile<long int> way_positions;
+  DataFile<long int> rel_positions;
 
   DataFile<long int> node_ids;
   DataFile<long int> way_ids; 
   DataFile<long int> rel_ids;
  
-  /*
-  DataFile<double>   node_lon;
-  DataFile<double>   node_lat;
-  
-  DataFile<int>      node_vis;
-  DataFile<long int> node_uids;
-  DataFile<long int> node_cs;
-  DataFile<long int> node_ver;
-  TagFile            node_tags;
-  DataFile<time_t>   node_timestamp;
-
-  DataFile<int>     way_vis;
-
-
-  DataFile<long int> way_uids;
-  DataFile<long int> way_cs;
-  DataFile<time_t>   way_timestamp;
-  DataFile<long int> way_ver;
-  WayNodeFile  way_nodes;
-  
-  DataFile<int>     rel_vis;
-
-
-  DataFile<long int> rel_uids;
-  DataFile<long int> rel_cs;
-  DataFile<long int> rel_ver;
-  DataFile<time_t>   rel_timestamp; 
-  typedef std::map<int, int > node_index_t; // node id to node idx
-  */
   int scanlines;
   long blockcount;
   ofstream header;
@@ -140,53 +118,20 @@ public:
     current_timestamp(-1),
     current_element_type(t_none),
     parent_element_type(t_none),
-
+    marker(0),
     // positions
     node_positions(dir,blockcount,"node_positions"),
     way_positions(dir,blockcount,"way_positions"),
     rel_positions(dir,blockcount,"relation_positions"),
-
-    
-    // node lat lon
-    //    node_lon("node_lon"),
-    //    node_lat("node_lat"),
 
     //ids
     node_ids(dir,blockcount,"node_ids"),
     way_ids(dir,blockcount,"way_ids"),
     rel_ids(dir,blockcount,"relation_ids"),
 
-    // changesets
-    //    node_cs("node_cs"),
-    //way_cs("way_cs"),
-    //    rel_cs("relation_cs"),
-
-    // version
-    //node_ver("node_ver"),
-    //way_ver ("way_ver"),
-    //rel_ver ("relation_ver"),
-
-    //    node_timestamp("node_timestamp"),
-    //    way_timestamp ("way_timestamp"),
-    //    rel_timestamp ("rel_timestamp"),
-
-    //    node_uids("node_uids"),
-    //    way_uids ("way_uids"),
-    // rel_uids ("rel_uids"),
-
-    //    node_user("node_user"),
-    //way_user ("way_user"),
-    //    rel_user ("rel_user"),
-
-    //    node_vis("node_vis"),
-    //    way_vis ("way_vis"),
-    //    rel_vis ("rel_vis"),
-    //    way_nodes ("way_nodes"),
-
     //    node_tags("node_tags"), // node tags
     object_count(0),
-    scanlines(0)
-    
+    scanlines(0)    
   {
     header.open(string(string(dir) + "header.txt").c_str());
     body.open(string(string(dir) + "body.txt").c_str());
@@ -204,12 +149,10 @@ public:
 
   void  set_current_element_type_node (){
     set_current_element_type_none ();
-
     current_element_type=t_node;  
   }
 
   void  set_current_element_type_way (){
-    //    check_counts_ways();
     set_current_element_type_none ();
     current_element_type=t_way;
   }
@@ -218,7 +161,6 @@ public:
     set_current_element_type_none ();
     current_element_type=t_relation;
   }
-
 
   void add_node_position(){
     node_positions.push_back(marker);
@@ -232,20 +174,11 @@ public:
     rel_positions.push_back(marker);
   }
 
-  void set_current_pos(int pos)
-  {
-    // cout << "Current pos is " << pos << endl;
-    marker =pos;
-  }
-
-
-  bool check_counts_nodes()
-  {
+  bool check_counts_nodes()  {
     return true;
   }
   
   void set_current_id(long int id) {
-
     if (id == 0) {
       cerr << "there is no id  "  << endl;
       return ; // 
@@ -333,10 +266,8 @@ public:
     return get_element_type_name(get_parent_element_type());
   }
 
+
   void record_start_position() {
-    // now we close the previous object if it is not closed
-    body << "leftover:" << currentobject << endl;
-    currentobject.clear();
     switch (get_current_element_type()) {
     case         t_none:
       //      cout << "This should never happen none" << endl;
@@ -369,7 +300,8 @@ public:
       default:
         break;
       };
-    //cerr << "set_current_element_type_none" << endl;
+
+
     if (get_current_element_type()!=t_none) {
              current_element_type=t_none;
     }
@@ -383,12 +315,20 @@ public:
   }
 
   void report_finished() {
-    body << "finished:" << currentobject << endl;
+    if (object_count <= 0)      {
+      header << "count:" << object_count << " data:" << currentobject << endl;
+    } else {
+        body << currentobject << endl;
+    }
+    currentobject.clear();
   }
+
   // 
   int scannerstatus(int stat, const char * buffer)
   {
-    report_finished();
+    // write the footer
+    footer    << currentobject << endl;
+    currentobject.clear();
 
     if (scanlines++ % 10000 ==0)
       {
@@ -407,10 +347,7 @@ public:
     if (!check_counts_nodes())
       {
 	cerr << "error" << endl;
-	//        cerr << "last   \"" << laststring << "\"" << endl;
-	//        cerr << "buffer \"" << buffer << "\""<< endl;
         return -1;
-        //exit (123);
       }
 
     //    laststring =buffer;
@@ -419,25 +356,16 @@ public:
 
   void finish_current_object()
   {
-    body << "finish:" << currentobject << endl;
-    currentobject.clear();
+    report_finished();
 
-    if (debug_lines())
-      {
-        cerr << "finish current object" << endl;
-      }
+    if (debug_lines()) {
+      cerr << "finish current object" << endl;
+    }
     
     // reset the data
     set_current_element_type_none ();
-
-
-    //    if (!check_counts_nodes())
-      {
-        //        cerr << "last   \"" << laststring << "\"" << endl;
-        //exit (123);
-      }
-
   }
+
   void set_action_modify (){}
   void set_action_delete (){}
   void set_action_create (){}
