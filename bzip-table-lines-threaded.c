@@ -9,6 +9,10 @@
 #include <thread>
 #include <queue>
 #include <mutex>
+#include "filepreindexer.hpp"
+
+OSMWorldPreindex iworld2; 
+
 #define BUF_SIZE 4096 * 100 
 
 std::mutex globalsystem;
@@ -20,34 +24,59 @@ std::mutex globalsystem_finished;
 bool data_finished=0;
 
 int debug() {return 0;}
-
-class Datablock
-{
+int prescanner(OSMWorldPreindex & world,const char *s);
+class Datablock {
  public:
+  long long seen;
   int blockcount;
-  char buf[BUF_SIZE];  
-
+  char buf[BUF_SIZE+1];  
   Datablock() {
     blockcount=0;
     buf[0]=0;
-    }
-
-  //  std::thread thread;
+  }
  Datablock(int blockcount,  const char * pbuf) :
-  blockcount(blockcount)//,
-  //    thread (threadprocess)
-  {
+  blockcount(blockcount)  {
     strncpy(buf,pbuf,BUF_SIZE);
+    buf[BUF_SIZE]=0;
+  }
+  Datablock(const Datablock & r)    {
+    blockcount=r.blockcount;
+    strncpy(buf,r.buf,BUF_SIZE);
+    buf[BUF_SIZE]=0;
+  }
+  
+  int process() {
+    // skip over everything until we get a <node/<way/<relation and send the stuff before to the previous block
+    // skip all unfinished data
+    //    int ret=preprocess_line(buf)
+    iworld2.set_current_pos(seen);
+    seen +=  BUF_SIZE;
+    //    if (len>2)    {
+    int ret= prescanner(iworld2,buf);
+    if (ret != 1)  {
+      cerr << "prescanner returned ret " << ret << " for len :" << BUF_SIZE << endl;
+    } else {
+      //cerr << "OK scanner returned ret " << ret << " for len :" << strlen(buffer) << endl;
+    }
+    
+    if (iworld2.scannerstatus(ret,buf)!=0) {
+      cerr << "ERROR: status returned ret " << ret << " for \"" << buf << "\""<< endl;
+      //          exit(233);
+      return -1;
+    }
+    
+    return 0;
+    
   }
 
-
- Datablock(const Datablock & r) 
-   {
-     blockcount=r.blockcount;
-     strncpy(buf,r.buf,BUF_SIZE);
-   }
+  int merge_previous() {
+    // merge the data from the previous block
+  }
   
- 
+  int merge_next() {
+    // merge the leftover data with the next block
+  }
+  
 };
 
 std::queue<Datablock> dataqueue;
@@ -56,8 +85,6 @@ static void threadprocess ()
 {
   std::thread::id id;               // Refers to no thread
   id = std::this_thread::get_id();  // get id for this thread
-  //  printf("thread process %llu starting \n",id);
-
   {
     std::unique_lock<std::mutex> lk(globalsystem);
     while(!data_ready)
@@ -89,7 +116,9 @@ static void threadprocess ()
           if (b.blockcount>0)
             {
               printf("block %d, size %d\n",b.blockcount,strlen(b.buf));
-              std::this_thread::sleep_for(std::chrono::milliseconds(400)); // simulate processing, dont do this inside the 
+              //std::this_thread::sleep_for(std::chrono::milliseconds(400)); // simulate processing, dont do this inside the 
+              b.process();
+              //connect this to the previous one
             }
         }
         else 

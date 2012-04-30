@@ -5,7 +5,7 @@ PROGS=bzip-table  bzip-table-fosm bzip-table-linecount ragelosm
 
 #seek-bunzip
 
-HEADERS= datafile.hpp tagfile.hpp wayfile.hpp fileindexer.hpp fileindexer.hpp ifileindexer.hpp
+HEADERS= datafile.hpp tagfile.hpp wayfile.hpp fileindexer.hpp fileindexer.hpp ifileindexer.hpp filepreindexer.hpp
 
 all: $(PROGS) all2
 
@@ -28,8 +28,14 @@ bzip-table-linecount : bzip-table-linecount.c micro-bunzip.c
 indexer.o : ifileindexer.hpp indexer.c ifileindexer_b.o 
 	g++ $(CFLAGS) -c indexer.c -o $@ 
 
+preindexer.o : ifileindexer.hpp preindexer.c 
+	g++ $(CFLAGS) -c preindexer.c -o $@ 
+
 indexer.c : indexer.rl
 	ragel -G1 indexer.rl
+
+preindexer.c : preindexer.rl
+	ragel -G1 preindexer.rl
 
 ifileindexer.hpp : ifileindexer.tt
 	tpage $< > $@ 	
@@ -49,11 +55,8 @@ ragelosm : bzip-table-lines2.o process-fosm.o indexer.o ifileindexer_b.o $(HEADE
 bzip-table-lines-threaded.o : bzip-table-lines-threaded.c $(HEADERS)
 	g++ $(CFLAGS) -c -std=c++0x $< -o $@
 
-ragelosmt : bzip-table-lines-threaded.o process-fosm.o indexer.o ifileindexer_b.o $(HEADERS)
-	g++   -static-libgcc -pthread $(CFLAGS)  bzip-table-lines-threaded.o process-fosm.o indexer.o ifileindexer_b.o -lbz2 -o $@
-
-#ragelosm : bzip-table-lines2.o process-fosm.o indexer.o ifileindexer_b.o $(HEADERS)
-#	1g++ $(CFLAGS)  bzip-table-lines2.o process-fosm.o indexer.o ifileindexer_b.o -lbz2 -o $@ 
+ragelosmt : bzip-table-lines-threaded.o process-fosm.o preindexer.o ifileindexer_b.o $(HEADERS)
+	g++   -static-libgcc -pthread $(CFLAGS)  bzip-table-lines-threaded.o process-fosm.o preindexer.o ifileindexer_b.o indexer.o -lbz2 -o $@ 
 
 seek-bunzip : seek-bunzip.o micro-bunzip.o
 
