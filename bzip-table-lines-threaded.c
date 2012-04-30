@@ -10,8 +10,7 @@
 #include <queue>
 #include <mutex>
 #include "filepreindexer.hpp"
-
-
+const int threadcount=50;
 
 #define BUF_SIZE 4096 * 100 
 
@@ -170,7 +169,7 @@ static void threadprocess ()
 
     }
 }
-const int threadcount=5;
+
 
 
 class MyThread : public std::thread {
