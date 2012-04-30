@@ -16,6 +16,48 @@ const int blocksize=512;
 class OSMWorldPreindex
 {
 public:
+  void debug_start_char(char s, int state)
+  {
+    body << "start:" <<s << "\t" << state << endl;
+  }
+
+  void debug_end_string(const char * start,int size)
+  {
+    //    char buffer[];
+    cerr << "got end " << size << endl;
+    /*    const char * p=start;
+    while (p < (p + size -1))
+      {
+        body << "debug:" <<*p;
+        p++;
+      }
+    body << endl;
+    */
+  }
+
+  void debug_node_char(char s, int state)
+  {
+    body << "node:" <<s << "\t" << state << endl;
+  }
+
+  void debug_end_char(char s, int state)
+  {
+    body << "end:" << s << "\t" << state << endl;
+  }
+  string currentobject;
+  void debug_general_char(const char * type,char s, int state)
+  {
+    if (s != '\r'){
+      currentobject.push_back(s);
+    }
+    //body << type <<":" << s << "\t" << state << endl;
+  }
+
+  void debug_end_line(const string &s)
+  {
+    body << "end line:" << s << endl;
+  }
+
   enum element_type_t{
     t_none=0,
     t_node,
@@ -45,8 +87,8 @@ public:
   istream::pos_type marker; // position in the file
 
   DataFile<istream::pos_type> node_positions;
-  DataFile<long int> way_positions;
-  DataFile<long int> rel_positions;
+  DataFile<istream::pos_type> way_positions;
+  DataFile<istream::pos_type> rel_positions;
 
   DataFile<long int> node_ids;
   DataFile<long int> way_ids; 
@@ -82,7 +124,14 @@ public:
   typedef std::map<int, int > node_index_t; // node id to node idx
   */
   int scanlines;
-  OSMWorldPreindex () :
+  long blockcount;
+  ofstream header;
+  ofstream footer;
+  ofstream body;
+  ofstream debug;
+
+  OSMWorldPreindex (const char * dir, long blockcount) :
+    blockcount(blockcount),
     current_id(0),
     current_cs(-1),
     current_ver(-1),
@@ -93,9 +142,9 @@ public:
     parent_element_type(t_none),
 
     // positions
-    node_positions("node_positions"),
-    way_positions("way_positions"),
-    rel_positions("relation_positions"),
+    node_positions(dir,blockcount,"node_positions"),
+    way_positions(dir,blockcount,"way_positions"),
+    rel_positions(dir,blockcount,"relation_positions"),
 
     
     // node lat lon
@@ -103,9 +152,9 @@ public:
     //    node_lat("node_lat"),
 
     //ids
-        node_ids("node_ids"),
-        way_ids("way_ids"),
-        rel_ids("relation_ids"),
+    node_ids(dir,blockcount,"node_ids"),
+    way_ids(dir,blockcount,"way_ids"),
+    rel_ids(dir,blockcount,"relation_ids"),
 
     // changesets
     //    node_cs("node_cs"),
@@ -137,8 +186,12 @@ public:
     //    node_tags("node_tags"), // node tags
     object_count(0),
     scanlines(0)
+    
   {
-
+    header.open(string(string(dir) + "header.txt").c_str());
+    body.open(string(string(dir) + "body.txt").c_str());
+    debug.open(string(string(dir) + "debug.txt").c_str());
+    footer.open(string(string(dir) + "footer.txt").c_str());
   }
 
   element_type_t  get_current_element_type (){
@@ -156,7 +209,7 @@ public:
   }
 
   void  set_current_element_type_way (){
-    check_counts_ways();
+    //    check_counts_ways();
     set_current_element_type_none ();
     current_element_type=t_way;
   }
@@ -185,19 +238,11 @@ public:
     marker =pos;
   }
 
+
   bool check_counts_nodes()
   {
     return true;
   }
-
-  void check_counts_ways()
-  {
-  }
-
-  void check_counts_rels()
-  {
-  }
-
   
   void set_current_id(long int id) {
 
@@ -232,7 +277,6 @@ public:
 
         break;
       };
-
 
     current_id=id;
     int index=0;
@@ -271,7 +315,6 @@ public:
 
   }
 
-
   const char * get_element_type_name(element_type_t t) {
     const char * element_names[] = {
       "none",
@@ -292,7 +335,8 @@ public:
 
   void record_start_position() {
     // now we close the previous object if it is not closed
-
+    body << "leftover:" << currentobject << endl;
+    currentobject.clear();
     switch (get_current_element_type()) {
     case         t_none:
       //      cout << "This should never happen none" << endl;
@@ -308,7 +352,7 @@ public:
       break;
 
     default:
-      cout << "This should never happen other:" << get_current_element_type() << endl;
+      //      cout << "This should never happen other:" << get_current_element_type() << endl;
       break;
     };
   }
@@ -338,17 +382,21 @@ public:
     //return true; 
   }
 
-  
+  void report_finished() {
+    body << "finished:" << currentobject << endl;
+  }
   // 
   int scannerstatus(int stat, const char * buffer)
   {
+    report_finished();
+
     if (scanlines++ % 10000 ==0)
       {
 	cerr << "L"<< scanlines << endl;
       }
-    if (debug_lines())
+    //    if (debug_lines())
       {
-        cerr << "stat:"<< stat 
+        debug << "stat:"<< stat 
              << "buffer \"" << buffer 
              << "\""<< endl;
       }
@@ -371,6 +419,9 @@ public:
 
   void finish_current_object()
   {
+    body << "finish:" << currentobject << endl;
+    currentobject.clear();
+
     if (debug_lines())
       {
         cerr << "finish current object" << endl;
@@ -380,7 +431,7 @@ public:
     set_current_element_type_none ();
 
 
-    if (!check_counts_nodes())
+    //    if (!check_counts_nodes())
       {
         //        cerr << "last   \"" << laststring << "\"" << endl;
         //exit (123);

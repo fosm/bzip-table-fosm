@@ -27,12 +27,18 @@ public:
   ofstream  txtfile;
   string    filename;
   long long total_count;
+  const char * dirname;
+  long blockcount;
   
-  TagFile(const char * filename)
-    :txtfile(string(string ("datafiles/") +  string(filename) + ".txt").c_str()),
-     total_count(0),
-     filename(filename)
+  TagFile(const char * dirname,long blockcount,const char * filename)
+    :total_count(0),
+     filename(filename),
+     dirname(dirname),
+     blockcount(blockcount)
   {    
+    string outputbase(string (dirname) + string(filename));
+    txtfile.open(string(outputbase+ ".txt").c_str());    
+
   }           
 
   ~TagFile()

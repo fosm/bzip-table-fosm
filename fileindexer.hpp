@@ -86,7 +86,7 @@ public:
   //  node_index_t rel_index;
 
   
-  OSMWorldImp () :
+  OSMWorldImp (const char * dir, long blockcount) :
     current_id(0),
     current_cs(-1),
     current_ver(-1),
@@ -97,48 +97,48 @@ public:
     parent_element_type(t_none),
 
     // positions
-    node_positions("node_positions"),
-    way_positions("way_positions"),
-    rel_positions("relation_positions"),
+    node_positions(dir,blockcount,"node_positions"),
+    way_positions(dir,blockcount,"way_positions"),
+    rel_positions(dir,blockcount,"relation_positions"),
 
     
     // node lat lon
-    node_lon("node_lon"),
-    node_lat("node_lat"),
+    node_lon(dir,blockcount,"node_lon"),
+    node_lat(dir,blockcount,"node_lat"),
 
     //ids
-    node_ids("node_ids"),
-    way_ids("way_ids"),
-    rel_ids("relation_ids"),
+    node_ids(dir,blockcount,"node_ids"),
+    way_ids(dir,blockcount,"way_ids"),
+    rel_ids(dir,blockcount,"relation_ids"),
 
     // changesets
-    node_cs("node_cs"),
-    way_cs("way_cs"),
-    rel_cs("relation_cs"),
+    node_cs(dir,blockcount,"node_cs"),
+    way_cs(dir,blockcount,"way_cs"),
+    rel_cs(dir,blockcount,"relation_cs"),
 
     // version
-    node_ver("node_ver"),
-    way_ver ("way_ver"),
-    rel_ver ("relation_ver"),
+    node_ver(dir,blockcount,"node_ver"),
+    way_ver (dir,blockcount,"way_ver"),
+    rel_ver (dir,blockcount,"relation_ver"),
 
-    node_timestamp("node_timestamp"),
-    way_timestamp ("way_timestamp"),
-    rel_timestamp ("rel_timestamp"),
+    node_timestamp(dir,blockcount,"node_timestamp"),
+    way_timestamp (dir,blockcount,"way_timestamp"),
+    rel_timestamp (dir,blockcount,"rel_timestamp"),
 
-    node_uids("node_uids"),
-    way_uids ("way_uids"),
-    rel_uids ("rel_uids"),
+    node_uids(dir,blockcount,"node_uids"),
+    way_uids (dir,blockcount,"way_uids"),
+    rel_uids (dir,blockcount,"rel_uids"),
 
-    //    node_user("node_user"),
-    //way_user ("way_user"),
-    //    rel_user ("rel_user"),
+    //    node_user(dir,blockcount,"node_user"),
+    //way_user (dir,blockcount,"way_user"),
+    //    rel_user (dir,blockcount,"rel_user"),
 
-    node_vis("node_vis"),
-    way_vis ("way_vis"),
-    rel_vis ("rel_vis"),
-    way_nodes ("way_nodes"),
+    node_vis(dir,blockcount,"node_vis"),
+    way_vis (dir,blockcount,"way_vis"),
+    rel_vis (dir,blockcount,"rel_vis"),
+    way_nodes (dir,blockcount,"way_nodes"),
 
-    node_tags("node_tags"), // node tags
+    node_tags(dir,blockcount,"node_tags"), // node tags
     object_count(0),
     scanlines(0)
   {

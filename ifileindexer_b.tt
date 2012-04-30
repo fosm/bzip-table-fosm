@@ -5,7 +5,7 @@
 */
 #include "fileindexer.hpp"
 
-OSMWorldImp world;
+OSMWorldImp world("datafiles/imp",0);
 
    [% FOREACH fieldname IN [  'record_start_position', 
 'set_current_element_type_member', 'set_current_element_type_nd', 'set_current_element_type_node', 'set_current_element_type_rel',                               'set_current_element_type_tag', 'set_current_element_type_way',

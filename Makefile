@@ -1,7 +1,7 @@
 CC = gcc 
 CFLAGS = -g -O3 -DTESTING -I ~/perl5/include -L ~/perl5/lib
 
-PROGS=bzip-table  bzip-table-fosm bzip-table-linecount ragelosm
+PROGS=bzip-table  bzip-table-fosm bzip-table-linecount ragelosm ragelosmt
 
 #seek-bunzip
 
@@ -55,7 +55,7 @@ ragelosm : bzip-table-lines2.o process-fosm.o indexer.o ifileindexer_b.o $(HEADE
 bzip-table-lines-threaded.o : bzip-table-lines-threaded.c $(HEADERS)
 	g++ $(CFLAGS) -c -std=c++0x $< -o $@
 
-ragelosmt : bzip-table-lines-threaded.o process-fosm.o preindexer.o ifileindexer_b.o $(HEADERS)
+ragelosmt : bzip-table-lines-threaded.o process-fosm.o preindexer.o ifileindexer_b.o filepreindexer.hpp $(HEADERS)
 	g++   -static-libgcc -pthread $(CFLAGS)  bzip-table-lines-threaded.o process-fosm.o preindexer.o ifileindexer_b.o indexer.o -lbz2 -o $@ 
 
 seek-bunzip : seek-bunzip.o micro-bunzip.o
@@ -153,3 +153,6 @@ retest : testoffenbach testral
 
 testfosmpart : ragelosm
 	./ragelosm data/earth-20120401130001.osm.bz2 > debug.txt 2>&1
+
+testthread : ragelosmt
+	./ragelosmt data/earth-20120401130001.osm.bz2

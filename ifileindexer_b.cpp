@@ -5,7 +5,7 @@
 */
 #include "fileindexer.hpp"
 
-OSMWorldImp world;
+OSMWorldImp world("datafiles/imp",0);
 
    
    //record_start_position

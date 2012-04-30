@@ -38,16 +38,22 @@ public:
   long int total_count;
   long int write_count;
   int total_way_count;
+  const char * dirname;
+  long blockcount;
   
-  WayNodeFile(const char * filename)
-    :txtfile(string(string ("datafiles/") +  string(filename) + ".txt").c_str()),
-     txtfile2(string(string ("datafiles/") +  string(filename) + "2.txt").c_str()),
-     file(string(string ("datafiles/") + string(filename) + ".bin").c_str()),
-     total_way_count(0),
-     total_count(0),
-     write_count(0),
-     filename(filename)
+  WayNodeFile(const char * dirname,long blockcount,const char * filename)
+      :     total_way_count(0),
+            total_count(0),
+            write_count(0),
+            filename(filename),
+            dirname(dirname),
+            blockcount(blockcount)
   {    
+    string outputbase(string (dirname) + string(filename));
+    txtfile.open(string(outputbase + ".txt").c_str());
+    txtfile2.open(string(outputbase + "2.txt").c_str());
+    file.open(string(outputbase + ".bin").c_str());
+
   }           
 
   ~WayNodeFile()

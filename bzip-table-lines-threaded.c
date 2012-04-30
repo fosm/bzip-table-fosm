@@ -11,7 +11,7 @@
 #include <mutex>
 #include "filepreindexer.hpp"
 
-OSMWorldPreindex iworld2; 
+
 
 #define BUF_SIZE 4096 * 100 
 
@@ -22,6 +22,28 @@ bool data_ready=0;
 
 std::mutex globalsystem_finished;
 bool data_finished=0;
+#include <dirent.h>
+#include <errno.h>
+#include <unistd.h>
+#include <pwd.h>
+#include <grp.h>
+#include <sys/stat.h>
+int runmkdir(const char *path)
+{
+    struct stat            st;
+    int status=0;
+    if (stat(path, &st) != 0)
+    {
+      if (mkdir(path, 0777) != 0)
+        status = -1;
+    }
+    else if (!S_ISDIR(0777))
+    {
+        errno = ENOTDIR;
+        status = -1;
+    }
+    return(status);
+}
 
 int debug() {return 0;}
 int prescanner(OSMWorldPreindex & world,const char *s);
@@ -49,10 +71,15 @@ class Datablock {
     // skip over everything until we get a <node/<way/<relation and send the stuff before to the previous block
     // skip all unfinished data
     //    int ret=preprocess_line(buf)
+    runmkdir("datafiles");
+    char dirbuf[255];
+    sprintf(dirbuf,"datafiles/%06ld/",blockcount);
+    runmkdir(dirbuf);
+    OSMWorldPreindex iworld2(dirbuf,blockcount); 
     iworld2.set_current_pos(seen);
     seen +=  BUF_SIZE;
-    //    if (len>2)    {
-    int ret= prescanner(iworld2,buf);
+    int ret=0;
+    ret=prescanner(iworld2,buf);
     if (ret != 1)  {
       cerr << "prescanner returned ret " << ret << " for len :" << BUF_SIZE << endl;
     } else {
@@ -60,7 +87,7 @@ class Datablock {
     }
     
     if (iworld2.scannerstatus(ret,buf)!=0) {
-      cerr << "ERROR: status returned ret " << ret << " for \"" << buf << "\""<< endl;
+      cerr << "ERROR: status returned ret " << ret << endl;
       //          exit(233);
       return -1;
     }
@@ -205,6 +232,7 @@ bunzip_one(FILE *f) {
       // each block depends on the previous block, but can skip the first items until the previoud block is finished.
       Datablock data(blockcount,buf);
       {
+        //data.process(); // process them directly
         std::unique_lock<std::mutex> lk(queuelock);
         dataqueue.push(data);
         if (dataqueue.size() > threadcount)   {

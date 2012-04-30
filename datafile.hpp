@@ -5,13 +5,19 @@ public:
   ofstream  txtfile;
   string    filename;
   long long total_count;
-  
-  DataFile(const char * filename)
-    :file(string(string ("datafiles/") + string(filename) + ".bin").c_str()),
-     txtfile(string(string ("datafiles/") +  string(filename) + ".txt").c_str()),
-     total_count(0),
-     filename(filename)
-  {    
+  const char * dirname;
+  long blockcount;
+
+  DataFile(const char * dirname,long blockcount,const char * filename)
+    :     
+    total_count(0),
+    filename(filename),
+    dirname(dirname),
+    blockcount(blockcount)
+  { 
+    string outputbase(string (dirname) + string(filename));
+    file.open(string (outputbase + ".bin").c_str());
+    txtfile.open(string(outputbase+ ".txt").c_str());    
   }           
 
   ~DataFile()
