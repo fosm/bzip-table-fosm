@@ -94,8 +94,6 @@ clean:
 format:
 	astyle --options=astyle.opts *.c *.h
 
-testfosm: ragelosm
-	./ragelosm /xapi/planet/earth-20120401130001.osm.bz2
 
 testgeofabrik: ragelosm 
 	./ragelosm   ~/OSM-API-Proxy/data/kosovo.osm.bz2  > test.out
@@ -159,3 +157,6 @@ testfosmpart : ragelosm
 
 testthread : ragelosmt
 	./ragelosmt data/earth-20120401130001.osm.bz2
+
+testfosm: ragelosmt
+	./ragelosmt /xapi/planet/earth-20120401130001.osm.bz2
