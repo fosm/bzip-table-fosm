@@ -78,9 +78,9 @@ public:
   //  DataFile<long int> way_positions;
   //  DataFile<long int> rel_positions;
 
-  DataFile<long int> node_ids;
-  DataFile<long int> way_ids; 
-  DataFile<long int> rel_ids;
+  DataFile<long long int> node_ids;
+  DataFile<long long int> way_ids; 
+  DataFile<long long int> rel_ids;
   long blockcount;
   ofstream header;
   ofstream footer;

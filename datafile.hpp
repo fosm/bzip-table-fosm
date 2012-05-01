@@ -1,8 +1,11 @@
+#define USE_TEXT 1
 template <class T> class DataFile {
 public:
   vector<T> data;
   ofstream  file;
-  //  ofstream  txtfile;
+#ifdef USE_TEXT
+  ofstream  txtfile;
+#endif
   string    filename;
   long long total_count;
   const char * dirname;
@@ -17,7 +20,9 @@ public:
   { 
     string outputbase(string (dirname) + string(filename));
     file.open(string (outputbase + ".bin").c_str());
-    //    txtfile.open(string(outputbase+ ".txt").c_str());    
+    #ifdef USE_TEXT
+    txtfile.open(string(outputbase+ ".txt").c_str());    
+    #endif
   }           
 
   ~DataFile()
@@ -25,7 +30,9 @@ public:
     int count =data.size();
     write(count);
     file.close();
-    //    txtfile.close();
+#ifdef USE_TEXT
+    txtfile.close();
+#endif
     //    cout << "Closing file "<< dirname << filename << ", wrote " << total_count << endl;
   }
 
@@ -43,14 +50,14 @@ public:
   {
     // append the data to the file
     file.write((const char*)&data[0], count * sizeof(T));
-
-    /*    typename vector<T>::iterator i;
+#ifdef USE_TEXT
+    typename vector<T>::iterator i;
     for(i=data.begin();i!=data.end();i++)
       {
         txtfile << *i << endl;
       }
     data.clear(); // erase the data
-    */
+#endif
   }
   
   void push_back (const T& v){

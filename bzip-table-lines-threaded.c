@@ -95,10 +95,10 @@ class Datablock {
       return -1;
     }
     // now lets zip and remove the files
-    sprintf(dirbuf,"tar -cjf datafiles/%06d.tbz datafiles/%06d",blocknumber,blocknumber);
-    system (dirbuf );
-    sprintf(dirbuf,"rm -rf datafiles/%06d",blocknumber);
-    system (dirbuf);
+    //sprintf(dirbuf,"tar -cjf datafiles/%06d.tbz datafiles/%06d",blocknumber,blocknumber);
+    //ret=system (dirbuf );
+    //    sprintf(dirbuf,"rm -rf datafiles/%06d",blocknumber);
+    //    system (dirbuf);
 
     return 0;
     
