@@ -8,7 +8,7 @@ class OSMWorld
 {
 public:
 
-  void set_current_pos(int pos); 
+   
    //record_start_position
    void record_start_position(); 
    template <class T> void record_start_position(const T &);
@@ -114,10 +114,6 @@ public:
    template <class T> void finish_current_object(const T &);
    
 
-  int scannerstatus(int s, char const* v);
-
-  void set_action_delete(); 
-  void set_action_create(); 
-  void set_action_modify(); 
+   void scannerstatus(int s, char const* v);
 
 };

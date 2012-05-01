@@ -1,4 +1,4 @@
-#define USE_TEXT 1
+//#define USE_TEXT 
 template <class T> class DataFile {
 public:
   vector<T> data;

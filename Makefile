@@ -31,22 +31,22 @@ bzip-table-linecount : bzip-table-linecount.c micro-bunzip.c
 indexer.o : ifileindexer.hpp indexer.c ifileindexer_b.o 
 	g++ $(CFLAGS) -c indexer.c -o $@ 
 
-preindexer.o : ifileindexer.hpp preindexer.c  filepreindexer.hpp
+preindexer.o : ifileindexer.hpp preindexer.c  filepreindexer.hpp $(HEADERS)
 	g++ $(CFLAGS) -c preindexer.c -o $@ 
 
 indexer.c : indexer.rl
 	ragel -G1 indexer.rl
 
-preindexer.c : preindexer.rl filepreindexer.hpp
+preindexer.c : preindexer.rl filepreindexer.hpp $(HEADERS)
 	ragel -G1 preindexer.rl
 
-ifileindexer.hpp : ifileindexer.tt
+ifileindexer.hpp : ifileindexer.tt $(HEADERS)
 	tpage $< > $@ 	
 
 ifileindexer_b.cpp : ifileindexer_b.tt $(HEADERS)
 	tpage $< > $@ 	
 
-%.o : %.c 
+%.o : %.c $(HEADERS)
 	g++ $(CFLAGS) -c $< -o $@ 	
 
 ifileindexer_b.o : ifileindexer_b.cpp $(HEADERS)
