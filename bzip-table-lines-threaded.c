@@ -95,11 +95,29 @@ class Datablock {
       return -1;
     }
     // now lets zip and remove the files
-    //sprintf(dirbuf,"tar -cjf datafiles/%06d.tbz datafiles/%06d",blocknumber,blocknumber);
-    //ret=system (dirbuf );
-    //    sprintf(dirbuf,"rm -rf datafiles/%06d",blocknumber);
-    //    system (dirbuf);
+    sprintf(dirbuf,"tar -cjf datafiles/%06d.tbz datafiles/%06d/*.txt",blocknumber,blocknumber);
+    ret=system (dirbuf );
+    if (ret != 0)
+      {
+	cerr << "ERROR: tar bzip failed returned ret " << ret << endl;
+	exit (ret);
+      }
 
+    sprintf(dirbuf,"tar -cjf datafiles/%06d_i.tbz datafiles/%06d/*.bin",blocknumber,blocknumber);
+    ret=system (dirbuf );
+    if (ret != 0)
+      {
+	cerr << "ERROR: tar bzip failed returned ret " << ret << endl;
+	exit (ret);
+      }
+
+    sprintf(dirbuf,"rm -rf datafiles/%06d",blocknumber);
+    ret=system (dirbuf);
+    if (ret != 0)
+      {
+	cerr << "ERROR: rm -rf failed returned ret " << ret << endl;
+	exit (ret);
+      }
     return 0;
     
   }
