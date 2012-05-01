@@ -18,19 +18,14 @@ class OSMWorldPreindex
 public:
   void skip() {
     //report_finished();
-    header << "SKIP:" << object_count << " data:" << currentobject << endl;
+    header << currentobject << endl;
     currentobject.clear();
-  }
-
-  void debug_start_char(char s, int state)
-  {
-    body << "start:" <<s << "\t" << state << endl;
   }
 
   void debug_end_string(const char * start,int size)
   {
     //    char buffer[];
-    cerr << "got end " << size << endl;
+    //    cerr << "got end " << size << endl;
     /*    const char * p=start;
     while (p < (p + size -1))
       {
@@ -41,32 +36,18 @@ public:
     */
   }
 
-  void debug_node_char(char s, int state)
-  {
-    body << "node:" <<s << "\t" << state << endl;
-  }
-
-  void debug_end_char(char s, int state)
-  {
-    body << "end:" << s << "\t" << state << endl;
-  }
   string currentobject;
   
   void add_char(char s)
   {
     marker++; // count chars read
-    if (s != '\r'){
+    if ((s != '\r') && (s != '\n')){
       currentobject.push_back(s);
     }
     //body << type <<":" << s << "\t" << state << endl;
   }
 
-  void debug_end_line(const string &s)
-  {
-    body << "end line:" << s << endl;
-  }
-
-  enum element_type_t{
+   enum element_type_t{
     t_none=0,
     t_node,
     t_way,
@@ -93,20 +74,18 @@ public:
 
   long int marker; // position in the file
 
-  DataFile<long int> node_positions;
-  DataFile<long int> way_positions;
-  DataFile<long int> rel_positions;
+  //  DataFile<long int> node_positions;
+  //  DataFile<long int> way_positions;
+  //  DataFile<long int> rel_positions;
 
   DataFile<long int> node_ids;
   DataFile<long int> way_ids; 
   DataFile<long int> rel_ids;
- 
-  int scanlines;
   long blockcount;
   ofstream header;
   ofstream footer;
   ofstream body;
-  ofstream debug;
+  //  ofstream debug;
 
   OSMWorldPreindex (const char * dir, long blockcount) :
     blockcount(blockcount),
@@ -120,22 +99,21 @@ public:
     parent_element_type(t_none),
     marker(0),
     // positions
-    node_positions(dir,blockcount,"node_positions"),
-    way_positions(dir,blockcount,"way_positions"),
-    rel_positions(dir,blockcount,"relation_positions"),
+    //    node_positions(dir,blockcount,"node_positions"),
+    //    way_positions(dir,blockcount,"way_positions"),
+    //    rel_positions(dir,blockcount,"relation_positions"),
 
     //ids
     node_ids(dir,blockcount,"node_ids"),
     way_ids(dir,blockcount,"way_ids"),
     rel_ids(dir,blockcount,"relation_ids"),
-
     //    node_tags("node_tags"), // node tags
-    object_count(0),
-    scanlines(0)    
+    object_count(0)
+
   {
     header.open(string(string(dir) + "header.txt").c_str());
     body.open(string(string(dir) + "body.txt").c_str());
-    debug.open(string(string(dir) + "debug.txt").c_str());
+    //    debug.open(string(string(dir) + "debug.txt").c_str());
     footer.open(string(string(dir) + "footer.txt").c_str());
   }
 
@@ -163,15 +141,15 @@ public:
   }
 
   void add_node_position(){
-    node_positions.push_back(marker);
+    //    node_positions.push_back(marker);
   }
 
   void add_way_position(){
-    way_positions.push_back(marker);
+    //    way_positions.push_back(marker);
   }
 
   void add_rel_position(){
-    rel_positions.push_back(marker);
+    //    rel_positions.push_back(marker);
   }
 
   bool check_counts_nodes()  {
@@ -180,7 +158,7 @@ public:
   
   void set_current_id(long int id) {
     if (id == 0) {
-      cerr << "there is no id  "  << endl;
+      //cerr << "there is no id  "  << endl;
       return ; // 
     }
 
@@ -268,6 +246,7 @@ public:
 
 
   void record_start_position() {
+    /*
     switch (get_current_element_type()) {
     case         t_none:
       //      cout << "This should never happen none" << endl;
@@ -286,6 +265,7 @@ public:
       //      cout << "This should never happen other:" << get_current_element_type() << endl;
       break;
     };
+    */
   }
 
   void  set_current_element_type_none (){
@@ -330,15 +310,9 @@ public:
     footer    << currentobject << endl;
     currentobject.clear();
 
-    if (scanlines++ % 10000 ==0)
+    if (debug_lines())
       {
-	cerr << "L"<< scanlines << endl;
-      }
-    //    if (debug_lines())
-      {
-        debug << "stat:"<< stat 
-             << "buffer \"" << buffer 
-             << "\""<< endl;
+        //        debug << "stat:"<< stat              << "buffer \"" << buffer              << "\""<< endl;
       }
     // reset the data
     set_current_element_type_none ();
