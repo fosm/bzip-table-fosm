@@ -19,7 +19,7 @@ action AddChar {
 }
 
 action AddChar2 {
-       world.add_char(fc);   
+//       world.add_char(fc);   
        currenttoken.push_back(fc);
 }
 

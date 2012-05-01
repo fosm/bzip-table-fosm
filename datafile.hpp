@@ -56,8 +56,8 @@ public:
       {
         txtfile << *i << endl;
       }
-    data.clear(); // erase the data
 #endif
+    data.clear(); // erase the data
   }
   
   void push_back (const T& v){
