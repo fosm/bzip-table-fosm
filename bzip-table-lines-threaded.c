@@ -10,7 +10,7 @@
 #include <queue>
 #include <mutex>
 #include "filepreindexer.hpp"
-const int threadcount=10;
+const int threadcount=20;
 
 #define BUF_SIZE 4096 * 100 
 
