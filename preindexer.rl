@@ -5,13 +5,22 @@ action RecordStart {
        world.record_start_position();
 }
 
+action StartValue {
+     currenttoken.clear();  
+}
+
 action Skip {          
-       cerr << "Skipping" << endl;
+//       cerr << "Skipping" << endl;
        world.skip();
 }
 
 action AddChar {
        world.add_char(fc);   
+}
+
+action AddChar2 {
+       world.add_char(fc);   
+       currenttoken.push_back(fc);
 }
 
 action some_err {
@@ -69,6 +78,21 @@ el_create = (
      $err (some_err )
      $AddChar;
 
+
+# ID Field
+action FinishID {
+     char *endptr;   // ignore  
+  //   cerr << "currenttoken" << currenttoken << endl;
+     world.set_current_id(strtol(currenttoken.c_str(), &endptr, 10));
+}
+
+quote = ('\''|'\"' );
+id_val_start = ( 'id' '=' quote  @StartValue);
+id_val_negvalue = (  '-'?  $AddChar2 );
+id_val_value = (  id_val_negvalue digit+  $AddChar2 );
+id_val_end   = (  quote  @ FinishID );
+id_val = ( id_val_start id_val_value id_val_end );
+
 tags = (
      el_node | 
      el_way |
@@ -91,7 +115,7 @@ end_element  = (
                         world.finish_current_object();
                 };
 
-start_element = ( '<' tags ) 
+start_element = ( '<' tags space+ id_val) 
               @RecordStart
               $err(some_err) 
               $AddChar;
@@ -130,6 +154,7 @@ int prescanner(OSMWorldPreindex & world,const char *s)
 {
   int cs;
   int res = 0;
+  string currenttoken;
   char *p= (char *)s;
   char *pe = (char *)s + strlen(s) +1 ;
   char *eof = 0;    

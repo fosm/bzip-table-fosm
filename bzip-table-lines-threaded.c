@@ -49,16 +49,16 @@ int prescanner(OSMWorldPreindex & world,const char *s);
 class Datablock {
  public:
   long long seen;
-  int blockcount;
+  int blocknumber;
   char buf[BUF_SIZE+1];  
   Datablock() {
-    blockcount=0;
+    blocknumber=-1;
     buf[0]=0;
     buf[BUF_SIZE]=0;
     buf[BUF_SIZE+1]=0;
   }
- Datablock(int blockcount,  const char * pbuf) :
-  blockcount(blockcount)  {
+ Datablock(int block,  const char * pbuf) :
+  blocknumber(block)  {
     //    cerr << "Created block " << blockcount << endl;
     strncpy(buf,pbuf,BUF_SIZE);
     //    cerr << "Check data:\"" << buf[BUF_SIZE -1] << "\""<< endl;
@@ -66,7 +66,7 @@ class Datablock {
     buf[BUF_SIZE+1]=0;
   }
   Datablock(const Datablock & r)    {
-    blockcount=r.blockcount;
+    blocknumber=r.blocknumber;
     strncpy(buf,r.buf,BUF_SIZE);
     buf[BUF_SIZE]=0;
     buf[BUF_SIZE+1]=0;
@@ -77,14 +77,14 @@ class Datablock {
     // skip all unfinished data
     runmkdir("datafiles");
     char dirbuf[255];
-    sprintf(dirbuf,"datafiles/%06d/",blockcount);
+    sprintf(dirbuf,"datafiles/%06d/",blocknumber);
     runmkdir(dirbuf);
-    OSMWorldPreindex iworld2(dirbuf,blockcount); 
+    OSMWorldPreindex iworld2(dirbuf,blocknumber); 
     seen +=  BUF_SIZE;
     int ret=0;
     ret=prescanner(iworld2,buf);
     if (ret != 1)  {
-      cerr << "prescanner returned ret " << ret << " for len :" << BUF_SIZE << endl;
+      //cerr << "prescanner returned ret " << ret << " for len :" << BUF_SIZE << endl;
     } else {
       //cerr << "OK scanner returned ret " << ret << " for len :" << strlen(buffer) << endl;
     }
@@ -94,7 +94,12 @@ class Datablock {
       //          exit(233);
       return -1;
     }
-    
+    // now lets zip and remove the files
+    sprintf(dirbuf,"tar -cjf datafiles/%06d.tbz datafiles/%06d",blocknumber,blocknumber);
+    system (dirbuf );
+    sprintf(dirbuf,"rm -rf datafiles/%06d",blocknumber);
+    system (dirbuf);
+
     return 0;
     
   }
@@ -136,20 +141,18 @@ static void threadprocess ()
             std::unique_lock<std::mutex> lk(queuelock);
             // now we have the lock, check the size again
             if (dataqueue.size()>0)    {
-              printf("queue size %d\n",dataqueue.size());
+              //printf("queue size %d\n",dataqueue.size());
               Datablock b2 = dataqueue.front();
               b=b2;
               dataqueue.pop();            
-
             }
           }
-          if (b.blockcount>=0)
-            {
-              printf("block %d, size %d\n",b.blockcount,strlen(b.buf));
-              //std::this_thread::sleep_for(std::chrono::milliseconds(400)); // simulate processing, dont do this inside the 
-              b.process();
-              //connect this to the previous one
-            }
+          if (b.blocknumber>=0)  {
+            //            printf("going to  block %d, size %d\n",b.blocknumber,strlen(b.buf));
+            //std::this_thread::sleep_for(std::chrono::milliseconds(400)); // simulate processing, dont do this inside the 
+            b.process();
+            //connect this to the previous one
+          }
         }
         else 
           {
@@ -226,14 +229,11 @@ bunzip_one(FILE *f) {
     fprintf(stderr, "E: BZ2_bzReadOpen: %d\n", bzError);
     return -1;
   }
-  int blockcount =0;
+  int blockcount =1;
   char buf[BUF_SIZE];    
   while (bzError == BZ_OK) {
     int nread = BZ2_bzRead(&bzError, bzf, buf, sizeof(buf));
     if (bzError == BZ_OK || bzError == BZ_STREAM_END) {
-      if (blockcount ==0) {
-        //printf("got count %d data:%s\n",nread,buf); 
-      }
       
       // each block depends on the previous block, but can skip the first items until the previoud block is finished.
       Datablock data(blockcount,buf);
@@ -241,20 +241,14 @@ bunzip_one(FILE *f) {
         //data.process(); // process them directly
         std::unique_lock<std::mutex> lk(queuelock);
         dataqueue.push(data);
-        if (dataqueue.size() > threadcount)   {
-          printf("queue size %d\n",dataqueue.size());
-          int i=0;
-          {
-            printf("queue size %d\n",dataqueue.size());
-            for (i=0;i<threadcount; i++)  { // wait for all to finishe?
-              std::thread::id id = threads[i].get_id();
-              //              printf("looking at %d with id %llu\n",i,id);
-            }
-          }  
-        }      
       }
 
-      if (blockcount == 0)
+      if (dataqueue.size() > (threadcount * 3))   {
+        printf("queue size %d\n",dataqueue.size());
+        sleep(2); // now sleep for the workers to catchup 
+      }
+
+      if (blockcount == 1)
         {
           printf("going to start threads\n");
           std::unique_lock<std::mutex> lk(globalsystem);

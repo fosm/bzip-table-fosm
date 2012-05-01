@@ -58,8 +58,8 @@ ragelosm : bzip-table-lines2.o process-fosm.o indexer.o ifileindexer_b.o $(HEADE
 bzip-table-lines-threaded.o : bzip-table-lines-threaded.c $(HEADERS)
 	g++ $(CFLAGS) -c -std=c++0x $< -o $@
 
-ragelosmt : bzip-table-lines-threaded.o process-fosm.o preindexer.o indexer.o ifileindexer_b.o filepreindexer.hpp $(HEADERS)
-	g++   -static-libgcc -pthread $(CFLAGS)  bzip-table-lines-threaded.o process-fosm.o preindexer.o ifileindexer_b.o indexer.o -lbz2 -o $@ 
+ragelosmt : bzip-table-lines-threaded.o  preindexer.o filepreindexer.hpp $(HEADERS)
+	g++   -static-libgcc -pthread $(CFLAGS)  bzip-table-lines-threaded.o  preindexer.o  -lbz2 -o $@ 
 
 seek-bunzip : seek-bunzip.o micro-bunzip.o
 
