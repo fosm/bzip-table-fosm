@@ -2,8 +2,6 @@ use JSON;
 use strict;
 use warnings;
 
-#my %index; # id to file
-
 use Data::Dumper;
 
 sub readdata
@@ -32,9 +30,6 @@ sub readdata
         my @integers = unpack "q*", $buffer;
         #print join ("\n",@integers). "\n";
         map {
-#            $index{$type}{pos}{$_}= $pos;
-#            $index{$type}{file}{$_}=$number;
-#            $index{$type}{$_}=[$number,$pos];
             print OUT join ("\t",($_,$number,$pos)) . "\n";
             $pos++;
         } @integers;
@@ -74,17 +69,17 @@ sub ProcessOne
 sub openindex
 {
     my $number=shift;
-    mkdir "json" unless -d "json";
-    open OUT, ">json/$number.json";
+    mkdir "index" unless -d "index";
+    open OUT, ">index/node_${number}.txt";
+    open OUTW, ">index/way_${number}.txt";
+    open OUTR, ">index/rel_${number}.txt";
 }
 
 sub writeindex
 {
-#    $json_text = encode_json \%index;
-#warn Dumper(%index);
-#    print OUT $json_text;
     close OUT;        
-
+    close OUTW;        
+    close OUTR;        
 }
 
 sub readfiles
