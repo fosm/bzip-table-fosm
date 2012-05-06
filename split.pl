@@ -4,10 +4,11 @@ use warnings;
 my $first;
 my $mtu=1135 * 5;
 my $buff="";
-
+my $index="fosm-20120401130001-idx-xaaaa.txt";
+open OUT2,">$index";
 while (<>)
 {
-    chomp;
+#    chomp;
     if (/(\d+)\t\d+\t\d+/)
     {
 	my $index=$1;
@@ -25,6 +26,7 @@ while (<>)
 	    print OUT $buff;
 	    close OUT;
 	    system ("bzip2 $file");
+	    print OUT2 "${file}.bz2\n";
 	    $buff="";
 	    $first=undef;
 	}
@@ -37,3 +39,4 @@ while (<>)
 	die $_;
     }
 }
+close OUT2;
