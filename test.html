@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="style.css"  rel="stylesheet"/>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script language="JavaScript">
+
+/* Simple JavaScript Inheritance
+ * By John Resig http://ejohn.org/
+1 * MIT Licensed.
+ */
+// Inspired by base2 and Prototype
+(function(){
+  var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
+  // The base Class implementation (does nothing)
+  this.Class = function(){};
+  
+  // Create a new Class that inherits from this class
+  Class.extend = function(prop) {
+    var _super = this.prototype;
+    
+    // Instantiate a base class (but only create the instance,
+    // don't run the init constructor)
+    initializing = true;
+    var prototype = new this();
+    initializing = false;
+    
+    // Copy the properties over onto the new prototype
+    for (var name in prop) {
+      // Check if we're overwriting an existing function
+      prototype[name] = typeof prop[name] == "function" && 
+        typeof _super[name] == "function" && fnTest.test(prop[name]) ?
+        (function(name, fn){
+          return function() {
+            var tmp = this._super;
+            
+            // Add a new ._super() method that is the same method
+            // but on the super-class
+            this._super = _super[name];
+            
+            // The method only need to be bound temporarily, so we
+            // remove it when we're done executing
+            var ret = fn.apply(this, arguments);        
+            this._super = tmp;
+            
+            return ret;
+          };
+        })(name, prop[name]) :
+        prop[name];
+    }
+    
+    // The dummy class constructor
+    function Class() {
+      // All construction is actually done in the init method
+      if ( !initializing && this.init )
+        this.init.apply(this, arguments);
+    }
+    
+    // Populate our constructed prototype object
+    Class.prototype = prototype;
+    
+    // Enforce the constructor to be what we expect
+    Class.prototype.constructor = Class;
+
+    // And make this class extendable
+    Class.extend = arguments.callee;
+    
+    return Class;
+  };
+})();
+
+function index(from,to,file) {
+    // alert(from);
+}
+
+function node(node,low,high,color,parent,left,right) {
+    // alert(from);
+    if ($("#" + node).length)
+    {
+        return;
+    }
+    var body =                " id=" + node  + 
+        " tree_color=" + color +
+        " tree_left="  + left +
+        " tree_right=" + right +
+        " tree_low="   + low +
+        " tree_high="  + high 
+        + ">" +
+        " node: " + node    + 
+        " parent: " + parent +
+        " color=" + color +
+        " left: " + left +
+        " right: " + right +
+        " low: " + low +
+        " high: " + high ;
+
+    if ($("#" + parent).length)
+    {
+        $("#" + parent).append( "<div class=childnode_"+document.__nextrel + body +  "</div>");         }    else    {
+        $("#log").append(  "<div class=parentnode  " + body +    "</div>");
+    }
+
+    if (right != 0)
+    {
+        //load("node_" + right +".js","right");
+    }
+
+    if (left != 0)
+    {
+        //load("node_" + left +".js","left");
+    }
+
+}
+
+function load (file,relation) {
+    var fileref=document.createElement('script')
+    fileref.setAttribute("type","text/javascript")
+    fileref.setAttribute("src", "json/" + file)
+    document.getElementsByTagName("head")[0].appendChild(fileref)
+    document.__nextrel=relation;
+}
+
+//http://stackoverflow.com/questions/1403888/get-url-parameter-with-jquery
+function getURLParameter(name) {
+    return decodeURI(
+        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+    );
+}
+
+
+var rbtree = Class.extend({
+    init: function(){
+    },
+    search: function(term){
+//        alert("search for" + term);
+        this.checkRange(this.getRoot(),term);
+    },
+    getRoot : function()   {
+        return "0x91b5210";
+    },
+    checkRange : function (node,term)    {
+        if (node == 0)
+        {
+            return;
+        }
+        if (!$("#" + node).length)
+        {
+            load("node_" + node +".js","unknown"); // check it is loaded
+        }
+
+        if ($("#" + node).length)
+        {
+            nd=$("#" + node);
+            var low = nd.attr("tree_low");
+            var high = nd.attr("tree_high");
+            if ((term >= low) && (term <= high))
+            {
+                alert("found " + term + " in " + node);
+            }
+            else if ( term < low)
+            {
+                var left = nd.attr("tree_left");
+                if (left > 0 )                {
+                    load("node_" + left +".js","left"); // check it is loaded
+                    this.checkRange(left,term); // recurse
+                }
+                else
+                {                
+                    alert("not found " + term + " in " + node);
+                }
+            }
+            else if ( term > high) {
+                var right = nd.attr("tree_right");
+                if ( right > 0 ) {
+                    load("node_" + right +".js","right"); // check it is loaded
+                    this.checkRange(right,term); // recurse
+                }
+                else
+                {                
+                    alert("not found " + term + " in " + node);
+                }
+            }
+        }
+        else
+        {
+            
+        }
+    },
+});
+
+$(document).ready(function()  {
+
+    var search = getURLParameter("search");
+    $('#search').val(search);
+
+    $('#searchbutton').click(function() {
+        var p = new rbtree(true);
+        //alert('Handler for .submit() called.');
+        p.search($('#search').val());
+        return false;
+    });
+
+    $("#log").append("<p>starting</p>");
+    load("node_0x91b5210.js");
+//    load("node_0x9f69210.js");    
+//    load("node_0x819f210.js","root");    
+
+});
+
+//http://ejohn.org/blog/simple-javascript-inheritance/
+(function(){
+
+})
+
+</script>
+</head>
+<body>
+<form>
+  <input id="search" name="search"/>
+</form>
+<div id="searchbutton">
+  Click here to search
+</div>
+<div id="log"/>
+</body>
+</html>

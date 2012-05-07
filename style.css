@@ -1,0 +1,21 @@
+.childnode {
+    margin-left : 10px;
+    padding-left : 10px;
+    background-color : orange;
+}
+
+.childnode_left {
+    margin-left : 10px;
+    padding-left : 10px;
+    background-color : green;
+}
+
+.childnode_right {
+    margin-left : 10px;
+    padding-left : 10px;
+    background-color : blue;
+}
+
+.parentnode {
+    background-color : red;
+}
